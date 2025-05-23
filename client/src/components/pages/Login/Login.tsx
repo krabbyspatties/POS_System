@@ -1,0 +1,21 @@
+import { useEffect } from "react";
+import LoginForm from "../../forms/login/LoginForm";
+
+const Login = () => {
+  useEffect(() => {
+    document.title = "Login Page";
+  }, []);
+
+  return (
+    <>
+      <div className="row">
+        <div className="d-flex justify-content-center mt-5">
+          <div className="col-md-4">
+            <LoginForm />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+export default Login;

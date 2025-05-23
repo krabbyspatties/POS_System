@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     const response = await axios.post("http://127.0.0.1:8000/api/login", {
-      email,
+      user_email: email,
       password,
     });
 
