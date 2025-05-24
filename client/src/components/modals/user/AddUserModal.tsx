@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import AddUserForm from "../../forms/users/UserForm";
 import AlertMessage from "../../AlertMessage";
 import SpinnerSmall from "../../SpinnerSmall";
+import UserForm from "../../forms/users/UserForm";
 
 interface AddUserModalProps {
   showModal: boolean;
@@ -60,8 +60,10 @@ const AddUserModal = ({
                   onClose={handleCloseAlertMessage}
                 />
               </div>
-              <AddUserForm
-                setSubmitForm={submitFormRef}
+              <UserForm
+                setSubmitForm={(submitFn) => {
+                  submitFormRef.current = submitFn;
+                }}
                 setLoadingStore={setLoadingStore}
                 onUserAdded={(message) => {
                   handleShowAlertMessage(message, true, true);

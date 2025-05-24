@@ -13,10 +13,6 @@ const Navbar = () => {
 
   const menuItems = [
     {
-      route: "/genders",
-      title: "Genders",
-    },
-    {
       route: "/users",
       title: "Users",
     },
@@ -59,7 +55,7 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            ballinas_rnl
+            POS_SYSTEM
           </a>
           <button
             className="navbar-toggler"
