@@ -3,6 +3,7 @@ import MainLayout from "../../layout/MainLayout";
 import AddUserModal from "../../modals/user/AddUserModal";
 import type { Users } from "../../../interfaces/Users";
 import UsersTable from "../../table/user/UsersTable";
+import EditUserModal from "../../modals/user/editUserModal";
 
 const UsersPage = () => {
   const [refreshUsers, setRefreshUsers] = useState(false);
@@ -38,13 +39,13 @@ const UsersPage = () => {
         onRefreshUsers={() => setRefreshUsers(!refreshUsers)}
         onClose={() => setOpenAddUserModal(false)}
       />
-      {/* <EditUserModal
+      <EditUserModal
         showModal={openEditUserModal}
         user={selectedUser}
         onRefreshUsers={() => setRefreshUsers(!refreshUsers)}
         onClose={handleCloseEditUserModal}
       />
-      <DeleteUserModal
+      {/* <DeleteUserModal
         showModal={openDeleteUserModal}
         user={selectedUser}
         onRefreshUsers={() => setRefreshUsers(!refreshUsers)}
@@ -61,7 +62,7 @@ const UsersPage = () => {
       </div>
       <UsersTable
         refreshUsers={refreshUsers}
-        // onEditUser={handleOpenEditUserModal}
+        onEditUser={handleOpenEditUserModal}
         // onDeleteUser={handleOpenDeleteUserModal}
       />
     </>

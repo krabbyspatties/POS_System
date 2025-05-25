@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import UserService from "../../../services/UserService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
+import type { Users } from "../../../interfaces/Users";
 
 interface User {
   user_id: number;
@@ -13,19 +15,15 @@ interface User {
   user_phone: string;
   user_address: string;
   role: string;
+  user_status: string;
 }
 
 interface UsersTableProps {
   refreshUsers: boolean;
-  // onEditUser: (user: User) => void;
-  // onDeleteUser: (user: User) => void;
+  onEditUser: (user: Users) => void;
 }
 
-const UsersTable = ({
-  refreshUsers,
-}: // onEditUser,
-// onDeleteUser,
-UsersTableProps) => {
+const UsersTable = ({ refreshUsers, onEditUser }: UsersTableProps) => {
   const [state, setState] = useState({
     loadingUsers: true,
     users: [] as User[],
@@ -74,7 +72,7 @@ UsersTableProps) => {
             <th>Phone</th>
             <th>Address</th>
             <th>Role</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -90,11 +88,18 @@ UsersTableProps) => {
                 <td>{index + 1}</td>
                 <td>
                   {user.user_image ? (
-                    <img
-                      src={user.user_image}
-                      alt={user.first_name}
-                      style={{ width: 40, height: 40, borderRadius: "50%" }}
-                    />
+                    <Link to={`/users/${user.user_id}`}>
+                      <img
+                        src={user.user_image}
+                        alt={user.first_name}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Link>
                   ) : (
                     <div
                       style={{
@@ -104,9 +109,7 @@ UsersTableProps) => {
                         backgroundColor: "#ccc",
                         display: "inline-block",
                       }}
-                    >
-                      {}
-                    </div>
+                    />
                   )}
                 </td>
                 <td>{`${user.last_name}, ${user.first_name}`}</td>
@@ -117,20 +120,14 @@ UsersTableProps) => {
                 <td>{user.role}</td>
                 <td>
                   <div className="btn-group">
-                    {/* <button
+                    <button
                       type="button"
-                      className="btn btn-success"
+                      className="btn btn-primary btn-sm"
                       onClick={() => onEditUser(user)}
                     >
                       Edit
                     </button>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => onDeleteUser(user)}
-                    >
-                      Delete
-                    </button> */}
+                    {/* Add more actions here if needed */}
                   </div>
                 </td>
               </tr>
