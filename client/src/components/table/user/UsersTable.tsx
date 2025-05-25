@@ -21,9 +21,14 @@ interface User {
 interface UsersTableProps {
   refreshUsers: boolean;
   onEditUser: (user: Users) => void;
+  onDeleteUser: (user: Users) => void;
 }
 
-const UsersTable = ({ refreshUsers, onEditUser }: UsersTableProps) => {
+const UsersTable = ({
+  refreshUsers,
+  onEditUser,
+  onDeleteUser,
+}: UsersTableProps) => {
   const [state, setState] = useState({
     loadingUsers: true,
     users: [] as User[],
@@ -127,7 +132,13 @@ const UsersTable = ({ refreshUsers, onEditUser }: UsersTableProps) => {
                     >
                       Edit
                     </button>
-                    {/* Add more actions here if needed */}
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => onDeleteUser(user)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>

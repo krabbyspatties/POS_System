@@ -82,7 +82,7 @@ class UserController extends Controller
     public function destroyUser(User $user)
     {
         $user->update([
-            'is_deleted' => true
+            'is_deleted' => 1
         ]);
 
         return response()->json([
