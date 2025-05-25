@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ItemCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
@@ -13,7 +14,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', 'user');
         Route::post('/logout', 'logout');
     });
+    Route::controller(ItemCategoryController::class)->group(function () {
+        Route::get('/loadCategory', 'loadCategory');
+        Route::get('/getCategory/{category_id}', 'getCategory');
+        Route::post('/storeCategory', 'storeCategory');
+        Route::put('/updateCategory/{category}', 'updateCategory');
+        Route::delete('/destroyCategory/{category_id}', 'destroyCategory');
 
+
+    });
     Route::controller(UserController::class)->group(function () {
         Route::get('/loadUsers', 'loadUsers');
         Route::post('/storeUser', 'storeUser');

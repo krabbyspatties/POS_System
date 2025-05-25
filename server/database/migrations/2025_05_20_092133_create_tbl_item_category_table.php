@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('tbl_item_category', function (Blueprint $table) {
             $table->id('category_id');
             $table->string('category_name', 55)->unique();
+            $table->tinyInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +23,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('tbl_item_category');
+        Schema::enableForeignKeyConstraints();
     }
 };

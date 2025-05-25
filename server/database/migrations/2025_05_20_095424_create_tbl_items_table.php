@@ -18,12 +18,13 @@ return new class extends Migration {
             $table->integer('item_quantity');
             $table->string('item_image', 255)->nullable();
             $table->enum('stock_level', ['available', 'unavailable', 'low_inventory'])->default('available');
-
-            $table->foreignId('category')
-                ->constrained('tbl_item_category', 'category_id')
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')
+                ->references('category_id')
+                ->on('tbl_item_category')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-
+            $table->tinyInteger('is_deleted')->default(false);
             $table->timestamps();
         });
 
@@ -34,6 +35,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('tbl_items');
+        Schema::enableForeignKeyConstraints();
     }
 };

@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('user_address', 255)->nullable();
             $table->string('user_image', 255)->nullable();
             $table->enum('role', ['cashier', 'manager', 'administrator']);
+            $table->tinyInteger('is_deleted')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +31,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('tbl_users');
+        Schema::enableForeignKeyConstraints();
     }
 };

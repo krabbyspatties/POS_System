@@ -23,9 +23,9 @@ interface UsersTableProps {
 
 const UsersTable = ({
   refreshUsers,
-  // onEditUser,
-  // onDeleteUser,
-}: UsersTableProps) => {
+}: // onEditUser,
+// onDeleteUser,
+UsersTableProps) => {
   const [state, setState] = useState({
     loadingUsers: true,
     users: [] as User[],
@@ -89,11 +89,25 @@ const UsersTable = ({
               <tr className="align-middle" key={user.user_id}>
                 <td>{index + 1}</td>
                 <td>
-                  <img
-                    src={user.user_image}
-                    alt={user.first_name}
-                    style={{ width: 40, height: 40, borderRadius: "50%" }}
-                  />
+                  {user.user_image ? (
+                    <img
+                      src={user.user_image}
+                      alt={user.first_name}
+                      style={{ width: 40, height: 40, borderRadius: "50%" }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#ccc",
+                        display: "inline-block",
+                      }}
+                    >
+                      {}
+                    </div>
+                  )}
                 </td>
                 <td>{`${user.last_name}, ${user.first_name}`}</td>
                 <td>{user.user_name}</td>

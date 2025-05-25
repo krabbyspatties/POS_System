@@ -4,8 +4,7 @@ import AddUserModal from "../../modals/user/AddUserModal";
 import type { Users } from "../../../interfaces/Users";
 import UsersTable from "../../table/user/UsersTable";
 
-
-const Users = () => {
+const UsersPage = () => {
   const [refreshUsers, setRefreshUsers] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Users | null>(null);
   const [openAddUserModal, setOpenAddUserModal] = useState(false);
@@ -71,4 +70,4 @@ const Users = () => {
   return <MainLayout content={content} />;
 };
 
-export default Users;
+export default UsersPage;

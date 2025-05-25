@@ -10,11 +10,12 @@ use Illuminate\Notifications\Notifiable;
 
 class Item_Category extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
     protected $table = 'tbl_item_category';
     protected $primaryKey = 'category_id';
     protected $fillable = [
         'category_name',
+        'is_deleted'
     ];
 
     public function items(): HasMany

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             'user_address' => 'Test',
             'user_image' => '',
             'role' => 'Administrator',
+            'is_deleted' => 0,
 
         ]);
     }
