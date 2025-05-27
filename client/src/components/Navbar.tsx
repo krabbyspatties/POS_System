@@ -20,6 +20,10 @@ const Navbar = () => {
       route: "/itemCategories",
       title: "ItemCategories",
     },
+    {
+      route: "/items",
+      title: "items",
+    },
   ];
 
   const handleLogout = (e: FormEvent) => {

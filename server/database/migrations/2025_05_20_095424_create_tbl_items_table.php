@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('item_name', 55);
             $table->string('item_description', 255);
             $table->decimal('item_price', 8, 2);
-            $table->integer('item_quantity');
+            $table->integer('item_quantity')->default(0)->nullable();
             $table->string('item_image', 255)->nullable();
             $table->enum('stock_level', ['available', 'unavailable', 'low_inventory'])->default('available');
             $table->unsignedBigInteger('category_id');

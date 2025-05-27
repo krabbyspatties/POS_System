@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function loadUsers()
     {
-        $users = User::where('is_deleted', false)->get();
+        $users = User::where('is_deleted', 0)->get();
 
         return response()->json([
             'users' => $users

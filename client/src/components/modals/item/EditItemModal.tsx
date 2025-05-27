@@ -1,41 +1,44 @@
-import type { Users } from "../../../interfaces/User/Users";
-import AlertMessage from "../../AlertMessage";
-import EditUserForm from "../../forms/users/EditUserForm";
-import SpinnerSmall from "../../SpinnerSmall";
 import { useRef, useState } from "react";
+import type { Items } from "../../../interfaces/Item/Items";
+import EditItemForm from "../../forms/items/EditItemForm";
+import AlertMessage from "../../AlertMessage";
+import SpinnerSmall from "../../SpinnerSmall";
 
-interface EditUserModalProps {
+interface EditItemModalProps {
   showModal: boolean;
-  user: Users | null;
+  item: Items | null;
+  onRefreshItems: (refresh: boolean) => void;
   onClose: () => void;
-  onRefreshUsers: (refresh: boolean) => void;
 }
 
-const EditUserModal = ({
+const EditItemModal = ({
   showModal,
-  user,
+  item,
+  onRefreshItems,
   onClose,
-  onRefreshUsers,
-}: EditUserModalProps) => {
-  const [message, setMessage] = useState<string>("");
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [loadingStore, setLoadingStore] = useState<boolean>(false);
-  const [refreshUsers, setRefreshUsers] = useState<boolean>(false);
+}: EditItemModalProps) => {
+  const SubmitFormRef = useRef<() => void | null>(null);
 
-  const submitFormRef = useRef<(() => void) | null>(null);
+  const [refreshItems, setRefreshItems] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
+
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleShowAlertMessage = (
-    msg: string,
-    success: boolean,
-    visible: boolean
+    message: string,
+    isSuccess: boolean,
+    isVisible: boolean
   ) => {
-    setMessage(msg);
-    setIsSuccess(success);
-    setIsVisible(visible);
+    setMessage(message);
+    setIsSuccess(isSuccess);
+    setIsVisible(isVisible);
   };
 
   const handleCloseAlertMessage = () => {
+    setMessage("");
+    setIsSuccess(false);
     setIsVisible(false);
   };
 
@@ -49,7 +52,7 @@ const EditUserModal = ({
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5">Add User</h1>
+              <h1 className="modal-title fs-5">Edit Item</h1>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -60,14 +63,14 @@ const EditUserModal = ({
                   onClose={handleCloseAlertMessage}
                 />
               </div>
-              <EditUserForm
-                user={user}
-                setSubmitForm={submitFormRef}
-                setLoadingUpdate={setLoadingStore}
-                onUserUpdated={(message: string) => {
+              <EditItemForm
+                item={item}
+                setSubmitForm={SubmitFormRef}
+                setLoadingUpdate={setLoadingUpdate}
+                onItemUpdated={(message) => {
                   handleShowAlertMessage(message, true, true);
-                  setRefreshUsers(!refreshUsers);
-                  onRefreshUsers(!refreshUsers);
+                  setRefreshItems(!refreshItems);
+                  onRefreshItems(!refreshItems);
                 }}
               />
             </div>
@@ -75,23 +78,23 @@ const EditUserModal = ({
               <button
                 type="button"
                 className="btn btn-secondary"
+                disabled={loadingUpdate}
                 onClick={onClose}
-                disabled={loadingStore}
               >
                 Close
               </button>
               <button
-                type="submit"
+                type="button"
                 className="btn btn-primary"
-                disabled={loadingStore}
-                onClick={() => submitFormRef.current?.()}
+                disabled={loadingUpdate}
+                onClick={() => SubmitFormRef.current?.()}
               >
-                {loadingStore ? (
+                {loadingUpdate ? (
                   <>
-                    <SpinnerSmall /> Saving User...
+                    <SpinnerSmall /> Updating Item...
                   </>
                 ) : (
-                  "Save User"
+                  "Save Item"
                 )}
               </button>
             </div>
@@ -102,4 +105,4 @@ const EditUserModal = ({
   );
 };
 
-export default EditUserModal;
+export default EditItemModal;

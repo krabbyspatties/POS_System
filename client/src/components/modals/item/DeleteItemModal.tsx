@@ -1,41 +1,44 @@
-import type { Users } from "../../../interfaces/User/Users";
-import AlertMessage from "../../AlertMessage";
-import EditUserForm from "../../forms/users/EditUserForm";
-import SpinnerSmall from "../../SpinnerSmall";
 import { useRef, useState } from "react";
+import type { Items } from "../../../interfaces/Item/Items";
+import AlertMessage from "../../AlertMessage";
+import DeleteItemForm from "../../forms/items/DeleteItemForm";
+import SpinnerSmall from "../../SpinnerSmall";
 
-interface EditUserModalProps {
+interface DeleteItemModalProps {
   showModal: boolean;
-  user: Users | null;
+  item: Items | null;
+  onRefreshItems: (refresh: boolean) => void;
   onClose: () => void;
-  onRefreshUsers: (refresh: boolean) => void;
 }
 
-const EditUserModal = ({
+const DeleteItemModal = ({
   showModal,
-  user,
+  item,
+  onRefreshItems,
   onClose,
-  onRefreshUsers,
-}: EditUserModalProps) => {
-  const [message, setMessage] = useState<string>("");
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [loadingStore, setLoadingStore] = useState<boolean>(false);
-  const [refreshUsers, setRefreshUsers] = useState<boolean>(false);
+}: DeleteItemModalProps) => {
+  const submitFormRef = useRef<() => void | null>(null);
 
-  const submitFormRef = useRef<(() => void) | null>(null);
+  const [refreshItems, setRefreshItems] = useState(false);
+  const [loadingDestroy, setLoadingDestroy] = useState(false);
+
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleShowAlertMessage = (
-    msg: string,
-    success: boolean,
-    visible: boolean
+    message: string,
+    isSuccess: boolean,
+    isVisible: boolean
   ) => {
-    setMessage(msg);
-    setIsSuccess(success);
-    setIsVisible(visible);
+    setMessage(message);
+    setIsSuccess(isSuccess);
+    setIsVisible(isVisible);
   };
 
   const handleCloseAlertMessage = () => {
+    setMessage("");
+    setIsSuccess(false);
     setIsVisible(false);
   };
 
@@ -49,7 +52,7 @@ const EditUserModal = ({
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5">Add User</h1>
+              <h1 className="modal-title fs-5">Delete Item</h1>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -60,14 +63,17 @@ const EditUserModal = ({
                   onClose={handleCloseAlertMessage}
                 />
               </div>
-              <EditUserForm
-                user={user}
+              <p className="fs-4">
+                Are you sure do you want to delete this item?
+              </p>
+              <DeleteItemForm
+                item={item}
                 setSubmitForm={submitFormRef}
-                setLoadingUpdate={setLoadingStore}
-                onUserUpdated={(message: string) => {
+                setLoadingDestroy={setLoadingDestroy}
+                onDeletedItem={(message) => {
                   handleShowAlertMessage(message, true, true);
-                  setRefreshUsers(!refreshUsers);
-                  onRefreshUsers(!refreshUsers);
+                  setRefreshItems(!refreshItems);
+                  onRefreshItems(refreshItems);
                 }}
               />
             </div>
@@ -75,23 +81,23 @@ const EditUserModal = ({
               <button
                 type="button"
                 className="btn btn-secondary"
+                disabled={loadingDestroy}
                 onClick={onClose}
-                disabled={loadingStore}
               >
                 Close
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
-                disabled={loadingStore}
+                className="btn btn-danger"
+                disabled={loadingDestroy}
                 onClick={() => submitFormRef.current?.()}
               >
-                {loadingStore ? (
+                {loadingDestroy ? (
                   <>
-                    <SpinnerSmall /> Saving User...
+                    <SpinnerSmall /> Deleting Item...
                   </>
                 ) : (
-                  "Save User"
+                  "Delete Item"
                 )}
               </button>
             </div>
@@ -102,4 +108,4 @@ const EditUserModal = ({
   );
 };
 
-export default EditUserModal;
+export default DeleteItemModal;

@@ -8,5 +8,4 @@ export interface Users {
     user_phone: string;
     user_address: string;
     role: string;
-    user_status: string;
 }

@@ -1,38 +1,38 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import type { Users } from "../../../interfaces/User/Users";
-import UserService from "../../../services/UserService";
+import type { Items } from "../../../interfaces/Item/Items";
+import ItemService from "../../../services/ItemService";
 import ErrorHandler from "../../handler/ErrorHandler";
 
-interface DeleteUserFormProps {
-  user: Users | null;
+interface DeleteItemFormProps {
+  item: Items | null;
   setSubmitForm: React.MutableRefObject<(() => void) | null>;
   setLoadingDestroy: (loading: boolean) => void;
-  onDeletedUser: (message: string) => void;
+  onDeletedItem: (message: string) => void;
 }
 
-const DeleteUserForm = ({
-  user,
+const DeleteItemForm = ({
+  item,
   setSubmitForm,
   setLoadingDestroy,
-  onDeletedUser,
-}: DeleteUserFormProps) => {
+  onDeletedItem,
+}: DeleteItemFormProps) => {
   const [state, setState] = useState({
-    user_id: 0,
-    full_name: "",
+    item_id: 0,
+    item_name: "",
   });
 
-  const handleDestroyUser = (e: FormEvent) => {
+  const handleDestroyItem = (e: FormEvent) => {
     e.preventDefault();
 
     setLoadingDestroy(true);
 
-    UserService.destroyUser(state.user_id)
+    ItemService.destroyItem(state.item_id)
       .then((res) => {
         if (res.status === 200) {
-          onDeletedUser(res.data.message);
+          onDeletedItem(res.data.message);
         } else {
           console.error(
-            "Unexpected status error while destroying user: ",
+            "Unexpected status error while destroying item: ",
             res.status
           );
         }
@@ -45,24 +45,20 @@ const DeleteUserForm = ({
       });
   };
 
-  const handleUserFullName = (firstName: string, lastName: string) => {
-    return `${firstName} ${lastName}`;
-  };
-
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (user) {
+    if (item) {
       setState((prevState) => ({
         ...prevState,
-        user_id: user.user_id,
-        full_name: handleUserFullName(user.first_name, user.last_name),
+        item_id: item.item_id,
+        item_name: item.item_name,
       }));
     } else {
       setState((prevState) => ({
         ...prevState,
-        user_id: 0,
-        full_name: "",
+        item_id: 0,
+        item_name: "",
       }));
     }
 
@@ -71,20 +67,20 @@ const DeleteUserForm = ({
         formRef.current.requestSubmit();
       }
     };
-  }, [user, setSubmitForm]);
+  }, [item, setSubmitForm]);
 
   return (
     <>
-      <form ref={formRef} onSubmit={handleDestroyUser}>
+      <form ref={formRef} onSubmit={handleDestroyItem}>
         <div className="row">
           <div className="d-flex justify-content-center">
             <div className="col-md-6">
               <div className="mb-3">
-                <label htmlFor="full_name">Full Name</label>
+                <label htmlFor="item_name">Item Name</label>
                 <input
                   type="text"
                   className="form-control"
-                  value={state.full_name}
+                  value={state.item_name}
                   readOnly
                 />
               </div>
@@ -96,4 +92,4 @@ const DeleteUserForm = ({
   );
 };
 
-export default DeleteUserForm;
+export default DeleteItemForm;

@@ -5,8 +5,8 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
-import type { UserFieldErrors } from "../../../interfaces/UserFieldErrors";
-import type { Users } from "../../../interfaces/Users";
+import type { UserFieldErrors } from "../../../interfaces/User/UserFieldErrors";
+import type { Users } from "../../../interfaces/User/Users";
 import UserService from "../../../services/UserService";
 
 interface EditUserFormProps {

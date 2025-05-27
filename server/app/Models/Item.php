@@ -20,7 +20,8 @@ class Item extends Model
         'item_quantity',
         'item_image',
         'stock_level',
-        'category',
+        'category_id',
+        'is_deleted',
     ];
 
     public function category(): BelongsTo

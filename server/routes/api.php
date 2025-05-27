@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ItemCategoryController;
+use App\Http\Controllers\Api\ItemController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
@@ -28,5 +29,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/storeUser', 'storeUser');
         Route::put('/updateUser/{user}', 'updateUser');
         Route::put('/destroyUser/{user}', 'destroyUser');
+    });
+    Route::controller(ItemController::class)->group(function () {
+        Route::get('/loadItems', 'loadItems');
+        Route::post('/storeItem', 'storeItem');
+        Route::put('/updateItem/{item}', 'updateItem');
+        Route::delete('/destroyItem/{item}', 'destroyItem');
     });
 });

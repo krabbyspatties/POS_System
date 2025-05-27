@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import UserService from "../../../services/UserService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
-import type { Users } from "../../../interfaces/Users";
+import type { Users } from "../../../interfaces/User/Users";
 
 interface User {
   user_id: number;

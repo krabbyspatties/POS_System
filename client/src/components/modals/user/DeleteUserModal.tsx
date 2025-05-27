@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { Users } from "../../../interfaces/Users";
+import type { Users } from "../../../interfaces/User/Users";
 import AlertMessage from "../../AlertMessage";
 import DeleteUserForm from "../../forms/users/DeleteUserForm";
 import SpinnerSmall from "../../SpinnerSmall";

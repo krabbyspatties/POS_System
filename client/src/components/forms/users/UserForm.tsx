@@ -1,11 +1,7 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import ErrorHandler from "../../handler/ErrorHandler";
-import type { UserFieldErrors } from "../../../interfaces/UserFieldErrors";
+import type { UserFieldErrors } from "../../../interfaces/User/UserFieldErrors";
 import UserService from "../../../services/UserService";
 
 interface AddUserFormProps {
@@ -112,7 +108,9 @@ const UserForm = ({
             <label htmlFor="first_name">First Name</label>
             <input
               type="text"
-              className={`form-control ${state.errors.first_name ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.first_name ? "is-invalid" : ""
+              }`}
               name="first_name"
               id="first_name"
               value={state.first_name}
@@ -127,7 +125,9 @@ const UserForm = ({
             <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
-              className={`form-control ${state.errors.last_name ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.last_name ? "is-invalid" : ""
+              }`}
               name="last_name"
               id="last_name"
               value={state.last_name}
@@ -142,7 +142,9 @@ const UserForm = ({
             <label htmlFor="user_name">User Name</label>
             <input
               type="text"
-              className={`form-control ${state.errors.user_name ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.user_name ? "is-invalid" : ""
+              }`}
               name="user_name"
               id="user_name"
               value={state.user_name}
@@ -157,7 +159,9 @@ const UserForm = ({
             <label htmlFor="user_email">Email</label>
             <input
               type="email"
-              className={`form-control ${state.errors.user_email ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.user_email ? "is-invalid" : ""
+              }`}
               name="user_email"
               id="user_email"
               value={state.user_email}
@@ -172,7 +176,9 @@ const UserForm = ({
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              className={`form-control ${state.errors.password ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.password ? "is-invalid" : ""
+              }`}
               name="password"
               id="password"
               value={state.password}
@@ -187,7 +193,9 @@ const UserForm = ({
             <label htmlFor="password_confirmation">Confirm Password</label>
             <input
               type="password"
-              className={`form-control ${state.errors.password_confirmation ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.password_confirmation ? "is-invalid" : ""
+              }`}
               name="password_confirmation"
               id="password_confirmation"
               value={state.password_confirmation}
@@ -195,7 +203,9 @@ const UserForm = ({
               maxLength={255}
             />
             {state.errors.password_confirmation && (
-              <span className="text-danger">{state.errors.password_confirmation[0]}</span>
+              <span className="text-danger">
+                {state.errors.password_confirmation[0]}
+              </span>
             )}
           </div>
         </div>
@@ -205,7 +215,9 @@ const UserForm = ({
             <label htmlFor="user_phone">Phone</label>
             <input
               type="text"
-              className={`form-control ${state.errors.user_phone ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.user_phone ? "is-invalid" : ""
+              }`}
               name="user_phone"
               id="user_phone"
               value={state.user_phone}
@@ -220,7 +232,9 @@ const UserForm = ({
             <label htmlFor="user_address">Address</label>
             <input
               type="text"
-              className={`form-control ${state.errors.user_address ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.user_address ? "is-invalid" : ""
+              }`}
               name="user_address"
               id="user_address"
               value={state.user_address}
@@ -228,14 +242,18 @@ const UserForm = ({
               maxLength={255}
             />
             {state.errors.user_address && (
-              <span className="text-danger">{state.errors.user_address[0]}</span>
+              <span className="text-danger">
+                {state.errors.user_address[0]}
+              </span>
             )}
           </div>
           <div className="mb-3">
             <label htmlFor="user_image">Image URL</label>
             <input
               type="text"
-              className={`form-control ${state.errors.user_image ? "is-invalid" : ""}`}
+              className={`form-control ${
+                state.errors.user_image ? "is-invalid" : ""
+              }`}
               name="user_image"
               id="user_image"
               value={state.user_image}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import MainLayout from "../../layout/MainLayout";
 import AddUserModal from "../../modals/user/AddUserModal";
-import type { Users } from "../../../interfaces/Users";
+import type { Users } from "../../../interfaces/User/Users";
 import UsersTable from "../../table/user/UsersTable";
 import EditUserModal from "../../modals/user/EditUserModal";
 import DeleteUserModal from "../../modals/user/DeleteUserModal";

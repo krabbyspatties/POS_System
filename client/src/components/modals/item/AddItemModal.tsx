@@ -1,41 +1,41 @@
-import type { Users } from "../../../interfaces/User/Users";
-import AlertMessage from "../../AlertMessage";
-import EditUserForm from "../../forms/users/EditUserForm";
-import SpinnerSmall from "../../SpinnerSmall";
 import { useRef, useState } from "react";
+import AlertMessage from "../../AlertMessage";
+import ItemForm from "../../forms/items/AddItemsForm";
+import SpinnerSmall from "../../SpinnerSmall";
 
-interface EditUserModalProps {
+interface AddItemModalProps {
   showModal: boolean;
-  user: Users | null;
+  onRefreshItems: (refresh: boolean) => void;
   onClose: () => void;
-  onRefreshUsers: (refresh: boolean) => void;
 }
 
-const EditUserModal = ({
+const AddItemModal = ({
   showModal,
-  user,
+  onRefreshItems,
   onClose,
-  onRefreshUsers,
-}: EditUserModalProps) => {
-  const [message, setMessage] = useState<string>("");
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [loadingStore, setLoadingStore] = useState<boolean>(false);
-  const [refreshUsers, setRefreshUsers] = useState<boolean>(false);
+}: AddItemModalProps) => {
+  const submitFormRef = useRef<() => void | null>(null);
 
-  const submitFormRef = useRef<(() => void) | null>(null);
+  const [refreshItems, setRefreshItems] = useState(false);
+  const [loadingStore, setLoadingStore] = useState(false);
+
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleShowAlertMessage = (
-    msg: string,
-    success: boolean,
-    visible: boolean
+    message: string,
+    isSuccess: boolean,
+    isVisible: boolean
   ) => {
-    setMessage(msg);
-    setIsSuccess(success);
-    setIsVisible(visible);
+    setMessage(message);
+    setIsSuccess(isSuccess);
+    setIsVisible(isVisible);
   };
 
   const handleCloseAlertMessage = () => {
+    setMessage("");
+    setIsSuccess(false);
     setIsVisible(false);
   };
 
@@ -49,7 +49,7 @@ const EditUserModal = ({
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5">Add User</h1>
+              <h1 className="modal-title fs-5">Add Item</h1>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -60,14 +60,15 @@ const EditUserModal = ({
                   onClose={handleCloseAlertMessage}
                 />
               </div>
-              <EditUserForm
-                user={user}
-                setSubmitForm={submitFormRef}
-                setLoadingUpdate={setLoadingStore}
-                onUserUpdated={(message: string) => {
+              <ItemForm
+                setSubmitForm={(submitFn) => {
+                  submitFormRef.current = submitFn;
+                }}
+                setLoadingStore={setLoadingStore}
+                onItemAdded={(message) => {
                   handleShowAlertMessage(message, true, true);
-                  setRefreshUsers(!refreshUsers);
-                  onRefreshUsers(!refreshUsers);
+                  setRefreshItems(!refreshItems);
+                  onRefreshItems(refreshItems);
                 }}
               />
             </div>
@@ -88,10 +89,10 @@ const EditUserModal = ({
               >
                 {loadingStore ? (
                   <>
-                    <SpinnerSmall /> Saving User...
+                    <SpinnerSmall /> Saving Item...
                   </>
                 ) : (
-                  "Save User"
+                  "Save Item"
                 )}
               </button>
             </div>
@@ -102,4 +103,4 @@ const EditUserModal = ({
   );
 };
 
-export default EditUserModal;
+export default AddItemModal;
