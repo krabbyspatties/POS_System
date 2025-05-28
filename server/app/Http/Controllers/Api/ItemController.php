@@ -35,7 +35,7 @@ class ItemController extends Controller
             'item_description' => $validated['item_description'],
             'item_price' => $validated['item_price'],
             'item_quantity' => $validated['item_quantity'] ?? 0,
-            'item_image' => $validated['item_image'] ?? null,
+            'item_image' => $validated['item_image'] ?? 'storage/images/placeholder.jpg',
             'stock_level' => $validated['stock_level'],
             'category_id' => $validated['category_id'],
             'is_deleted' => 0,
