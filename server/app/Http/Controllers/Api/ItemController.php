@@ -31,27 +31,20 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('item_image')) {
-            $validated['item_image'] = $request->file('item_image')->store('item_image', 'public');
+            $validated['item_image'] = $request->file('item_image')->store('pictures', 'public');
         } else {
             $validated['item_image'] = '/pictures/default1.png';
         }
 
         Item::create([
-            'item_name' => $validated['item_name'],
-            'item_description' => $validated['item_description'],
-            'item_price' => $validated['item_price'],
-            'item_quantity' => $validated['item_quantity'] ?? 0,
             'item_image' => $validated['item_image'],
-            'stock_level' => $validated['stock_level'],
-            'category_id' => $validated['category_id'],
-            'is_deleted' => 0,
         ]);
 
         return response()->json([
             'message' => 'Item Successfully Added.'
         ], 200);
     }
-    public function updateItem(Request $request, Item $item)
+    public function updateItem(Request $request, $id)
     {
         $validated = $request->validate([
             'item_name' => ['required', 'max:55'],
@@ -63,12 +56,11 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('item_image')) {
-            $validatedData['item_image'] = $request->file('item_image')->store('item_image', 'public');
-        } else {
-            $validatedData['item_image'] = '/pictures/default1.png';
+            $validatedData['item_image'] = $request->file('item_image')->store('pictures', 'public');
         }
 
-        $item->update($validated);
+        $item = Item::findOrFail($id);
+        $item->update($validatedData);
 
         return response()->json([
             'message' => 'Item Successfully Updated'
