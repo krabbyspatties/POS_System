@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Item_Category;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class ItemCategoryController extends Controller
 {
@@ -28,8 +28,7 @@ class ItemCategoryController extends Controller
 
     public function storeCategory(Request $request)
     {
-        $validated = $request->
-            validate([
+        $validated = $request->validate([
                 'category_name' => ['required', 'min:4', 'max:55']
             ]);
 
@@ -41,7 +40,6 @@ class ItemCategoryController extends Controller
 
             'message' => 'Category Successfully Added'
         ], 200);
-
     }
 
     public function updateCategory(Request $request, Item_Category $category)
@@ -77,6 +75,4 @@ class ItemCategoryController extends Controller
 
         return response()->json(['message' => 'Category Successfully Deleted.'], 200);
     }
-
-
 }

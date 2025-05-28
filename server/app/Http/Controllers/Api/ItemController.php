@@ -25,17 +25,23 @@ class ItemController extends Controller
             'item_description' => ['required', 'max:255'],
             'item_price' => ['required', 'numeric', 'min:0'],
             'item_quantity' => ['nullable', 'integer', 'min:0'],
-            'item_image' => ['nullable', 'string', 'max:255'],
+            'item_image' => ['nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'],
             'stock_level' => ['required', Rule::in(['available', 'unavailable', 'low_inventory'])],
             'category_id' => ['required', 'exists:tbl_item_category,category_id'],
         ]);
+
+        if ($request->hasFile('item_image')) {
+            $validated['item_image'] = $request->file('item_image')->store('item_image', 'public');
+        } else {
+            $validated['item_image'] = '/pictures/default1.png';
+        }
 
         Item::create([
             'item_name' => $validated['item_name'],
             'item_description' => $validated['item_description'],
             'item_price' => $validated['item_price'],
             'item_quantity' => $validated['item_quantity'] ?? 0,
-            'item_image' => $validated['item_image'] ?? 'storage/images/placeholder.jpg',
+            'item_image' => $validated['item_image'],
             'stock_level' => $validated['stock_level'],
             'category_id' => $validated['category_id'],
             'is_deleted' => 0,
@@ -51,10 +57,16 @@ class ItemController extends Controller
             'item_name' => ['required', 'max:55'],
             'item_description' => ['required', 'max:255'],
             'item_price' => ['required', 'numeric', 'min:0'],
-            'item_image' => ['nullable', 'string', 'max:255'],
+            'item_image' => ['nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'],
             'stock_level' => ['required', Rule::in(['available', 'unavailable', 'low_inventory'])],
             'category_id' => ['required', 'exists:tbl_item_category,category_id'],
         ]);
+
+        if ($request->hasFile('item_image')) {
+            $validatedData['item_image'] = $request->file('item_image')->store('item_image', 'public');
+        } else {
+            $validatedData['item_image'] = '/pictures/default1.png';
+        }
 
         $item->update($validated);
 
