@@ -6,7 +6,7 @@ export interface Items {
   item_description: string;
   item_price: number;
   item_quantity: number;
-  item_image: string;
+  item_image: string | File;
   stock_level: string;
   category: ItemCategories;
 }

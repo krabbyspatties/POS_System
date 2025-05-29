@@ -79,15 +79,15 @@ const AddCategoryForm = ({ onCategoryAdded }: AddCategoriesFormProps) => {
             <input
               type="text"
               className={`form-control  ${
-                state.errors.category ? "is-invalid" : ""
+                state.errors.category_name ? "is-invalid" : ""
               }`}
               id="category"
               name="category"
               value={state.category}
               onChange={handleInputChange}
             />
-            {state.errors.category && (
-              <p className="text-danger">{state.errors.category[0]}</p>
+            {state.errors.category_name && (
+              <p className="text-danger">{state.errors.category_name[0]}</p>
             )}
           </div>
           <div className="d-flex justify-content-end">

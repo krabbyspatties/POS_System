@@ -8,10 +8,14 @@ const ItemService = {
         throw error;
       });
   },
-  storeItem: async (data: any) => {
-    
-  console.log('Payload:', data);  
-    return AxiosInstance.post("/storeItem", data)
+  storeItem: async (data: FormData) => {
+    console.log('Payload (FormData):', data);  
+  
+    return AxiosInstance.post("/storeItem", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
       .then((response) => response)
       .catch((error) => {
         throw error;

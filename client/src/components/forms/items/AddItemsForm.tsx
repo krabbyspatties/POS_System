@@ -29,7 +29,7 @@ const ItemForm = ({
     item_description: "",
     item_price: "",
     item_quantity: "",
-    item_image: "",
+    item_image: "" as string | File, // Fix applied
     stock_level: "",
     category_id: "",
     errors: {} as ItemFieldErrors,
@@ -44,7 +44,7 @@ const ItemForm = ({
       item_quantity: "",
       item_image: "",
       stock_level: "",
-      category: "",
+      category_id: "",
       errors: {} as ItemFieldErrors,
     }));
   };
@@ -55,10 +55,7 @@ const ItemForm = ({
     const { name, value } = e.target;
 
     setState((prevState) => {
-      let updatedState: any = {
-        ...prevState,
-        [name]: value,
-      };
+      let updatedState: any = { ...prevState, [name]: value };
 
       if (name === "item_quantity") {
         const quantity = parseInt(value);
@@ -75,28 +72,44 @@ const ItemForm = ({
     });
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setState((prevState) => ({
+      ...prevState,
+      item_image: file ?? "",
+    }));
+  };
+
   const handleStoreItem = (e: FormEvent) => {
     e.preventDefault();
-
     setLoadingStore(true);
 
-    ItemService.storeItem(state)
+    const formData = new FormData();
+    formData.append("item_name", state.item_name);
+    formData.append("item_description", state.item_description);
+    formData.append("item_price", state.item_price);
+    formData.append("item_quantity", state.item_quantity);
+    formData.append("stock_level", state.stock_level);
+    formData.append("category_id", state.category_id);
+
+    if (state.item_image instanceof File) {
+      formData.append("item_image", state.item_image);
+    }
+
+    ItemService.storeItem(formData)
       .then((res) => {
         if (res.status === 200) {
           handleResetNecessaryFields();
           onItemAdded(res.data.message);
         } else {
           console.error(
-            "Unexpected status error while storing user: ",
+            "Unexpected status error while storing item: ",
             res.status
           );
         }
       })
       .catch((error) => {
-        if (error.response) {
-          console.log("Validation errors:", error.response.data.errors);
-        }
-        if (error.response && error.response.status === 422) {
+        if (error.response?.status === 422) {
           setState((prevState) => ({
             ...prevState,
             errors: error.response.data.errors,
@@ -249,23 +262,27 @@ const ItemForm = ({
             )}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="item_image">Image URL</label>
-            <input
-              type="text"
-              className={`form-control ${
-                state.errors.item_image ? "is-invalid" : ""
-              }`}
-              name="item_image"
-              id="item_image"
-              value={state.item_image}
-              onChange={handleInputChange}
-              maxLength={255}
-            />
-            {state.errors.item_image && (
-              <span className="text-danger">{state.errors.item_image[0]}</span>
-            )}
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label htmlFor="item_image">Image File</label>
+              <input
+                type="file"
+                className={`form-control ${
+                  state.errors.item_image ? "is-invalid" : ""
+                }`}
+                name="item_image"
+                id="item_image"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              {state.errors.item_image && (
+                <span className="text-danger">
+                  {state.errors.item_image[0]}
+                </span>
+              )}
+            </div>
           </div>
+
           <div className="mb-3">
             <label>Status</label>
             <input
