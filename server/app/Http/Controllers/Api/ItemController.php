@@ -25,20 +25,18 @@ class ItemController extends Controller
             'item_description' => ['required', 'max:255'],
             'item_price' => ['required', 'numeric', 'min:0'],
             'item_quantity' => ['nullable', 'integer', 'min:0'],
-            'item_image' => ['nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'],
+            'item_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'stock_level' => ['required', Rule::in(['available', 'unavailable', 'low_inventory'])],
             'category_id' => ['required', 'exists:tbl_item_category,category_id'],
         ]);
 
         if ($request->hasFile('item_image')) {
-            $validated['item_image'] = $request->file('item_image')->store('pictures', 'public');
+            $validated['item_image'] = $request->file('item_image')->store('images', 'public');
         } else {
-            $validated['item_image'] = '/pictures/default1.png';
+            $validated['item_image'] = 'images/placeholder.jpg';
         }
 
-        Item::create([
-            'item_image' => $validated['item_image'],
-        ]);
+        Item::create($validated);
 
         return response()->json([
             'message' => 'Item Successfully Added.'
@@ -50,17 +48,17 @@ class ItemController extends Controller
             'item_name' => ['required', 'max:55'],
             'item_description' => ['required', 'max:255'],
             'item_price' => ['required', 'numeric', 'min:0'],
-            'item_image' => ['nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'],
+            'item_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'stock_level' => ['required', Rule::in(['available', 'unavailable', 'low_inventory'])],
             'category_id' => ['required', 'exists:tbl_item_category,category_id'],
         ]);
 
         if ($request->hasFile('item_image')) {
-            $validatedData['item_image'] = $request->file('item_image')->store('pictures', 'public');
+            $validated['item_image'] = $request->file('item_image')->store('pictures', 'public');
         }
 
         $item = Item::findOrFail($id);
-        $item->update($validatedData);
+        $item->update($validated);
 
         return response()->json([
             'message' => 'Item Successfully Updated'
