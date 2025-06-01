@@ -17,7 +17,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
     loadingGet: true,
     loadingUpdate: false,
     category_id: 0,
-    category_name: "", // ✅ correct field name
+    category_name: "",
     errors: {} as CategoryFieldErrors,
   });
 
@@ -41,7 +41,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
           SetState((prevState) => ({
             ...prevState,
             category_id: res.data.category.category_id,
-            category_name: res.data.category.category_name, // ✅ match backend
+            category_name: res.data.category.category_name,
           }));
         } else {
           console.error("Unexpected status error: ", res.status);
@@ -67,7 +67,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
     }));
 
     ItemCategoryServices.updateCategories(state.category_id, {
-      category_name: state.category_name, // ✅ send correct data
+      category_name: state.category_name,
     })
       .then((res) => {
         if (res.status === 200) {

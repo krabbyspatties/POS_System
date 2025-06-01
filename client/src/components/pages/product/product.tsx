@@ -97,11 +97,16 @@ const ProductsTable = ({
               <div className="card h-100 shadow-sm product-card">
                 <div
                   className="product-image-wrapper"
-                  onClick={() =>
-                    setSelectedItemId(
-                      selectedItemId === item.item_id ? null : item.item_id
-                    )
-                  }
+                  onClick={() => {
+                    const existingOrder = orderList.find(
+                      (order) => order.item_id === item.item_id
+                    );
+                    if (existingOrder) {
+                      onRemove(item); // Deselect
+                    } else {
+                      onAdd(item); // Select
+                    }
+                  }}
                   style={{ position: "relative", cursor: "pointer" }}
                 >
                   <img
@@ -111,35 +116,12 @@ const ProductsTable = ({
                     alt={item.item_name}
                     className="card-img-top product-image"
                   />
-
                   {selectedItemId === item.item_id && (
                     <div
                       ref={selectedItemRef}
-                      className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded d-flex justify-content-center align-items-center z-2"
+                      className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded d-flex justify-content-center align-items-center z-2 text-white"
                     >
-                      <button
-                        className="btn btn-light btn-sm mx-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onRemove(item);
-                        }}
-                      >
-                        -
-                      </button>
-                      <span className="text-white mx-2">
-                        {orderList.find(
-                          (order) => order.item_id === item.item_id
-                        )?.quantity || 0}
-                      </span>
-                      <button
-                        className="btn btn-light btn-sm mx-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onAdd(item);
-                        }}
-                      >
-                        +
-                      </button>
+                      Selected
                     </div>
                   )}
                 </div>

@@ -17,6 +17,7 @@ class Item extends Model
         'item_name',
         'item_description',
         'item_price',
+        'item_discount',
         'item_quantity',
         'item_image',
         'stock_level',

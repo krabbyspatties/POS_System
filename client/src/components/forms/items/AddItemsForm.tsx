@@ -28,6 +28,7 @@ const ItemForm = ({
     item_name: "",
     item_description: "",
     item_price: "",
+    item_discount: "",
     item_quantity: "",
     item_image: "" as string | File, // Fix applied
     stock_level: "",
@@ -41,6 +42,7 @@ const ItemForm = ({
       item_name: "",
       item_description: "",
       item_price: "",
+      item_discount: "",
       item_quantity: "",
       item_image: "",
       stock_level: "",
@@ -88,6 +90,7 @@ const ItemForm = ({
     formData.append("item_name", state.item_name);
     formData.append("item_description", state.item_description);
     formData.append("item_price", state.item_price);
+    formData.append("item_discount", state.item_discount);
     formData.append("item_quantity", state.item_quantity);
     formData.append("stock_level", state.stock_level);
     formData.append("category_id", state.category_id);
@@ -211,6 +214,26 @@ const ItemForm = ({
             />
             {state.errors.item_price && (
               <span className="text-danger">{state.errors.item_price[0]}</span>
+            )}
+          </div>
+          <div className="mb-3">
+            <label htmlFor="item_discount">Discount</label>
+            <input
+              type="number"
+              step="0.01"
+              className={`form-control ${
+                state.errors.item_discount ? "is-invalid" : ""
+              }`}
+              name="item_discount"
+              id="item_discount"
+              value={state.item_discount}
+              onChange={handleInputChange}
+              min="0"
+            />
+            {state.errors.item_discount && (
+              <span className="text-danger">
+                {state.errors.item_discount[0]}
+              </span>
             )}
           </div>
           <div className="mb-3">

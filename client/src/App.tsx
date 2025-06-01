@@ -8,6 +8,7 @@ import EditItemCategory from "./components/pages/itemCategory/EditItemCategory";
 import DeleteCategory from "./components/pages/itemCategory/DeleteItemCategory";
 import ItemsPage from "./components/pages/items/Items";
 import ProductPage from "./components/pages/product/productPage";
+import ReceiptPage from "./components/pages/receipt/ReceiptPage";
 
 // const submitFormRef = React.createRef<() => void>();
 
@@ -61,6 +62,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ProductPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/receipt",
+    element: (
+      <ProtectedRoute>
+        <ReceiptPage />
       </ProtectedRoute>
     ),
   },

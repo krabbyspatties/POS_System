@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\order;
 use DB;
 use Illuminate\Http\Request;
+use App\Models\Item;
 
 class OrderController extends Controller
 {
+
     public function createOrder(Request $request)
     {
         $validated = $request->validate([
@@ -24,13 +26,25 @@ class OrderController extends Controller
         try {
             $order = Order::create([
                 'customer_email' => $validated['customer_email'],
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
             ]);
 
+
             foreach ($validated['items'] as $item) {
+                $dbItem = Item::where('item_id', $item['item_id'])->lockForUpdate()->first();
+
+                if ($dbItem->item_quantity < $item['quantity']) {
+                    throw new \Exception("Insufficient stock for item: {$dbItem->item_name}");
+                }
+
                 $order->items()->attach($item['item_id'], [
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
                 ]);
+
+                $dbItem->item_quantity -= $item['quantity'];
+                $dbItem->save();
             }
 
             DB::commit();

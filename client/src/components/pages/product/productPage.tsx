@@ -5,6 +5,7 @@ import ProductsTable from "./product";
 import AlertMessage from "../../AlertMessage";
 import type { Items } from "../../../interfaces/Item/Items";
 import type { OrderItem } from "../../../interfaces/order_item/order_item";
+import { useNavigate } from "react-router-dom";
 
 const ProductPage = () => {
   const [refreshItems, setRefreshOrder] = useState(false);
@@ -14,6 +15,8 @@ const ProductPage = () => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleAddToOrder = (item: Items) => {
     setOrderList((prev) => {
@@ -101,8 +104,16 @@ const ProductPage = () => {
             <AddOrderForm
               orderList={orderList}
               itemList={itemList}
-              onOrderAdded={(msg) => {
+              onAdd={handleAddToOrder}
+              onRemove={handleRemoveFromOrder}
+              onOrderAdded={(msg, order) => {
                 handleShowAlertMessage(msg, true, true);
+                navigate("/receipt", {
+                  state: {
+                    order: orderList,
+                    order_email: order.customer_email,
+                  },
+                });
                 setRefreshOrder(!refreshItems);
                 setOrderList([]);
               }}
