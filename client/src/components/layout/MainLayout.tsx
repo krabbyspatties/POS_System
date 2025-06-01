@@ -6,12 +6,14 @@ interface MainLayoutProps {
 
 const MainLayout = ({ content }: MainLayoutProps) => {
   return (
-    <>
-      <div className="container-fluid">
+    <div>
+      <div style={{ marginBottom: "24px" }}>
         <Navbar />
-        <div>{content}</div>
       </div>
-    </>
+      <main>
+        {content}
+      </main>
+    </div>
   );
 };
 
