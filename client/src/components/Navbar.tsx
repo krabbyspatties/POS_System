@@ -12,29 +12,15 @@ const Navbar = () => {
   const [loadingLogout, setLoadingLogout] = useState(false);
 
   const menuItems = [
-    {
-      route: "/users",
-      title: "Users",
-    },
-    {
-      route: "/itemCategories",
-      title: "ItemCategories",
-    },
-    {
-      route: "/items",
-      title: "items",
-    },
-    {
-      route: "/products",
-      title: "products",
-    },
+    { route: "/users", title: "Users" },
+    { route: "/itemCategories", title: "ItemCategories" },
+    { route: "/items", title: "items" },
+    { route: "/products", title: "products" },
   ];
 
   const handleLogout = (e: FormEvent) => {
     e.preventDefault();
-
     setLoadingLogout(true);
-
     logout()
       .then(() => {
         navigate("/");
@@ -50,65 +36,75 @@ const Navbar = () => {
   const handleUserFullName = () => {
     const user = localStorage.getItem("user");
     const parsedUser = user ? JSON.parse(user) : null;
-
     let fullName = "";
-
-    if (parsedUser.middle_name) {
+    if (parsedUser?.middle_name) {
       fullName = `${parsedUser.last_name}, ${parsedUser.first_name} ${parsedUser.middle_name[0]}.`;
-    } else {
+    } else if (parsedUser) {
       fullName = `${parsedUser.last_name}, ${parsedUser.first_name}`;
     }
-
     return fullName;
   };
 
   return (
-    <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            POS_SYSTEM
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-              {menuItems.map((menuItem, index) => (
-                <li className="nav-item" key={index}>
-                  <Link className="nav-link" to={menuItem.route}>
-                    {menuItem.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            {handleUserFullName()}
-          </div>
-          <button
-            type="submit"
-            className="btn btn-danger"
-            onClick={handleLogout}
-            disabled={loadingLogout}
-          >
-            {loadingLogout ? (
-              <>
-                <SpinnerSmall /> Logging Out...
-              </>
-            ) : (
-              "Logout"
-            )}
-          </button>
-        </div>
-      </nav>
-    </>
+    <nav
+      className="d-flex align-items-center justify-content-between"
+      style={{
+      width: "100%",
+      height: "64px",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      borderBottom: "1px solid #222",
+      zIndex: 1000,
+      backgroundColor: "#007bff",
+      color: "#fff",
+      padding: "0 32px",
+      }}
+    >
+      
+      <ul className="nav mb-0 d-flex align-items-center">
+      <span className="navbar-brand mb-0" style={{ color: "#fff", fontWeight: "bold", marginRight: "24px" }}>
+        POS_SYSTEM
+      </span>
+      {menuItems.map((menuItem, index) => (
+        <li className="nav-item" key={index}>
+        <Link
+          className="nav-link"
+          to={menuItem.route}
+          style={{
+          color: "#fff",
+          backgroundColor: "rgba(0,0,0,0.1)",
+          borderRadius: "4px",
+          marginLeft: "8px",
+          padding: "8px 16px",
+          fontWeight: 500,
+          }}
+        >
+          {menuItem.title}
+        </Link>
+        </li>
+      ))}
+      </ul>
+  
+      <div className="d-flex align-items-center">
+      <strong>{handleUserFullName()}</strong>
+      <button
+        type="button"
+        className="btn btn-light btn-sm ms-3"
+        onClick={handleLogout}
+        disabled={loadingLogout}
+        style={{ color: "#007bff", borderColor: "#fff" }}
+      >
+        {loadingLogout ? (
+        <>
+          <SpinnerSmall /> Logging Out...
+        </>
+        ) : (
+        "Logout"
+        )}
+      </button>
+      </div>
+    </nav>
   );
 };
 
