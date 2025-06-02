@@ -8,7 +8,6 @@ import DeleteItemModal from "../../modals/item/DeleteItemModal";
 import ItemAlert from "../../forms/alert/ItemAlert";
 import ItemService from "../../../services/ItemService";
 import ErrorHandler from "../../handler/ErrorHandler";
-import Spinner from "../../Spinner";
 
 const ItemsPage = () => {
   const [refreshItems, setRefreshItems] = useState(false);
@@ -94,7 +93,7 @@ const ItemsPage = () => {
         onClose={handleCloseDeleteItemModal}
       />
 
-      <div className="d-flex justify-content-end mt-2">
+      <div className="d-flex justify-content-end mt-4">
         <button
           type="button"
           className="btn btn-primary"

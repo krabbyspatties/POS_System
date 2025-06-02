@@ -6,8 +6,13 @@ import SpinnerSmall from "../../SpinnerSmall";
 import type { Items } from "../../../interfaces/Item/Items";
 import type { OrderItem } from "../../../interfaces/order_item/order_item";
 
+interface OrderInfo {
+  customer_email: string;
+  first_name: string;
+  last_name: string;
+}
 interface AddOrdersFormProps {
-  onOrderAdded: (message: string, order: { customer_email: string }) => void;
+  onOrderAdded: (message: string, order: OrderInfo) => void;
   orderList: OrderItem[];
   onAdd: (item: Items) => void;
   itemList: Items[];
@@ -56,76 +61,64 @@ const AddOrderForm = ({
       return;
     }
 
-    const outOfStockItems = orderList.filter((order) => {
-      const item = order.item;
-      return order.quantity > item.item_quantity;
-    });
-
+    // Check stock again just before submitting
+    const outOfStockItems = orderList.filter(
+      (order) => order.quantity > order.item.item_quantity
+    );
     if (outOfStockItems.length > 0) {
-      const message = outOfStockItems
-        .map(
-          (order) =>
-            `${order.item.item_name} (ordered: ${order.quantity}, in stock: ${order.item.item_quantity})`
-        )
-        .join("\n");
-
-      alert("Insufficient stock for the following items:\n" + message);
+      alert(
+        "Insufficient stock for the following items:\n" +
+          outOfStockItems
+            .map(
+              (order) =>
+                `${order.item.item_name} (ordered: ${order.quantity}, in stock: ${order.item.item_quantity})`
+            )
+            .join("\n")
+      );
       return;
     }
 
     const formData = {
       customer_email: state.customer_email,
-      items: orderList.map((order) => {
-        const discountedPrice = getDiscountedPrice(
-          order.price,
-          order.item.item_discount ?? 0
-        );
-        return {
-          item_id: order.item_id,
-          quantity: order.quantity,
-          price: discountedPrice,
-        };
-      }),
+      first_name: state.first_name,
+      last_name: state.last_name,
+      items: orderList.map((order) => ({
+        item_id: order.item_id,
+        quantity: order.quantity,
+        price: getDiscountedPrice(order.price, order.item.item_discount ?? 0),
+        item_discount: order.item.item_discount ?? 0,
+      })),
     };
 
-    setState((prevState) => ({
-      ...prevState,
-      loadingStore: true,
-    }));
+    setState((prev) => ({ ...prev, loadingStore: true }));
 
     OrderServices.createOrders(formData)
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
-          setState((prevState) => ({
-            ...prevState,
+          setState({
+            loadingStore: false,
             customer_email: "",
+            first_name: "",
+            last_name: "",
             errors: {} as OrderFieldErrors,
-          }));
-
+          });
           onOrderAdded(res.data.message, {
             customer_email: state.customer_email,
+            first_name: state.first_name,
+            last_name: state.last_name,
           });
         } else {
-          console.error(
-            "Unexpected Status error during storing order: ",
-            res.status
-          );
+          console.error("Unexpected status code: ", res.status);
         }
       })
       .catch((error) => {
         if (error.response?.status === 422) {
-          setState((prevState) => ({
-            ...prevState,
-            errors: error.response.data.errors,
-          }));
+          setState((prev) => ({ ...prev, errors: error.response.data.errors }));
         }
         ErrorHandler(error, null);
       })
       .finally(() => {
-        setState((prevState) => ({
-          ...prevState,
-          loadingStore: false,
-        }));
+        setState((prev) => ({ ...prev, loadingStore: false }));
       });
   };
 
@@ -151,7 +144,7 @@ const AddOrderForm = ({
         <div className="">
           <label htmlFor="first_name">First_name</label>
           <input
-            type="email"
+            type="text"
             className={`form-control ${
               state.errors.first_name ? "is-invalid" : ""
             }`}
@@ -168,7 +161,7 @@ const AddOrderForm = ({
         <div className="mb-3">
           <label htmlFor="last_name">Last Name</label>
           <input
-            type="email"
+            type="text"
             className={`form-control ${
               state.errors.last_name ? "is-invalid" : ""
             }`}

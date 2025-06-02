@@ -15,6 +15,8 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'customer_email' => 'required|email|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|integer|exists:tbl_items,item_id',
             'items.*.quantity' => 'required|integer|min:1',

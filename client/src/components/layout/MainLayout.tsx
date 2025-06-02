@@ -7,12 +7,8 @@ interface MainLayoutProps {
 const MainLayout = ({ content }: MainLayoutProps) => {
   return (
     <div>
-      <div style={{ marginBottom: "24px" }}>
-        <Navbar />
-      </div>
-      <main>
-        {content}
-      </main>
+      <Navbar />
+      <main style={{ paddingTop: "80px" }}>{content}</main>
     </div>
   );
 };

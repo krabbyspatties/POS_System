@@ -4,7 +4,7 @@ import UserService from "../../../services/UserService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
 import type { Users } from "../../../interfaces/User/Users";
-import AddUserModal from "/Finals/POS_System/client/src/components/modals/user/AddUserModal";
+import AddUserModal from "../../modals/user/AddUserModal";
 
 interface User {
   user_id: number;
@@ -35,7 +35,7 @@ const UsersTable = ({
     users: [] as User[],
   });
 
-  const [filter, setFilter] = useState<{ name: string; role: string; }>({
+  const [filter, setFilter] = useState<{ name: string; role: string }>({
     name: "",
     role: "",
   });
@@ -97,12 +97,12 @@ const UsersTable = ({
           placeholder="Search by name"
           className="form-control mb-2"
           value={filter.name}
-          onChange={e => setFilter((f) => ({ ...f, name: e.target.value }))}
+          onChange={(e) => setFilter((f) => ({ ...f, name: e.target.value }))}
         />
         <select
           className="form-select mb-2"
           value={filter.role}
-          onChange={e => setFilter((f) => ({ ...f, role: e.target.value }))}
+          onChange={(e) => setFilter((f) => ({ ...f, role: e.target.value }))}
         >
           <option value="">All Roles</option>
           <option value="administrator">Administrator</option>
@@ -119,7 +119,13 @@ const UsersTable = ({
       </div>
 
       <div style={{ flex: 1, padding: 32 }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 16,
+          }}
+        >
           <button
             className="btn btn-primary btn-sm"
             style={{ marginRight: 8 }}
@@ -128,7 +134,13 @@ const UsersTable = ({
             Add User
           </button>
         </div>
-        <div style={{ background: "#fff", borderRadius: 8, boxShadow: "0 2px 8px #e0e0e0" }}>
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #e0e0e0",
+          }}
+        >
           <table className="table table-hover mb-0" style={{ width: "100%" }}>
             <thead className="table-light">
               <tr>
@@ -151,91 +163,95 @@ const UsersTable = ({
                     <Spinner />
                   </td>
                 </tr>
-              ) : (
-                state.users
-                  .filter(user =>
-                    (filter.name === "" || `${user.first_name} ${user.last_name}`.toLowerCase().includes(filter.name.toLowerCase())) &&
+              ) : state.users.filter(
+                  (user) =>
+                    (filter.name === "" ||
+                      `${user.first_name} ${user.last_name}`
+                        .toLowerCase()
+                        .includes(filter.name.toLowerCase())) &&
                     (filter.role === "" || user.role === filter.role)
+                ).length > 0 ? (
+                state.users
+                  .filter(
+                    (user) =>
+                      (filter.name === "" ||
+                        `${user.first_name} ${user.last_name}`
+                          .toLowerCase()
+                          .includes(filter.name.toLowerCase())) &&
+                      (filter.role === "" || user.role === filter.role)
                   )
-                  .length > 0 ? (
-                    state.users
-                      .filter(user =>
-                        (filter.name === "" || `${user.first_name} ${user.last_name}`.toLowerCase().includes(filter.name.toLowerCase())) &&
-                        (filter.role === "" || user.role === filter.role)
-                      )
-                      .map((user, index) => (
-                        <tr className="align-middle" key={user.user_id}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {user.user_image ? (
-                              <Link to={`/users/${user.user_id}`}>
-                                <img
-                                  src={user.user_image}
-                                  alt={user.first_name}
-                                  style={{
-                                    width: 40,
-                                    height: 40,
-                                    borderRadius: "50%",
-                                    cursor: "pointer",
-                                  }}
-                                />
-                              </Link>
-                            ) : (
-                              <div
-                                style={{
-                                  width: 40,
-                                  height: 40,
-                                  borderRadius: "50%",
-                                  backgroundColor: "#ccc",
-                                  display: "inline-block",
-                                }}
-                              />
-                            )}
-                          </td>
-                          <td>{`${user.last_name}, ${user.first_name}`}</td>
-                          <td>{user.user_name}</td>
-                          <td>{user.user_email}</td>
-                          <td>{user.user_phone}</td>
-                          <td>{user.user_address}</td>
-                          <td>{user.role}</td>
-                          <td>
-                            <span
-                              className={`badge ${
-                                user.user_status === "Active"
-                                  ? "bg-success"
-                                  : "bg-secondary"
-                              }`}
-                            >
-                              {user.user_status}
-                            </span>
-                          </td>
-                          <td>
-                            <div className="btn-group">
-                              <button
-                                type="button"
-                                className="btn btn-primary btn-sm"
-                                onClick={() => onEditUser(user)}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                type="button"
-                                className="btn btn-danger btn-sm"
-                                onClick={() => onDeleteUser(user)}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                  ) : (
-                    <tr className="align-middle">
-                      <td colSpan={10} className="text-center">
-                        No Users Found
+                  .map((user, index) => (
+                    <tr className="align-middle" key={user.user_id}>
+                      <td>{index + 1}</td>
+                      <td>
+                        {user.user_image ? (
+                          <Link to={`/users/${user.user_id}`}>
+                            <img
+                              src={user.user_image}
+                              alt={user.first_name}
+                              style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "50%",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </Link>
+                        ) : (
+                          <div
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "50%",
+                              backgroundColor: "#ccc",
+                              display: "inline-block",
+                            }}
+                          />
+                        )}
+                      </td>
+                      <td>{`${user.last_name}, ${user.first_name}`}</td>
+                      <td>{user.user_name}</td>
+                      <td>{user.user_email}</td>
+                      <td>{user.user_phone}</td>
+                      <td>{user.user_address}</td>
+                      <td>{user.role}</td>
+                      <td>
+                        <span
+                          className={`badge ${
+                            user.user_status === "Active"
+                              ? "bg-success"
+                              : "bg-secondary"
+                          }`}
+                        >
+                          {user.user_status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="btn-group">
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={() => onEditUser(user)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() => onDeleteUser(user)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  )
+                  ))
+              ) : (
+                <tr className="align-middle">
+                  <td colSpan={10} className="text-center">
+                    No Users Found
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

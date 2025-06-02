@@ -44,6 +44,8 @@ const ProductPage = () => {
         ...prev,
         {
           customer_email: "",
+          first_name: "",
+          last_name: "",
           item_id: item.item_id,
           quantity: 1,
           price: item.item_price,
@@ -110,8 +112,10 @@ const ProductPage = () => {
                 handleShowAlertMessage(msg, true, true);
                 navigate("/receipt", {
                   state: {
-                    order: orderList,
+                    order_item: orderList,
                     order_email: order.customer_email,
+                    first_name: order.first_name,
+                    last_name: order.last_name,
                   },
                 });
                 setRefreshOrder(!refreshItems);
