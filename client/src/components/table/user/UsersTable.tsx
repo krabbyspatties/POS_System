@@ -89,6 +89,8 @@ const UsersTable = ({
           backgroundColor: "#007bff",
           color: "#fff",
           padding: 16,
+          top: 100,
+          
         }}
       >
         <h5>Advanced Filter</h5>

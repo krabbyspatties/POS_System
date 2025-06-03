@@ -50,7 +50,7 @@ const Navbar = () => {
       className="d-flex align-items-center justify-content-between mb-3"
       style={{
         width: "100%",
-        height: "64px",
+        height: "80px",
         position: "fixed",
         top: 0,
         left: 0,
@@ -78,7 +78,7 @@ const Navbar = () => {
                 backgroundColor: "rgba(0,0,0,0.1)",
                 borderRadius: "4px",
                 marginLeft: "8px",
-                padding: "8px 16px",
+                padding: "8px 20px",
                 fontWeight: 500,
               }}
             >

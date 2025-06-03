@@ -56,15 +56,6 @@ const UsersPage = () => {
         onRefreshUsers={() => setRefreshUsers(!refreshUsers)}
         onClose={handleCloseDeleteUserModal}
       />
-      <div className="d-flex justify-content-end mt-2">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setOpenAddUserModal(true)}
-        >
-          Add User
-        </button>
-      </div>
       <UsersTable
         refreshUsers={refreshUsers}
         onEditUser={handleOpenEditUserModal}
