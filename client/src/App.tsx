@@ -9,6 +9,8 @@ import DeleteCategory from "./components/pages/itemCategory/DeleteItemCategory";
 import ItemsPage from "./components/pages/items/Items";
 import ProductPage from "./components/pages/product/productPage";
 import ReceiptPage from "./components/pages/receipt/ReceiptPage";
+import ChartPage from "./components/pages/chart/Chart";
+import ReportPage from "./components/pages/report/report";
 
 // const submitFormRef = React.createRef<() => void>();
 
@@ -70,6 +72,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ReceiptPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/charts",
+    element: (
+      <ProtectedRoute>
+        <ChartPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/reports",
+    element: (
+      <ProtectedRoute>
+        <ReportPage />
       </ProtectedRoute>
     ),
   },

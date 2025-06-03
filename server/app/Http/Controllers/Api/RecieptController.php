@@ -15,13 +15,15 @@ class RecieptController extends Controller
         ]);
 
         $file = $request->file('receipt_pdf');
+
         $filename = 'receipt_' . time() . '.' . $file->getClientOriginalExtension();
 
-        $path = $file->storeAs('public/receipts', $filename);
+        $path = $file->storeAs('receipts', $filename, 'public');
 
         return response()->json([
             'message' => 'Receipt saved successfully',
             'path' => Storage::url($path),
         ]);
     }
+
 }

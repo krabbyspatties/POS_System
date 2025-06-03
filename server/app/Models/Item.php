@@ -11,8 +11,10 @@ use Illuminate\Notifications\Notifiable;
 class Item extends Model
 {
     use HasFactory, Notifiable;
+
     protected $table = 'tbl_items';
     protected $primaryKey = 'item_id';
+
     protected $fillable = [
         'item_name',
         'item_description',
@@ -24,6 +26,27 @@ class Item extends Model
         'category_id',
         'is_deleted',
     ];
+
+    // Accessors to match expected field names
+    public function getIdAttribute()
+    {
+        return $this->item_id;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->item_name;
+    }
+
+    public function getStockAttribute()
+    {
+        return $this->item_quantity;
+    }
+
+    public function getCostPriceAttribute()
+    {
+        return $this->item_price; // adjust if you have a separate cost_price field
+    }
 
     public function category(): BelongsTo
     {
