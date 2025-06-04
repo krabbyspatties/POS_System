@@ -93,25 +93,37 @@ const ItemsPage = () => {
         onClose={handleCloseDeleteItemModal}
       />
 
-      <div className="d-flex justify-content-end mt-4">
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setOpenAddItemModal(true)}
-        >
-          Add Item
-        </button>
-      </div>
-      <div className="d-flex mt-3" style={{ gap: "20px" }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}>
+        <div>
+          <div
+        className="alert"
+        style={{
+          backgroundColor: "#e3f2fd",
+          border: "1px solid #90caf9",
+          color: "#1565c0",
+          borderRadius: "4px",
+          padding: "16px",
+          fontFamily: "monospace",
+          fontSize: "15px",
+          marginBottom: "0",
+          marginTop: "1rem",
+          minWidth: "260px",
+          maxWidth: "320px",
+        }}
+        role="alert"
+          >
+        <strong>Logs:</strong>
+        <div style={{ marginTop: "8px" }}>
           <ItemAlert lowStockItems={lowStockItems} loading={loadingItems} />
         </div>
-        <div style={{ flex: 2, minWidth: 0 }}>
+          </div>
+        </div>
+        <div style={{ flex: 1 }}>
           <ItemsTable
-            loadingItems={loadingItems}
-            items={items}
-            onEditItem={handleOpenEditItemModal}
-            onDeleteItem={handleOpenDeleteItemModal}
+        loadingItems={loadingItems}
+        items={items}
+        onEditItem={handleOpenEditItemModal}
+        onDeleteItem={handleOpenDeleteItemModal}
           />
         </div>
       </div>

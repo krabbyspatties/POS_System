@@ -73,79 +73,121 @@ const ProductsTable = ({
   }, []);
 
   return (
-    <div className="container py-3">
-      <form className="d-flex mt-4" role="search">
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <div
+        style={{
+          width: 260,
+          backgroundColor: "#007bff",
+          color: "#fff",
+          padding: 16,
+          position: "relative",
+          zIndex: 1,
+          minHeight: "100vh",
+        }}
+      >
+        <h5>Advanced Filter</h5>
         <input
-          className="form-control me-2"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
+          type="text"
+          placeholder="Search by name"
+          className="form-control mb-2"
+          disabled
         />
-        <button className="btn btn-outline-success" type="submit">
-          Search
+        <select className="form-select mb-2" disabled>
+          <option value="">Categories</option>
+        </select>
+        <button
+          className="btn btn-primary"
+          style={{ border: "2px solid black" }}
+          disabled
+        >
+          Reset Filters
         </button>
-      </form>
+      </div>
 
-      {state.loadingItems ? (
-        <div className="py-3 text-center">
-          <Spinner />
-        </div>
-      ) : state.items.length > 0 ? (
-        <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 py-3">
-          {state.items.map((item) => (
-            <div className="col" key={item.item_id}>
-              <div className="card h-100 shadow-sm product-card">
-                <div
-                  className="product-image-wrapper"
-                  onClick={() => {
-                    const existingOrder = orderList.find(
-                      (order) => order.item_id === item.item_id
-                    );
-                    if (existingOrder) {
-                      onRemove(item); // Deselect
-                    } else {
-                      onAdd(item); // Select
-                    }
-                  }}
-                  style={{ position: "relative", cursor: "pointer" }}
-                >
-                  <img
-                    src={`http://localhost:8000/storage/${
-                      item.item_image || "Images/placeholder.png"
-                    }`}
-                    alt={item.item_name}
-                    className="card-img-top product-image"
-                  />
-                  {selectedItemId === item.item_id && (
-                    <div
-                      ref={selectedItemRef}
-                      className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded d-flex justify-content-center align-items-center z-2 text-white"
-                    >
-                      Selected
-                    </div>
-                  )}
-                </div>
-                <div className="card-body d-flex flex-column">
-                  <h6
-                    className="card-title product-title"
-                    title={item.item_name}
-                  >
-                    {item.item_name}
-                  </h6>
-                  <p className="card-text product-description flex-grow-1">
-                    {item.item_description}
-                  </p>
-                  <p className="card-text product-price">
-                    <strong>₱{item.item_price.toLocaleString()}</strong>
-                  </p>
-                </div>
-              </div>
+      <div style={{ flex: 1, padding: 32, marginRight: 400, transition: "margin-right 0.3s" }}>
+        <form className="d-flex mt-4" role="search">
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button className="btn btn-outline-success" type="submit">
+            Search
+          </button>
+        </form>
+
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #e0e0e0",
+            marginTop: 20,
+            padding: 24,
+          }}
+        >
+          {state.loadingItems ? (
+            <div className="py-3 text-center">
+              <Spinner />
             </div>
-          ))}
+          ) : state.items.length > 0 ? (
+            <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 py-3">
+              {state.items.map((item) => (
+                <div className="col" key={item.item_id}>
+                  <div className="card h-100 shadow-sm product-card">
+                    <div
+                      className="product-image-wrapper"
+                      onClick={() => {
+                        const existingOrder = orderList.find(
+                          (order) => order.item_id === item.item_id
+                        );
+                        if (existingOrder) {
+                          onRemove(item);
+                        } else {
+                          onAdd(item);
+                        }
+                      }}
+                      style={{ position: "relative", cursor: "pointer" }}
+                    >
+                      <img
+                        src={`http://localhost:8000/storage/${
+                          item.item_image || "Images/placeholder.png"
+                        }`}
+                        alt={item.item_name}
+                        className="card-img-top product-image"
+                      />
+                      {selectedItemId === item.item_id && (
+                        <div
+                          ref={selectedItemRef}
+                          className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded d-flex justify-content-center align-items-center z-2 text-white"
+                        >
+                          Selected
+                        </div>
+                      )}
+                    </div>
+                    <div className="card-body d-flex flex-column">
+                      <h6
+                        className="card-title product-title"
+                        title={item.item_name}
+                      >
+                        {item.item_name}
+                      </h6>
+                      <p className="card-text product-description flex-grow-1">
+                        {item.item_description}
+                      </p>
+                      <p className="card-text product-price">
+                        <strong>₱{item.item_price.toLocaleString()}</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-3 text-center">No Items Found</div>
+          )}
         </div>
-      ) : (
-        <div className="py-3 text-center">No Items Found</div>
-      )}
+      </div>
     </div>
   );
 };

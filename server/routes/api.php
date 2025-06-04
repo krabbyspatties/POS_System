@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\ChartController;
 use App\Http\Controllers\Api\ItemCategoryController;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\RecieptController;
+use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
@@ -41,5 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::controller(OrderController::class)->group(function () {
         Route::post('/createOrder', 'createOrder');
+    });
+    Route::controller(ChartController::class)->group(function () {
+        Route::get('/BestItem', [ChartController::class, 'bestSellingItems']);
+        Route::get('/TopCustomers', [ChartController::class, 'topSpendingCustomers']);
+    });
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('/salesReport', 'salesReport');
+        Route::get('/inventoryReport', 'inventoryReport');
     });
 });

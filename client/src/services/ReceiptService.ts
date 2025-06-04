@@ -1,11 +1,13 @@
 import AxiosInstance from "../AxiosInstance";
 
+console.log('ReceiptService initialized');
+
 const ReceiptService = {
-    saveReceipt: async  () => {
+    saveReceipt: async () => {
         return AxiosInstance.get('/saveReceipt')
-        .then((response) => response)
-        .catch((error) => {throw error;})
+            .then((response) => response)
+            .catch((error) => { throw error; });
     },
-}
+};
 
 export default ReceiptService;

@@ -86,45 +86,36 @@ const ProductPage = () => {
   const content = (
     <>
       <AlertMessage
-        message={message}
-        isSuccess={isSuccess}
-        isVisible={isVisible}
-        onClose={handleCloseAlertMessage}
+      message={message}
+      isSuccess={isSuccess}
+      isVisible={isVisible}
+      onClose={handleCloseAlertMessage}
       />
-      <div className="container py-3">
-        <div className="row">
-          <div className="col-lg-8 mb-4">
-            <ProductsTable
-              refreshItems={refreshItems}
-              orderList={orderList}
-              onAdd={handleAddToOrder}
-              onRemove={handleRemoveFromOrder}
-            />
-          </div>
-
-          <div className="col-lg-4">
-            <AddOrderForm
-              orderList={orderList}
-              itemList={itemList}
-              onAdd={handleAddToOrder}
-              onRemove={handleRemoveFromOrder}
-              onOrderAdded={(msg, order) => {
-                handleShowAlertMessage(msg, true, true);
-                navigate("/receipt", {
-                  state: {
-                    order_item: orderList,
-                    order_email: order.customer_email,
-                    first_name: order.first_name,
-                    last_name: order.last_name,
-                  },
-                });
-                setRefreshOrder(!refreshItems);
-                setOrderList([]);
-              }}
-            />
-          </div>
-        </div>
-      </div>
+      <AddOrderForm
+      orderList={orderList}
+      itemList={itemList}
+      onAdd={handleAddToOrder}
+      onRemove={handleRemoveFromOrder}
+      onOrderAdded={(msg, order) => {
+        handleShowAlertMessage(msg, true, true);
+        navigate("/receipt", {
+        state: {
+          order_item: orderList,
+          order_email: order.customer_email,
+          first_name: order.first_name,
+          last_name: order.last_name,
+        },
+        });
+        setRefreshOrder(!refreshItems);
+        setOrderList([]);
+      }}
+      />
+      <ProductsTable
+      refreshItems={refreshItems}
+      orderList={orderList}
+      onAdd={handleAddToOrder}
+      onRemove={handleRemoveFromOrder}
+      />
     </>
   );
 

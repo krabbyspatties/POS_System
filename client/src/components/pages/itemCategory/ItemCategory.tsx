@@ -28,14 +28,9 @@ const CategoriesPage = () => {
   };
   const content = (
     <>
-      <AlertMessage
-        message={message}
-        isSuccess={isSuccess}
-        isVisible={isVisible}
-        onClose={handleCloseAlertMessage}
-      />
-      <div className="row">
-        <div className="col-md-4">
+
+      <div style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}>
+        <div>
           <AddCategoryForm
             onCategoryAdded={(message) => {
               handleShowAlertMessage(message, true, true);
@@ -43,7 +38,13 @@ const CategoriesPage = () => {
             }}
           />
         </div>
-        <div className="col-md-8">
+        <div style={{ flex: 1 }}>
+        <AlertMessage
+        message={message}
+        isSuccess={isSuccess}
+        isVisible={isVisible}
+        onClose={handleCloseAlertMessage}
+      />
           <CategoryTable refreshCategory={refreshCategory} />
         </div>
       </div>

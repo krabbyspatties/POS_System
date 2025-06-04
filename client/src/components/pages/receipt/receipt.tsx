@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import type { OrderItem } from "../../../interfaces/order_item/order_item";
@@ -15,6 +15,7 @@ const Receipt = ({
   last_name: string;
 }) => {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const [hasUploaded, setHasUploaded] = useState(false);
 
   const total = (order_item ?? []).reduce(
     (sum, item) => sum + item.quantity * item.price,
@@ -22,49 +23,53 @@ const Receipt = ({
   );
   const fullname = `${first_name} ${last_name}`;
 
-  const handlePrintPDF = async () => {
-    if (!receiptRef.current) return;
+  useEffect(() => {
+    if (hasUploaded) return; // prevent multiple uploads
 
-    const canvas = await html2canvas(receiptRef.current, {
-      scale: 2,
-    });
+    const generateAndUploadPDF = async () => {
+      if (!receiptRef.current) return;
 
-    const imgData = canvas.toDataURL("image/png");
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: "a4",
-    });
+      const canvas = await html2canvas(receiptRef.current, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-
-    // Instead of saving directly to client, get the PDF output as Blob
-    const pdfBlob = pdf.output("blob");
-
-    // Prepare form data to send PDF file to backend
-    const formData = new FormData();
-    formData.append("receipt_pdf", pdfBlob, "receipt.pdf");
-
-    try {
-      const response = await fetch("http://localhost:8000/api/saveReceipt", {
-        method: "POST",
-        body: formData,
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
       });
 
-      if (response.ok) {
-        alert("Receipt PDF successfully saved on server!");
-      } else {
-        alert("Failed to save receipt PDF on server.");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      const pdfBlob = pdf.output("blob");
+
+      const formData = new FormData();
+      formData.append("receipt_pdf", pdfBlob, "receipt.pdf");
+
+      try {
+        const response = await fetch("http://localhost:8000/api/saveReceipt", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          alert("Receipt PDF successfully saved on server!");
+          setHasUploaded(true); // mark as done here
+        } else {
+          alert("Failed to save receipt PDF on server.");
+        }
+      } catch (error) {
+        console.error("Error uploading PDF:", error);
+        alert("An error occurred while saving PDF.");
       }
-    } catch (error) {
-      console.error("Error uploading PDF:", error);
-      alert("An error occurred while saving PDF.");
-    }
-  };
+    };
+
+    generateAndUploadPDF();
+  }, [order_item, order_email, first_name, last_name, hasUploaded]);
 
   return (
     <div>
@@ -96,10 +101,6 @@ const Receipt = ({
           </li>
         </ul>
       </div>
-
-      <button className="btn btn-primary mt-3" onClick={handlePrintPDF}>
-        Export as PDF
-      </button>
     </div>
   );
 };
