@@ -22,7 +22,18 @@ const EditUserForm = ({
   setLoadingUpdate,
   onUserUpdated,
 }: EditUserFormProps) => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<{
+    user_id: number;
+    first_name: string;
+    last_name: string;
+    user_name: string;
+    user_email: string;
+    user_phone: string;
+    user_address: string;
+    user_image: string | File;
+    role: string;
+    errors: UserFieldErrors;
+  }>({
     user_id: 0,
     first_name: "",
     last_name: "",
@@ -251,7 +262,7 @@ const EditUserForm = ({
                 }`}
                 name="user_image"
                 id="user_image"
-                value={state.user_image}
+                value={typeof state.user_image === "string" ? state.user_image : ""}
                 onChange={handleInputChange}
                 maxLength={255}
               />
