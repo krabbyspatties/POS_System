@@ -22,7 +22,6 @@ const ItemService = {
   },
 
   updateItem: async (ItemId: number, data: any) => {
-    // Prepare FormData payload
     const formData = new FormData();
 
     formData.append("item_name", data.item_name);
@@ -36,7 +35,6 @@ const ItemService = {
     formData.append("stock_level", data.stock_level);
     formData.append("category_id", String(data.category_id));
 
-    // Only append item_image if it's a File (new upload)
     if (data.item_image instanceof File) {
       formData.append("item_image", data.item_image);
     }

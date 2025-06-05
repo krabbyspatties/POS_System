@@ -11,14 +11,42 @@ const Navbar = () => {
 
   const [loadingLogout, setLoadingLogout] = useState(false);
 
+  const getUserRole = (): string | null => {
+    const user = localStorage.getItem("user");
+    const parsedUser = user ? JSON.parse(user) : null;
+    return parsedUser?.role || null;
+  };
+
+  const userRole = getUserRole() || "";
+
   const menuItems = [
-    { route: "/users", title: "Users" },
-    { route: "/itemCategories", title: "ItemCategories" },
-    { route: "/items", title: "items" },
-    { route: "/products", title: "products" },
-    { route: "/charts", title: "Charts" },
-    { route: "/reports", title: "Reports" },
+    { route: "/users", title: "Users", allowedRoles: ["administrator"] },
+    {
+      route: "/items",
+      title: "Items",
+      allowedRoles: ["administrator", "manager"],
+    },
+    {
+      route: "/products",
+      title: "Products",
+      allowedRoles: ["administrator", "manager", "cashier"],
+    },
+    {
+      route: "/charts",
+      title: "Charts",
+      allowedRoles: ["administrator", "manager"],
+    },
+    {
+      route: "/reports",
+      title: "Reports",
+      allowedRoles: ["administrator", "manager"],
+    },
   ];
+
+  // ✅ Filter routes based on user role
+  const accessibleMenuItems = menuItems.filter((item) =>
+    item.allowedRoles.includes(userRole)
+  );
 
   const handleLogout = (e: FormEvent) => {
     e.preventDefault();
@@ -70,7 +98,7 @@ const Navbar = () => {
         >
           POS_SYSTEM
         </span>
-        {menuItems.map((menuItem, index) => (
+        {accessibleMenuItems.map((menuItem, index) => (
           <li className="nav-item" key={index}>
             <Link
               className="nav-link"

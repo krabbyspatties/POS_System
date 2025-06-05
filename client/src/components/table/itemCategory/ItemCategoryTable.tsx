@@ -11,50 +11,39 @@ interface CategoryTableProps {
 
 const CategoryTable = ({ refreshCategory }: CategoryTableProps) => {
   const [state, setState] = useState({
-    loadingGCategory: true,
+    loadingCategories: true,
     itemCategories: [] as ItemCategories[],
   });
 
-  const handleLoadCategories = () => {
+  const loadCategories = () => {
+    setState((prev) => ({ ...prev, loadingCategories: true }));
+
     ItemCategoryServices.loadCategories()
       .then((res) => {
         if (res.status === 200) {
-          setState((prevState) => ({
-            ...prevState,
+          setState((prev) => ({
+            ...prev,
             itemCategories: res.data.categories,
           }));
         } else {
-          console.error("Unexpected status error during loading genders");
+          console.error("Unexpected status error during loading categories");
         }
       })
       .catch((error) => {
         ErrorHandler(error, null);
       })
       .finally(() => {
-        setState((prevState) => ({
-          ...prevState,
-          loadingGCategory: false,
-        }));
+        setState((prev) => ({ ...prev, loadingCategories: false }));
       });
   };
 
   useEffect(() => {
-    handleLoadCategories();
+    loadCategories();
   }, [refreshCategory]);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* No filter sidebar included as requested */}
       <div style={{ flex: 1, padding: 32 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: 16,
-          }}
-        >
-
-        </div>
         <div
           style={{
             background: "#fff",
@@ -71,7 +60,7 @@ const CategoryTable = ({ refreshCategory }: CategoryTableProps) => {
               </tr>
             </thead>
             <tbody>
-              {state.loadingGCategory ? (
+              {state.loadingCategories ? (
                 <tr>
                   <td colSpan={3} className="text-center">
                     <Spinner />

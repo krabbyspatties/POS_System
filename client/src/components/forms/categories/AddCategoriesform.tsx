@@ -73,44 +73,46 @@ const AddCategoryForm = ({ onCategoryAdded }: AddCategoriesFormProps) => {
   return (
     <>
       <div style={{ display: "flex", minHeight: "100vh" }}>
-      <div
-        style={{
-        width: 260,
-        backgroundColor: "#007bff",
-        color: "#fff",
-        padding: 16,
-        top: 100,
-        }}
-      >
-        <h5>Add Category</h5>
-        <form onSubmit={handleStoreCategory}>
-        <input
-          type="text"
-          placeholder="Category name"
-          className={`form-control mb-2 ${state.errors.category_name ? "is-invalid" : ""}`}
-          name="category"
-          value={state.category}
-          onChange={handleInputChange}
-        />
-        {state.errors.category_name && (
-          <p className="text-danger">{state.errors.category_name[0]}</p>
-        )}
-        <button
-          type="submit"
-          className="btn btn-primary"
-          style={{ border: "2px solid black" }}
-          disabled={state.loadingStore}
+        <div
+          style={{
+            width: 260,
+            backgroundColor: "#007bff",
+            color: "#fff",
+            padding: 16,
+            top: 100,
+          }}
         >
-          {state.loadingStore ? (
-          <>
-            <SpinnerSmall /> Loading...
-          </>
-          ) : (
-          "Save"
-          )}
-        </button>
-        </form>
-      </div>
+          <h5>Add Category</h5>
+          <form onSubmit={handleStoreCategory}>
+            <input
+              type="text"
+              placeholder="Category name"
+              className={`form-control mb-2 ${
+                state.errors.category_name ? "is-invalid" : ""
+              }`}
+              name="category"
+              value={state.category}
+              onChange={handleInputChange}
+            />
+            {state.errors.category_name && (
+              <p className="text-danger">{state.errors.category_name[0]}</p>
+            )}
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{ border: "2px solid black" }}
+              disabled={state.loadingStore}
+            >
+              {state.loadingStore ? (
+                <>
+                  <SpinnerSmall /> Loading...
+                </>
+              ) : (
+                "Save"
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

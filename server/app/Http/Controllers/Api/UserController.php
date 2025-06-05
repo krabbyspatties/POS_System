@@ -29,9 +29,15 @@ class UserController extends Controller
             'password_confirmation' => ['required', 'min:8', 'max:15'],
             'user_phone' => ['nullable', 'max:20'],
             'user_address' => ['nullable', 'max:255'],
-            'user_image' => ['nullable', 'max:255'],
+            'user_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => ['required', Rule::in(['cashier', 'manager', 'administrator'])],
         ]);
+
+        if ($request->hasFile('user_image')) {
+            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
+        } else {
+            $validated['user_image'] = 'images/userPlaceholder.jpg';
+        }
 
         User::create([
             'first_name' => $validated['first_name'],
@@ -41,7 +47,7 @@ class UserController extends Controller
             'password' => bcrypt($validated['password']),
             'user_phone' => $validated['user_phone'] ?? null,
             'user_address' => $validated['user_address'] ?? null,
-            'user_image' => $validated['user_image'] ?? null,
+            'user_image' => $validated['user_image'],
             'role' => $validated['role'],
         ]);
 
@@ -59,9 +65,13 @@ class UserController extends Controller
             'user_email' => ['required', 'email', 'max:255', Rule::unique('tbl_users', 'user_email')->ignore($user->user_id, 'user_id')],
             'user_phone' => ['nullable', 'max:20'],
             'user_address' => ['nullable', 'max:255'],
-            'user_image' => ['nullable', 'max:255'],
+            'user_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => ['required', Rule::in(['cashier', 'manager', 'administrator'])],
         ]);
+
+        if ($request->hasFile('user_image')) {
+            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
+        }
 
         $user->update([
             'first_name' => $validated['first_name'],
@@ -70,7 +80,7 @@ class UserController extends Controller
             'user_email' => $validated['user_email'],
             'user_phone' => $validated['user_phone'] ?? null,
             'user_address' => $validated['user_address'] ?? null,
-            'user_image' => $validated['user_image'] ?? null,
+            'user_image' => $validated['user_image'] ?? $user->user_image,
             'role' => $validated['role'],
         ]);
 

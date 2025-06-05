@@ -90,7 +90,6 @@ const UsersTable = ({
           color: "#fff",
           padding: 16,
           top: 100,
-          
         }}
       >
         <h5>Advanced Filter</h5>
@@ -189,11 +188,13 @@ const UsersTable = ({
                         {user.user_image ? (
                           <Link to={`/users/${user.user_id}`}>
                             <img
-                              src={user.user_image}
-                              alt={user.first_name}
+                              src={`/storage/${user.user_image}`}
+                              alt={`${user.first_name} ${user.last_name}`}
+                              className="rounded-circle img-thumbnail"
                               style={{
                                 width: 40,
                                 height: 40,
+                                objectFit: "cover",
                                 borderRadius: "50%",
                                 cursor: "pointer",
                               }}

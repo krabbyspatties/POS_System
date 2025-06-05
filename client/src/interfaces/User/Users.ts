@@ -2,7 +2,7 @@ export interface Users {
     user_id: number;
     first_name: string;
     last_name: string;
-    user_image: string;
+    user_image: string | File;
     user_name: string;
     user_email: string;
     user_phone: string;

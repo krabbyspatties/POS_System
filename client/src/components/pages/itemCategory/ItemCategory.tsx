@@ -28,7 +28,6 @@ const CategoriesPage = () => {
   };
   const content = (
     <>
-
       <div style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}>
         <div>
           <AddCategoryForm
@@ -39,12 +38,12 @@ const CategoriesPage = () => {
           />
         </div>
         <div style={{ flex: 1 }}>
-        <AlertMessage
-        message={message}
-        isSuccess={isSuccess}
-        isVisible={isVisible}
-        onClose={handleCloseAlertMessage}
-      />
+          <AlertMessage
+            message={message}
+            isSuccess={isSuccess}
+            isVisible={isVisible}
+            onClose={handleCloseAlertMessage}
+          />
           <CategoryTable refreshCategory={refreshCategory} />
         </div>
       </div>
