@@ -34,9 +34,9 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('user_image')) {
-            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
+            $validated['user_image'] = $request->file('userImage')->store('userImage', 'public');
         } else {
-            $validated['user_image'] = 'images/userPlaceholder.jpg';
+            $validated['user_image'] = 'userImage/userPlaceholder.jpg';
         }
 
         User::create([
@@ -70,7 +70,7 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('user_image')) {
-            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
+            $validated['user_image'] = $request->file('userPlaceholder')->store('userImage', 'public');
         }
 
         $user->update([
