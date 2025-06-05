@@ -239,6 +239,7 @@ const EditItemForm = ({
               id="stock_level"
               value={state.stock_level}
               onChange={handleInputChange}
+              readOnly
             />
             {state.errors.stock_level && (
               <span className="text-danger">{state.errors.stock_level[0]}</span>

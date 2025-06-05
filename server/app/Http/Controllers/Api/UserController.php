@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -34,9 +35,9 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('user_image')) {
-            $validated['user_image'] = $request->file('userImage')->store('userImage', 'public');
+            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
         } else {
-            $validated['user_image'] = 'userImage/userPlaceholder.jpg';
+            $validated['user_image'] = 'images/placeholder.jpg';
         }
 
         User::create([
@@ -70,7 +71,10 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('user_image')) {
-            $validated['user_image'] = $request->file('userPlaceholder')->store('userImage', 'public');
+            if ($user->user_image && $user->user_image !== 'images/placeholder.jpg') {
+                Storage::disk('public')->delete($user->user_image);
+            }
+            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
         }
 
         $user->update([

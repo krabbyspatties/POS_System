@@ -72,7 +72,7 @@ const AddCategoryForm = ({ onCategoryAdded }: AddCategoriesFormProps) => {
 
   return (
     <>
-      <div style={{ display: "flex", minHeight: "100vh" }}>
+      <div style={{ display: "flex", minHeight: "50vh" }}>
         <div
           style={{
             width: 260,

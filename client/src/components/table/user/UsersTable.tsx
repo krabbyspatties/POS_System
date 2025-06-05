@@ -185,32 +185,34 @@ const UsersTable = ({
                     <tr className="align-middle" key={user.user_id}>
                       <td>{index + 1}</td>
                       <td>
-                        {user.user_image ? (
-                          <Link to={`/users/${user.user_id}`}>
-                            <img
-                              src={`/storage/${user.user_image}`}
-                              alt={`${user.first_name} ${user.last_name}`}
-                              className="rounded-circle img-thumbnail"
-                              style={{
-                                width: 40,
-                                height: 40,
-                                objectFit: "cover",
-                                borderRadius: "50%",
-                                cursor: "pointer",
-                              }}
-                            />
-                          </Link>
-                        ) : (
-                          <div
-                            style={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: "50%",
-                              backgroundColor: "#ccc",
-                              display: "inline-block",
-                            }}
-                          />
-                        )}
+                      {user.user_image ? (
+                      <Link to={`/users/${user.user_id}`}>
+                        <img
+                          src={`http://localhost:8000/storage/${
+                            user.user_image || "images/placeholder.png"
+                          }`}
+                          alt={user.user_name}
+                          className="rounded-circle img-thumbnail"
+                          style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Link>
+                    ) : (
+                      <div
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "50%",
+                          backgroundColor: "#ccc",
+                          display: "inline-block",
+                        }}
+                      />
+                    )}
                       </td>
                       <td>{`${user.last_name}, ${user.first_name}`}</td>
                       <td>{user.user_name}</td>

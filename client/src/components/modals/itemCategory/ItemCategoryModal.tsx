@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AlertMessage from "../../AlertMessage";
 import SpinnerSmall from "../../SpinnerSmall";
 import CategoryContent from "../../forms/categories/CategoryContent";
 
@@ -14,10 +13,10 @@ const AddItemCategory = ({
   onRefreshItems,
   onClose,
 }: AddItemCategoryModalProps) => {
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [loadingStore, setLoadingStore] = useState(false);
+  const [, setMessage] = useState("");
+  const [, setIsSuccess] = useState(false);
+  const [, setIsVisible] = useState(false);
+  const [loadingStore] = useState(false);
 
   const handleShowAlertMessage = (
     message: string,
@@ -29,11 +28,6 @@ const AddItemCategory = ({
     setIsVisible(isVisible);
   };
 
-  const handleCloseAlertMessage = () => {
-    setMessage("");
-    setIsSuccess(false);
-    setIsVisible(false);
-  };
 
   const handleCategoryAdded = (msg: string) => {
     handleShowAlertMessage(msg, true, true);
@@ -62,14 +56,6 @@ const AddItemCategory = ({
               ></button>
             </div>
             <div className="modal-body">
-              <div className="mb-3">
-                <AlertMessage
-                  message={message}
-                  isSuccess={isSuccess}
-                  isVisible={isVisible}
-                  onClose={handleCloseAlertMessage}
-                />
-              </div>
               <CategoryContent onCategoryAdded={handleCategoryAdded} />
             </div>
             <div className="modal-footer">
