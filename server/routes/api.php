@@ -30,12 +30,12 @@ Route::get('/test-make-webhook', function () {
             'verify' => false, // Disable SSL verification
             'timeout' => 30,
         ])->post($makeWebhookUrl, [
-                    'pdf_url' => 'https://example.com/test.pdf',
-                    'email' => 'test@example.com',
-                    'first_name' => 'Test',
-                    'last_name' => 'User',
-                    'total' => 100.00,
-                ]);
+            'pdf_url' => 'https://example.com/test.pdf',
+            'email' => 'test@example.com',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'total' => 100.00,
+        ]);
 
         return response()->json([
             'status' => $response->status(),
@@ -98,10 +98,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/feedback/responses', [FeedbackController::class, 'getResponses']);
         Route::get('/feedback/questions', [FeedbackController::class, 'getSurveyQuestions']);
         Route::get('/feedback/summary', [FeedbackController::class, 'getAggregatedResponses']);
-
-
-
     });
 });
-
-

@@ -133,51 +133,66 @@ const SurveyCharts: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Survey Results</h2>
-      {summary &&
-        Object.entries(summary).map(([question, answers]) => {
-          const choices = surveyQuestions[question] || Object.keys(answers);
-
-          // Prepare data for PieChart
-          const data = choices.map((choice) => ({
-            name: choice,
-            value: answers[choice] || 0,
-          }));
-
-          return (
-            <div key={question} style={{ marginBottom: 50 }}>
-              <h4>{question}</h4>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={data}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    fill="#8884d8"
-                    label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
-                    }
-                    isAnimationActive={false}
-                  >
-                    {data.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value: number) => [value, "Count"]} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          );
-        })}
+      <h2 className="mb-4">Survey Results</h2>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(500px, 1fr))",
+          gap: "24px",
+        }}
+      >
+        {summary &&
+          Object.entries(summary).map(([question, answers]) => {
+            const choices = surveyQuestions[question] || Object.keys(answers);
+            const data = choices.map((choice) => ({
+              name: choice,
+              value: answers[choice] || 0,
+            }));
+  
+            return (
+              <div
+                key={question}
+                style={{
+                  background: "#fff",
+                  borderRadius: "12px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  padding: "20px",
+                }}
+              >
+                <h4 style={{ marginBottom: "16px" }}>{question}</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      fill="#8884d8"
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                      isAnimationActive={false}
+                    >
+                      {data.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value: number) => [value, "Count"]} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
+  
 };
 
 export default SurveyCharts;

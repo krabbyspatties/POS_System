@@ -42,12 +42,12 @@ class RecieptController extends Controller
                     'verify' => false, // Disable SSL verification
                     'timeout' => 30,
                 ])->post($makeWebhookUrl, [
-                            'pdf_url' => $pdfUrl,
-                            'email' => $request->email,
-                            'first_name' => $request->first_name,
-                            'last_name' => $request->last_name,
-                            'total' => $request->total,
-                        ]);
+                    'pdf_url' => $pdfUrl,
+                    'email' => $request->email,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'total' => $request->total,
+                ]);
 
                 \Log::info('Make.com webhook response status: ' . $response->status());
                 \Log::info('Make.com webhook response body: ' . $response->body());

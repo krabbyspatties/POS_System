@@ -82,26 +82,32 @@ const UsersTable = ({
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f8f9fa" }}>
+      {/* Sidebar Filter */}
       <div
         style={{
           width: 260,
           backgroundColor: "#007bff",
           color: "#fff",
-          padding: 16,
-          top: 100,
+          padding: 20,
+          fontSize: "1.1rem",
+          fontWeight: 500,
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          boxShadow: "2px 0 8px rgba(0,0,0,0.1)",
         }}
       >
-        <h5>Advanced Filter</h5>
+        <h5 style={{ marginBottom: 16 }}>🔍 Advanced Filter</h5>
         <input
           type="text"
           placeholder="Search by name"
-          className="form-control mb-2"
+          className="form-control mb-3"
           value={filter.name}
           onChange={(e) => setFilter((f) => ({ ...f, name: e.target.value }))}
         />
         <select
-          className="form-select mb-2"
+          className="form-select mb-3"
           value={filter.role}
           onChange={(e) => setFilter((f) => ({ ...f, role: e.target.value }))}
         >
@@ -111,40 +117,44 @@ const UsersTable = ({
           <option value="manager">Manager</option>
         </select>
         <button
-          className="btn btn-primary"
-          style={{ border: "2px solid black" }}
+          className="btn btn-light w-100"
+          style={{
+            border: "2px solid white",
+            fontWeight: "bold",
+            color: "#007bff",
+            backgroundColor: "#fff",
+          }}
           onClick={() => setFilter({ name: "", role: "" })}
         >
           Reset Filters
         </button>
       </div>
-
-      <div style={{ flex: 1, padding: 32 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: 16,
-          }}
-        >
+  
+      {/* Main Content */}
+      <div style={{ flex: 1, padding: 32, fontSize: "1rem", color: "#333" }}>
+        {/* Header Action */}
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
           <button
-            className="btn btn-primary btn-sm"
-            style={{ marginRight: 8 }}
+            className="btn btn-primary btn-lg"
+            style={{ fontSize: "1rem", padding: "8px 20px" }}
             onClick={() => setShowAddUserModal(true)}
           >
-            Add User
+            + Add User
           </button>
         </div>
+  
+        {/* Table Container */}
         <div
           style={{
             background: "#fff",
-            borderRadius: 8,
-            boxShadow: "0 2px 8px #e0e0e0",
+            borderRadius: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            padding: 24,
           }}
         >
           <table className="table table-hover mb-0" style={{ width: "100%" }}>
             <thead className="table-light">
-              <tr>
+              <tr style={{ fontSize: "1.05rem" }}>
                 <th>No.</th>
                 <th>Image</th>
                 <th>Full Name</th>
@@ -185,34 +195,33 @@ const UsersTable = ({
                     <tr className="align-middle" key={user.user_id}>
                       <td>{index + 1}</td>
                       <td>
-                      {user.user_image ? (
-                      <Link to={`/users/${user.user_id}`}>
-                        <img
-                          src={`http://localhost:8000/storage/${
-                            user.user_image || "images/placeholder.png"
-                          }`}
-                          alt={user.user_name}
-                          className="rounded-circle img-thumbnail"
-                          style={{
-                            width: 40,
-                            height: 40,
-                            objectFit: "cover",
-                            borderRadius: "50%",
-                            cursor: "pointer",
-                          }}
-                        />
-                      </Link>
-                    ) : (
-                      <div
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: "50%",
-                          backgroundColor: "#ccc",
-                          display: "inline-block",
-                        }}
-                      />
-                    )}
+                        {user.user_image ? (
+                          <Link to={`/users/${user.user_id}`}>
+                            <img
+                              src={`http://localhost:8000/storage/${user.user_image}`}
+                              alt={user.user_name}
+                              className="rounded-circle img-thumbnail"
+                              style={{
+                                width: 64,
+                                height: 64,
+                                objectFit: "cover",
+                                borderRadius: "50%",
+                                cursor: "pointer",
+                                border: "2px solid #007bff",
+                              }}
+                            />
+                          </Link>
+                        ) : (
+                          <div
+                            style={{
+                              width: 64,
+                              height: 64,
+                              borderRadius: "50%",
+                              backgroundColor: "#ccc",
+                              display: "inline-block",
+                            }}
+                          />
+                        )}
                       </td>
                       <td>{`${user.last_name}, ${user.first_name}`}</td>
                       <td>{user.user_name}</td>
@@ -227,6 +236,7 @@ const UsersTable = ({
                               ? "bg-success"
                               : "bg-secondary"
                           }`}
+                          style={{ fontSize: "0.9rem", padding: "6px 12px" }}
                         >
                           {user.user_status}
                         </span>
@@ -261,6 +271,8 @@ const UsersTable = ({
             </tbody>
           </table>
         </div>
+  
+        {/* Modal */}
         <AddUserModal
           showModal={showAddUserModal}
           onRefreshUsers={handleRefreshUsers}
@@ -269,6 +281,7 @@ const UsersTable = ({
       </div>
     </div>
   );
+  
 };
 
 export default UsersTable;

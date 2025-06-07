@@ -23,39 +23,54 @@ const ItemsTable = ({
   const [refreshItems, setRefreshItems] = useState(false);
 
   return (
-    <div style={{ flex: 1, padding: 32 }}>
+    <div style={{ flex: 1, padding: 32, backgroundColor: "#f8f9fa" }}>
+      {/* Top Buttons */}
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          marginBottom: 16,
+          marginBottom: 20,
+          gap: 12,
         }}
       >
         <button
           className="btn btn-success btn-sm"
-          style={{ marginRight: 8 }}
+          style={{
+            fontSize: "1rem",
+            padding: "8px 16px",
+            fontWeight: "600",
+            borderRadius: 6,
+          }}
           onClick={() => setOpenAddItemModal(true)}
         >
-          Add Item
+          + Add Item
         </button>
         <button
           className="btn btn-primary btn-sm"
-          style={{ marginRight: 8 }}
-          onClick={() => setOpenAddCategoryModal(true)} // open Add Category modal
+          style={{
+            fontSize: "1rem",
+            padding: "8px 16px",
+            fontWeight: "600",
+            borderRadius: 6,
+          }}
+          onClick={() => setOpenAddCategoryModal(true)}
         >
-          Add Category
+          + Add Category
         </button>
       </div>
+  
+      {/* Table Wrapper */}
       <div
         style={{
           background: "#fff",
-          borderRadius: 8,
-          boxShadow: "0 2px 8px #e0e0e0",
+          borderRadius: 12,
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+          padding: 16,
         }}
       >
         <table className="table table-hover mb-0" style={{ width: "100%" }}>
           <thead className="table-light">
-            <tr>
+            <tr style={{ fontSize: "1rem" }}>
               <th>No.</th>
               <th>Image</th>
               <th>Item</th>
@@ -83,25 +98,24 @@ const ItemsTable = ({
                     {item.item_image ? (
                       <Link to={`/items/${item.item_id}`}>
                         <img
-                          src={`http://localhost:8000/storage/${
-                            item.item_image || "Images/placeholder.png"
-                          }`}
+                          src={`http://localhost:8000/storage/${item.item_image}`}
                           alt={item.item_name}
                           className="rounded-circle img-thumbnail"
                           style={{
-                            width: 40,
-                            height: 40,
+                            width: 48,
+                            height: 48,
                             objectFit: "cover",
                             borderRadius: "50%",
                             cursor: "pointer",
+                            border: "2px solid #6c757d",
                           }}
                         />
                       </Link>
                     ) : (
                       <div
                         style={{
-                          width: 40,
-                          height: 40,
+                          width: 48,
+                          height: 48,
                           borderRadius: "50%",
                           backgroundColor: "#ccc",
                           display: "inline-block",
@@ -111,8 +125,8 @@ const ItemsTable = ({
                   </td>
                   <td>{item.item_name}</td>
                   <td>{item.item_description}</td>
-                  <td>{item.item_price}</td>
-                  <td>{item.item_discount}</td>
+                  <td>₱{Number(item.item_price).toFixed(2)}</td>
+                  <td>{item.item_discount}%</td>
                   <td>{item.item_quantity}</td>
                   <td>
                     <span
@@ -121,6 +135,11 @@ const ItemsTable = ({
                           ? "bg-success"
                           : "bg-secondary"
                       }`}
+                      style={{
+                        fontSize: "0.85rem",
+                        padding: "5px 12px",
+                        borderRadius: 12,
+                      }}
                     >
                       {item.stock_level}
                     </span>
@@ -131,6 +150,7 @@ const ItemsTable = ({
                       <button
                         type="button"
                         className="btn btn-primary btn-sm"
+                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
                         onClick={() => onEditItem(item)}
                       >
                         Edit
@@ -138,6 +158,7 @@ const ItemsTable = ({
                       <button
                         type="button"
                         className="btn btn-danger btn-sm"
+                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
                         onClick={() => onDeleteItem(item)}
                       >
                         Delete
@@ -156,15 +177,14 @@ const ItemsTable = ({
           </tbody>
         </table>
       </div>
-
-      {/* Add Item Modal */}
+  
+      {/* Modals */}
       <AddItemModal
         showModal={openAddItemModal}
         onRefreshItems={() => setRefreshItems(!refreshItems)}
         onClose={() => setOpenAddItemModal(false)}
       />
-
-      {/* Add Category Modal */}
+  
       <AddItemCategory
         showModal={openAddCategoryModal}
         onRefreshItems={() => setRefreshItems(!refreshItems)}
@@ -172,6 +192,7 @@ const ItemsTable = ({
       />
     </div>
   );
+  
 };
 
 export default ItemsTable;
