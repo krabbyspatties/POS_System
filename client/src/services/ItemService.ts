@@ -1,12 +1,12 @@
-import AxiosInstance from "../AxiosInstance";
+import AxiosInstance from "../AxiosInstance"
 
 const ItemService = {
   loadItems: async () => {
     return AxiosInstance.get("/loadItems")
       .then((response) => response)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
 
   storeItem: async (data: FormData) => {
@@ -17,48 +17,40 @@ const ItemService = {
     })
       .then((response) => response)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
 
-  updateItem: async (ItemId: number, data: any) => {
-    const formData = new FormData();
-
-    formData.append("item_name", data.item_name);
-    formData.append("item_description", data.item_description);
-    formData.append("item_price", String(data.item_price));
-
-    if (data.item_discount !== undefined && data.item_discount !== null) {
-      formData.append("item_discount", String(data.item_discount));
+  updateItem: async (itemId: number, data: FormData) => {
+    console.log("Updating item:", itemId)
+    console.log("FormData entries:")
+    for (const [key, value] of data.entries()) {
+      console.log(key, value)
     }
 
-    formData.append("stock_level", data.stock_level);
-    formData.append("category_id", String(data.category_id));
-
-    if (data.item_image instanceof File) {
-      formData.append("item_image", data.item_image);
-    }
-
-    console.log("Payload being sent to API:", formData);
-
-    return AxiosInstance.put(`/updateItem/${ItemId}`, formData, {
+    // Changed from PUT to POST to match UserService pattern
+    return AxiosInstance.post(`/updateItem/${itemId}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     })
-      .then((response) => response)
+      .then((response) => {
+        console.log("Update response:", response)
+        return response
+      })
       .catch((error) => {
-        throw error;
-      });
+        console.error("Update error:", error.response?.data || error.message)
+        throw error
+      })
   },
 
   destroyItem: async (ItemId: number) => {
     return AxiosInstance.delete(`/destroyItem/${ItemId}`)
       .then((response) => response)
       .catch((error) => {
-        throw error;
-      });
+        throw error
+      })
   },
-};
+}
 
-export default ItemService;
+export default ItemService

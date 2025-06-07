@@ -133,7 +133,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
               )}
             </div>
             <div className="d-flex justify-content-end">
-              <Link to="/users" className="btn btn-secondary me-1">
+              <Link to="/items" className="btn btn-secondary me-1">
                 Back
               </Link>
               <button

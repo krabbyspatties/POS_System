@@ -11,6 +11,7 @@ import ProductPage from "./components/pages/product/productPage";
 import ReceiptPage from "./components/pages/receipt/ReceiptPage";
 import ChartPage from "./components/pages/chart/Chart";
 import ReportPage from "./components/pages/report/report";
+import FeedbackPage from "./components/pages/feedback/feedback";
 
 // const submitFormRef = React.createRef<() => void>();
 
@@ -88,6 +89,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ReportPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/feedback",
+    element: (
+      <ProtectedRoute>
+        <FeedbackPage />
       </ProtectedRoute>
     ),
   },

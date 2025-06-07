@@ -41,6 +41,11 @@ const Navbar = () => {
       title: "Reports",
       allowedRoles: ["administrator", "manager"],
     },
+    {
+      route: "/feedback",
+      title: "Feedback",
+      allowedRoles: ["administrator", "manager"],
+    },
   ];
 
   // ✅ Filter routes based on user role

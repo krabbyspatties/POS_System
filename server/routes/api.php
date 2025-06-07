@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChartController;
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\ItemCategoryController;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\Api\OrderController;
@@ -9,7 +10,7 @@ use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Http; // Add this import
+use Illuminate\Support\Facades\Http;
 
 Route::post('/saveReceipt', [RecieptController::class, 'store']);
 
@@ -80,7 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::controller(ItemController::class)->group(function () {
             Route::post('/storeItem', 'storeItem');
-            Route::put('/updateItem/{item}', 'updateItem');
+            Route::post('/updateItem/{item}', 'updateItem');
             Route::delete('/destroyItem/{item}', 'destroyItem');
         });
 
@@ -93,6 +94,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/salesReport', 'salesReport');
             Route::get('/inventoryReport', 'inventoryReport');
         });
+
+        Route::get('/feedback/responses', [FeedbackController::class, 'getResponses']);
+        Route::get('/feedback/questions', [FeedbackController::class, 'getSurveyQuestions']);
+        Route::get('/feedback/summary', [FeedbackController::class, 'getAggregatedResponses']);
+
+
+
     });
 });
 
