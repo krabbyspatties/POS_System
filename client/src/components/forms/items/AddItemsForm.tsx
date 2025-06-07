@@ -198,6 +198,7 @@ const ItemForm = ({
               </span>
             )}
           </div>
+
           <div className="mb-3">
             <label htmlFor="item_price">Price</label>
             <input

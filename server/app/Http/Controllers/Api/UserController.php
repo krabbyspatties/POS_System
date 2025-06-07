@@ -68,13 +68,18 @@ class UserController extends Controller
             'user_address' => ['nullable', 'max:255'],
             'user_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'role' => ['required', Rule::in(['cashier', 'manager', 'administrator'])],
+            'existing_image' => ['nullable', 'string'],
         ]);
+
+        $imagePath = $user->user_image;
 
         if ($request->hasFile('user_image')) {
             if ($user->user_image && $user->user_image !== 'images/placeholder.jpg') {
                 Storage::disk('public')->delete($user->user_image);
             }
-            $validated['user_image'] = $request->file('user_image')->store('images', 'public');
+            $imagePath = $request->file('user_image')->store('images', 'public');
+        } elseif ($request->filled('existing_image')) {
+            $imagePath = $request->input('existing_image');
         }
 
         $user->update([
@@ -84,12 +89,13 @@ class UserController extends Controller
             'user_email' => $validated['user_email'],
             'user_phone' => $validated['user_phone'] ?? null,
             'user_address' => $validated['user_address'] ?? null,
-            'user_image' => $validated['user_image'] ?? $user->user_image,
+            'user_image' => $imagePath,
             'role' => $validated['role'],
         ]);
 
         return response()->json([
-            'message' => 'User Successfully Updated.'
+            'message' => 'User Successfully Updated.',
+            'user' => $user->fresh()
         ], 200);
     }
 

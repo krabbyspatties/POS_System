@@ -21,10 +21,24 @@ const UserService = {
       });
   },
 
-  updateUser: async (userId: number, data: any) => {
-    return AxiosInstance.put(`/updateUser/${userId}`, data)
-      .then((response) => response)
+  updateUser: async (userId: number, data: FormData) => {
+    console.log('Updating user:', userId);
+    console.log('FormData entries:');
+    for (let [key, value] of data.entries()) {
+      console.log(key, value);
+    }
+
+    return AxiosInstance.post(`/updateUser/${userId}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        console.log('Update response:', response);
+        return response;
+      })
       .catch((error) => {
+        console.error('Update error:', error.response?.data || error.message);
         throw error;
       });
   },

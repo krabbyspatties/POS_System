@@ -64,36 +64,55 @@ const EditUserForm = ({
     setState((prev) => ({ ...prev, errors: {} }));
 
     try {
-      const response = await UserService.updateUser(state.user_id, {
-        first_name: state.first_name,
-        last_name: state.last_name,
-        user_name: state.user_name,
-        user_email: state.user_email,
-        user_phone: state.user_phone,
-        user_address: state.user_address,
-        user_image: state.user_image,
-        role: state.role,
-      });
+      const formData = new FormData();
 
-      if (response.status === 422) {
-        setState((prev) => ({
-          ...prev,
-          errors: response.data.errors || {},
-        }));
-        setLoadingUpdate(false);
-        return;
+      // Append all required fields
+      formData.append("first_name", state.first_name);
+      formData.append("last_name", state.last_name);
+      formData.append("user_name", state.user_name);
+      formData.append("user_email", state.user_email);
+      formData.append("user_phone", state.user_phone || "");
+      formData.append("user_address", state.user_address || "");
+      formData.append("role", state.role);
+
+      // Handle image properly
+      if (state.user_image instanceof File) {
+        formData.append("user_image", state.user_image);
+      } else if (
+        typeof state.user_image === "string" &&
+        state.user_image !== ""
+      ) {
+        formData.append("existing_image", state.user_image);
       }
 
-      onUserUpdated("User updated successfully!");
+      console.log("Submitting form data for user:", state.user_id);
+
+      const response = await UserService.updateUser(state.user_id, formData);
+
+      // Check for successful response
+      if (response.status === 200) {
+        onUserUpdated(response.data.message || "User updated successfully!");
+      } else {
+        throw new Error("Unexpected response status: " + response.status);
+      }
     } catch (error: any) {
+      console.error("Update user error:", error);
+
       if (error.response?.status === 422) {
+        // Handle validation errors
         setState((prev) => ({
           ...prev,
           errors: error.response.data.errors || {},
         }));
+      } else if (error.response?.status === 404) {
+        alert("User not found. Please refresh the page and try again.");
+      } else if (error.response?.status === 403) {
+        alert("You don't have permission to update this user.");
       } else {
-        alert("An error occurred while updating the user.");
-        console.error(error);
+        alert(
+          "An error occurred while updating the user: " +
+            (error.response?.data?.message || error.message)
+        );
       }
     } finally {
       setLoadingUpdate(false);
@@ -105,27 +124,14 @@ const EditUserForm = ({
       setState((prevState) => ({
         ...prevState,
         user_id: user.user_id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        user_name: user.user_name,
-        user_email: user.user_email,
-        user_phone: user.user_phone,
-        user_address: user.user_address,
-        user_image: user.user_image ?? "",
-        role: user.role,
-      }));
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        user_id: 0,
-        first_name: "",
-        last_name: "",
-        user_name: "",
-        user_email: "",
-        user_phone: "",
-        user_address: "",
-        user_image: "",
-        role: "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        user_name: user.user_name || "",
+        user_email: user.user_email || "",
+        user_phone: user.user_phone || "",
+        user_address: user.user_address || "",
+        user_image: user.user_image || "",
+        role: user.role || "",
         errors: {} as UserFieldErrors,
       }));
     }
@@ -136,6 +142,7 @@ const EditUserForm = ({
       }
     };
   }, [user, setSubmitForm]);
+
   return (
     <>
       <form ref={formRef} onSubmit={handleUpdateUser}>
@@ -153,6 +160,7 @@ const EditUserForm = ({
                 value={state.first_name}
                 onChange={handleInputChange}
                 maxLength={55}
+                required
               />
               {state.errors.first_name && (
                 <span className="text-danger">
@@ -172,6 +180,7 @@ const EditUserForm = ({
                 value={state.last_name}
                 onChange={handleInputChange}
                 maxLength={55}
+                required
               />
               {state.errors.last_name && (
                 <span className="text-danger">{state.errors.last_name[0]}</span>
@@ -189,6 +198,7 @@ const EditUserForm = ({
                 value={state.user_name}
                 onChange={handleInputChange}
                 maxLength={55}
+                required
               />
               {state.errors.user_name && (
                 <span className="text-danger">{state.errors.user_name[0]}</span>
@@ -206,6 +216,7 @@ const EditUserForm = ({
                 value={state.user_email}
                 onChange={handleInputChange}
                 maxLength={255}
+                required
               />
               {state.errors.user_email && (
                 <span className="text-danger">
@@ -254,22 +265,36 @@ const EditUserForm = ({
               )}
             </div>
             <div className="mb-3">
-              <label htmlFor="user_image">Image URL</label>
+              <label htmlFor="user_image">Profile Image</label>
               <input
-                type="text"
+                type="file"
                 className={`form-control ${
                   state.errors.user_image ? "is-invalid" : ""
                 }`}
                 name="user_image"
                 id="user_image"
-                value={typeof state.user_image === "string" ? state.user_image : ""}
-                onChange={handleInputChange}
-                maxLength={255}
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setState((prevState) => ({
+                      ...prevState,
+                      user_image: file,
+                    }));
+                  }
+                }}
               />
               {state.errors.user_image && (
                 <span className="text-danger">
                   {state.errors.user_image[0]}
                 </span>
+              )}
+              {typeof state.user_image === "string" && state.user_image && (
+                <div className="mt-2">
+                  <small className="text-muted">
+                    Current image: {state.user_image}
+                  </small>
+                </div>
               )}
             </div>
             <div className="mb-3">
@@ -282,6 +307,7 @@ const EditUserForm = ({
                 id="role"
                 value={state.role}
                 onChange={handleInputChange}
+                required
               >
                 <option value="">Select Role</option>
                 <option value="cashier">Cashier</option>

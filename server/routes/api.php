@@ -9,20 +9,50 @@ use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Http; // Add this import
+
+Route::post('/saveReceipt', [RecieptController::class, 'store']);
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
 });
 
-Route::post('/saveReceipt', [RecieptController::class, 'store']);
+Route::get('/test-make-webhook', function () {
+    $makeWebhookUrl = env('MAKE_WEBHOOK_URL');
 
+    if (!$makeWebhookUrl) {
+        return response()->json(['error' => 'MAKE_WEBHOOK_URL not configured']);
+    }
+
+    try {
+        $response = Http::withOptions([
+            'verify' => false, // Disable SSL verification
+            'timeout' => 30,
+        ])->post($makeWebhookUrl, [
+                    'pdf_url' => 'https://example.com/test.pdf',
+                    'email' => 'test@example.com',
+                    'first_name' => 'Test',
+                    'last_name' => 'User',
+                    'total' => 100.00,
+                ]);
+
+        return response()->json([
+            'status' => $response->status(),
+            'body' => $response->body(),
+            'success' => $response->successful(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+        ]);
+    }
+});
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('/user', 'user');
         Route::post('/logout', 'logout');
     });
 
-    // ✅ Routes shared by ALL ROLES (including cashier)
     Route::middleware('role:cashier,manager,administrator')->group(function () {
         Route::post('/createOrder', [OrderController::class, 'createOrder']);
         Route::get('/loadItems', [ItemController::class, 'loadItems']);
@@ -33,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('/loadUsers', 'loadUsers');
             Route::post('/storeUser', 'storeUser');
-            Route::put('/updateUser/{user}', 'updateUser');
+            Route::post('/updateUser/{user}', 'updateUser');
             Route::put('/destroyUser/{user}', 'destroyUser');
         });
     });
