@@ -1,17 +1,18 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import AxiosInstance from "../AxiosInstance";
+
 interface User {
   id: number;
   name: string;
-  email: string;
+  user_email: string;
   // Add more fields based on your User model
 }
 
 interface AuthContextProps {
   user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (user_email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   isLoggedIn: boolean;
 }
@@ -31,13 +32,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      AxiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${token}`;
     }
   }, [token]);
 
-  const login = async (email: string, password: string) => {
-    const response = await axios.post("/login", {
-      email,
+  const login = async (user_email: string, password: string) => {
+    const response = await AxiosInstance.post("/login", {
+      user_email,
       password,
     });
 
@@ -48,12 +51,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   const logout = async () => {
     try {
-      await axios.post("/logout");
+      await AxiosInstance.post("/logout");
     } catch (err) {
       console.warn("Logout error:", err);
     }
@@ -64,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    delete axios.defaults.headers.common["Authorization"];
+    delete AxiosInstance.defaults.headers.common["Authorization"];
   };
 
   const isLoggedIn = !!token;
