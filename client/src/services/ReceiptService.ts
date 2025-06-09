@@ -2,10 +2,8 @@ import AxiosInstance from "../AxiosInstance"
 
 const ReceiptService = {
   saveReceipt: async (formData: FormData) => {
-    // Check file size before upload (client-side validation)
     const file = formData.get("receipt_pdf") as File
     if (file && file.size > 20 * 1024 * 1024) {
-      // 20MB limit
       throw new Error("File size too large. Maximum allowed size is 20MB.")
     }
 
@@ -13,7 +11,7 @@ const ReceiptService = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      timeout: 60000, // 60 second timeout for larger files
+      timeout: 60000, 
       onUploadProgress: (progressEvent) => {
         if (progressEvent.total) {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -23,14 +21,9 @@ const ReceiptService = {
     })
   },
 
-  // Helper method to compress PDF if needed (optional)
   compressPDF: async (file: File): Promise<File> => {
-    // This is a placeholder - you might want to implement actual PDF compression
-    // or use a library like pdf-lib for client-side compression
     return file
   },
-
-  // Helper method to validate file before upload
   validateFile: (file: File): { valid: boolean; error?: string } => {
     const maxSize = 20 * 1024 * 1024 // 20MB
     const allowedTypes = ["application/pdf"]

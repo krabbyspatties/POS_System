@@ -15,100 +15,89 @@ interface SummaryData {
   };
 }
 
-const surveyQuestions: {
-  [question: string]: string[];
-} = {
-  "How easy was it to complete your transaction using our POS system?": [
-    "Very Easy",
-    "Easy",
+const surveyQuestions: { [question: string]: string[] } = {
+  "The POS system is easy to use and user-friendly.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Difficult",
-    "Very Difficult",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How easy was it to navigate the POS screen or menu?": [
-    "Very Easy",
-    "Easy",
+  "The system responds quickly without significant delays.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Difficult",
-    "Very Difficult",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How satisfied were you with the speed of the checkout?": [
-    "Very Satisfied",
-    "Satisfied",
+  "It is easy to train new staff to use the POS system.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Dissatisfied",
-    "Very Dissatisfied",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How smooth was the payment process?": [
-    "Excellent",
-    "Good",
+  "The POS system helps improve our transaction accuracy.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Poor",
-    "Very Poor",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How well did the POS system support your preferred payment method?": [
-    "Completely",
-    "Mostly",
-    "Moderately",
-    "Slightly",
-    "Not at all",
-  ],
-  "Did you experience any technical issues during the transaction?": [
-    "Perfect experience",
-    "No issues",
-    "A few minor issues",
-    "Some issues",
-    "Many issues",
-  ],
-  "How clear and understandable was the on-screen information?": [
-    "Very clear",
-    "Clear",
+  "I am satisfied with the reliability and stability of the system.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Unclear",
-    "Very unclear",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How confident were you in reviewing your order details before payment?": [
-    "Completely confident",
-    "Very confident",
-    "Moderately confident",
-    "Slightly confident",
-    "Not confident at all",
-  ],
-  "How accurately did the POS system display your total amount?": [
-    "Very accurate",
-    "Accurate",
+  "The features of the POS system meet the needs of our business.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Inaccurate",
-    "Very inaccurate",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How satisfied were you with the promptness and accuracy of your receipt?": [
-    "Very Satisfied",
-    "Satisfied",
+  "The system integrates well with our inventory and reporting tools.": [
+    "Strongly Disagree",
+    "Disagree",
     "Neutral",
-    "Dissatisfied",
-    "Very Dissatisfied",
+    "Agree",
+    "Strongly Agree",
   ],
-  "How helpful was the customer-facing screen during checkout?": [
-    "Extremely helpful",
-    "Very helpful",
-    "Moderately helpful",
-    "Slightly helpful",
-    "Not helpful at all",
+  "Customer transactions are processed efficiently using the POS.": [
+    "Strongly Disagree",
+    "Disagree",
+    "Neutral",
+    "Agree",
+    "Strongly Agree",
   ],
+  "Technical support is responsive and helpful when issues arise.": [
+    "Strongly Disagree",
+    "Disagree",
+    "Neutral",
+    "Agree",
+    "Strongly Agree",
+  ],
+  "I would recommend this POS system to other businesses.": [
+    "Strongly Disagree",
+    "Disagree",
+    "Neutral",
+    "Agree",
+    "Strongly Agree",
+  ],
+  "What suggestions do you have for improving the POS system to better serve your needs?":
+    [],
 };
 
-const COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#AA336A",
-  "#663399",
-  "#33AA66",
-  "#CC3333",
-  "#3366CC",
-  "#999966",
-];
+// Map each choice to a fixed color
+const choiceColorMap: { [choice: string]: string } = {
+  "Strongly Disagree": "#FF3333", // Red
+  Disagree: "#FF8042", // Orange
+  Neutral: "#FFBB28", // Yellow
+  Agree: "#00C49F", // Teal
+  "Strongly Agree": "#0088FE", // Blue
+};
 
 const SurveyCharts: React.FC = () => {
   const [summary, setSummary] = useState<SummaryData | null>(null);
@@ -148,7 +137,7 @@ const SurveyCharts: React.FC = () => {
               name: choice,
               value: answers[choice] || 0,
             }));
-  
+
             return (
               <div
                 key={question}
@@ -175,10 +164,10 @@ const SurveyCharts: React.FC = () => {
                       }
                       isAnimationActive={false}
                     >
-                      {data.map((_, index) => (
+                      {data.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
+                          fill={choiceColorMap[entry.name] || "#8884d8"}
                         />
                       ))}
                     </Pie>
@@ -192,7 +181,6 @@ const SurveyCharts: React.FC = () => {
       </div>
     </div>
   );
-  
 };
 
 export default SurveyCharts;

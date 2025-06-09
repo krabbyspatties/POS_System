@@ -13,8 +13,19 @@ class Order_Item extends Model
     protected $fillable = [
         'order_id',
         'item_id',
+        'item_name',
         'quantity',
         'price',
+        'total_price',
+        'original_price',
+        'discount_percent',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
+        'discount_percent' => 'integer',
+        'quantity' => 'integer',
     ];
 
     public function order()
@@ -25,5 +36,18 @@ class Order_Item extends Model
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id', 'item_id');
+    }
+
+    public function getLineTotalAttribute()
+    {
+        return $this->price * $this->quantity;
+    }
+
+    public function getSavingsAttribute()
+    {
+        if ($this->discount_percent > 0 && $this->original_price) {
+            return ($this->original_price - $this->price) * $this->quantity;
+        }
+        return 0;
     }
 }

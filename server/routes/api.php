@@ -58,6 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/createOrder', [OrderController::class, 'createOrder']);
         Route::get('/loadItems', [ItemController::class, 'loadItems']);
         Route::get('/loadCategory', [ItemCategoryController::class, 'loadCategory']);
+        Route::get('/orders/{orderId}', [OrderController::class, 'getOrder']);
     });
 
     // ✅ ADMINISTRATOR — full access

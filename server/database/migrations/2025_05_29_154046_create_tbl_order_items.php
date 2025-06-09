@@ -15,12 +15,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('item_id');
             $table->integer('quantity')->default(1);
-            $table->decimal('price', 8, 2); // price per item at time of order
+            $table->decimal('price', 8, 2);
+            $table->decimal('total_price', 8, 2);
+            $table->decimal('original_price', 8, 2)->nullable();
+            $table->integer('discount_percent')->default(0);
             $table->timestamps();
 
             $table->foreign('order_id')->references('order_id')->on('tbl_orders')->onDelete('cascade');
             $table->foreign('item_id')->references('item_id')->on('tbl_items')->onDelete('cascade');
+
+            $table->index(['order_id', 'item_id']);
         });
+
 
     }
 

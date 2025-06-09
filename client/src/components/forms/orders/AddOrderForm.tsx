@@ -80,6 +80,8 @@ const AddOrderForm = ({
       customer_email: state.customer_email,
       first_name: state.first_name,
       last_name: state.last_name,
+
+      total_price: Math.round(totalPrice),
       items: orderList.map((order) => ({
         item_id: order.item_id,
         quantity: order.quantity,
@@ -123,159 +125,178 @@ const AddOrderForm = ({
   return (
     <div
       style={{
-      position: "fixed",
-      top: "80px", 
-      right: 0,
-      height: "calc(100vh - 80px)", 
-      width: "400px",
-      background: "#fff",
-      boxShadow: "-2px 0 8px rgba(0,0,0,0.1)",
-      zIndex: 1050,
-      transition: "transform 0.3s ease-in-out",
-      transform: "translateX(0)",
-      display: "flex",
-      flexDirection: "column",
-      padding: "24px",
+        position: "fixed",
+        top: "80px",
+        right: 0,
+        height: "calc(100vh - 80px)",
+        width: "400px",
+        background: "#fff",
+        boxShadow: "-2px 0 8px rgba(0,0,0,0.1)",
+        zIndex: 1050,
+        transition: "transform 0.3s ease-in-out",
+        transform: "translateX(0)",
+        display: "flex",
+        flexDirection: "column",
+        padding: "24px",
       }}
       className="pos-order-form"
     >
-      <form onSubmit={handleStoreOrder} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-      <div className="form-group" style={{ flex: 1, overflowY: "auto" }}>
-      <div style={{ marginBottom: "16px" }}>
-      <label htmlFor="customer_email" className="fw-bold">Customer Email</label>
-      <input
-        type="email"
-        className={`form-control ${state.errors.customer_email ? "is-invalid" : ""}`}
-        id="customer_email"
-        name="customer_email"
-        value={state.customer_email}
-        onChange={handleInputChange}
-        style={{ borderRadius: "8px", marginTop: "4px" }}
-      />
-      {state.errors.customer_email && (
-        <p className="text-danger">{state.errors.customer_email[0]}</p>
-      )}
-      </div>
-      <div style={{ marginBottom: "16px" }}>
-      <label htmlFor="first_name" className="fw-bold">First Name</label>
-      <input
-        type="text"
-        className={`form-control ${state.errors.first_name ? "is-invalid" : ""}`}
-        id="first_name"
-        name="first_name"
-        value={state.first_name}
-        onChange={handleInputChange}
-        style={{ borderRadius: "8px", marginTop: "4px" }}
-      />
-      {state.errors.first_name && (
-        <p className="text-danger">{state.errors.first_name[0]}</p>
-      )}
-      </div>
-
-      <div className="mb-3" style={{ marginBottom: "16px" }}>
-      <label htmlFor="last_name" className="fw-bold">Last Name</label>
-      <input
-        type="text"
-        className={`form-control ${state.errors.last_name ? "is-invalid" : ""}`}
-        id="last_name"
-        name="last_name"
-        value={state.last_name}
-        onChange={handleInputChange}
-        style={{ borderRadius: "8px", marginTop: "4px" }}
-      />
-      {state.errors.last_name && (
-        <p className="text-danger">{state.errors.last_name[0]}</p>
-      )}
-      </div>
-
-      <div className="mb-3" style={{ marginBottom: "16px" }}>
-      <label className="fw-bold">Order List</label>
-      {orderList.length === 0 ? (
-        <p className="text-muted">No items in the order yet.</p>
-      ) : (
-        <ul className="list-group mb-2" style={{ maxHeight: "180px", overflowY: "auto" }}>
-        {orderList.map((order) => {
-        const discountedPrice = getDiscountedPrice(
-        order.price,
-        order.item.item_discount ?? 0
-        );
-        return (
-        <li
-          key={order.item_id}
-          className="list-group-item d-flex justify-content-between align-items-center"
-          style={{
-          border: "none",
-          borderBottom: "1px solid #eee",
-          padding: "10px 0",
-          background: "transparent",
-          }}
-        >
-          <div className="d-flex align-items-center">
-          <strong className="me-2">{order.item.item_name}</strong>
-          <button
-          type="button"
-          className="btn btn-sm btn-outline-danger me-2"
-          onClick={() => onRemove(order.item)}
-          style={{ borderRadius: "50%", width: "28px", height: "28px", padding: 0 }}
-          >
-          -
-          </button>
-          <span className="mx-2">{order.quantity}</span>
-          <button
-          type="button"
-          className="btn btn-sm btn-outline-primary"
-          onClick={() => onAdd(order.item)}
-          style={{ borderRadius: "50%", width: "28px", height: "28px", padding: 0 }}
-          >
-          +
-          </button>
-          <span className="ms-3" style={{ fontSize: "0.95em", color: "#888" }}>
-          ₱{discountedPrice.toFixed(2)} each{" "}
-          {order.item.item_discount}% discount
-          </span>
-          </div>
-        </li>
-        );
-        })}
-        </ul>
-      )}
-      </div>
-
-      {orderList.length > 0 && (
-      <div className="mb-3" style={{ marginBottom: "16px" }}>
-        <p className="fw-bold" style={{ fontSize: "1.2em" }}>
-        Total Price: ₱
-        {totalPrice.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        })}
-        </p>
-      </div>
-      )}
-      </div>
-
-      <div className="d-flex justify-content-end" style={{ marginTop: "auto" }}>
-      <button
-      type="submit"
-      className="btn btn-primary"
-      disabled={state.loadingStore}
-      style={{
-        width: "100%",
-        borderRadius: "8px",
-        fontWeight: "bold",
-        fontSize: "1.1em",
-        padding: "12px 0",
-        letterSpacing: "1px",
-      }}
+      <form
+        onSubmit={handleStoreOrder}
+        style={{ flex: 1, display: "flex", flexDirection: "column" }}
       >
-      {state.loadingStore ? (
-        <>
-        <SpinnerSmall /> Loading...
-        </>
-      ) : (
-        "Submit Order"
-      )}
-      </button>
-      </div>
+        <div className="form-group" style={{ flex: 1, overflowY: "auto" }}>
+          <div style={{ marginBottom: "16px" }}>
+            <label htmlFor="customer_email" className="fw-bold">
+              Customer Email
+            </label>
+            <input
+              type="email"
+              className={`form-control ${
+                state.errors.customer_email ? "is-invalid" : ""
+              }`}
+              id="customer_email"
+              name="customer_email"
+              value={state.customer_email}
+              onChange={handleInputChange}
+              style={{ borderRadius: "8px", marginTop: "4px" }}
+            />
+            {state.errors.customer_email && (
+              <p className="text-danger">{state.errors.customer_email[0]}</p>
+            )}
+          </div>
+          <div style={{ marginBottom: "16px" }}>
+            <label htmlFor="first_name" className="fw-bold">
+              First Name
+            </label>
+            <input
+              type="text"
+              className={`form-control ${
+                state.errors.first_name ? "is-invalid" : ""
+              }`}
+              id="first_name"
+              name="first_name"
+              value={state.first_name}
+              onChange={handleInputChange}
+              style={{ borderRadius: "8px", marginTop: "4px" }}
+            />
+            {state.errors.first_name && (
+              <p className="text-danger">{state.errors.first_name[0]}</p>
+            )}
+          </div>
+
+          <div className="mb-3" style={{ marginBottom: "16px" }}>
+            <label htmlFor="last_name" className="fw-bold">
+              Last Name
+            </label>
+            <input
+              type="text"
+              className={`form-control ${
+                state.errors.last_name ? "is-invalid" : ""
+              }`}
+              id="last_name"
+              name="last_name"
+              value={state.last_name}
+              onChange={handleInputChange}
+              style={{ borderRadius: "8px", marginTop: "4px" }}
+            />
+            {state.errors.last_name && (
+              <p className="text-danger">{state.errors.last_name[0]}</p>
+            )}
+          </div>
+
+          <div className="mb-3" style={{ marginBottom: "16px" }}>
+            <label className="fw-bold">Order List</label>
+            {orderList.length === 0 ? (
+              <p className="text-muted">No items in the order yet.</p>
+            ) : (
+              <ul
+                className="list-group mb-2"
+                style={{ maxHeight: "180px", overflowY: "auto" }}
+              >
+                {orderList.map((order) => {
+                  const discountedPrice = getDiscountedPrice(
+                    order.price,
+                    order.item.item_discount ?? 0
+                  );
+                  return (
+                    <li
+                      key={order.item_id}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                      style={{
+                        border: "none",
+                        borderBottom: "1px solid #eee",
+                        padding: "10px 0",
+                        background: "transparent",
+                      }}
+                    >
+                      <div className="d-flex align-items-center">
+                        <strong className="me-2">{order.item.item_name}</strong>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-danger me-2"
+                          onClick={() => onRemove(order.item)}
+                          style={{
+                            borderRadius: "50%",
+                            width: "28px",
+                            height: "28px",
+                            padding: 0,
+                          }}
+                        >
+                          -
+                        </button>
+                        <span className="mx-2">{order.quantity}</span>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => onAdd(order.item)}
+                          style={{
+                            borderRadius: "50%",
+                            width: "28px",
+                            height: "28px",
+                            padding: 0,
+                          }}
+                        >
+                          +
+                        </button>
+                        <span
+                          className="ms-3"
+                          style={{ fontSize: "0.95em", color: "#888" }}
+                        >
+                          ₱{discountedPrice.toFixed(2)} each{" "}
+                          {order.item.item_discount}% discount
+                        </span>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          {orderList.length > 0 && (
+            <div
+              style={{
+                borderTop: "1px solid #ddd",
+                paddingTop: "12px",
+                marginTop: "auto",
+              }}
+            >
+              <strong>Total: ₱{totalPrice.toFixed(2)}</strong>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-auto d-flex justify-content-end align-items-center">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={state.loadingStore}
+            style={{ borderRadius: "8px", minWidth: "100px" }}
+          >
+            {state.loadingStore ? <SpinnerSmall /> : "Place Order"}
+          </button>
+        </div>
       </form>
     </div>
   );

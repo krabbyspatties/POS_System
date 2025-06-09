@@ -3,10 +3,15 @@ import type { ReactNode } from "react";
 import AxiosInstance from "../AxiosInstance";
 
 interface User {
-  id: number;
-  name: string;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  user_image: string | File;
+  user_name: string;
   user_email: string;
-  // Add more fields based on your User model
+  user_phone: string;
+  user_address: string;
+  role: "cashier" | "manager" | "administrator";
 }
 
 interface AuthContextProps {

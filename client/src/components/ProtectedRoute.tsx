@@ -1,12 +1,21 @@
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import type { ReactNode } from "react";
 
-const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn } = useAuth();
+interface ProtectedRouteProps {
+  children: ReactNode;
+  allowedRoles?: string[];
+}
 
-  if (!isLoggedIn) {
+const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
+  const { isLoggedIn, user } = useAuth();
+
+  if (!isLoggedIn || !user) {
     return <Navigate to="/" replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/products" replace />;
   }
 
   return children;

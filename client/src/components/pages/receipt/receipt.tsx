@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -40,15 +42,19 @@ const Receipt = ({
   first_name: string;
   last_name: string;
 }) => {
+  console.log("Order Items:", order_item);
   const receiptRef = useRef<HTMLDivElement>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const total = (order_item ?? []).reduce(
-    (sum, item) => sum + item.quantity * item.price,
-    0
-  );
+  const total = (order_item ?? []).reduce((sum, item) => {
+    const finalPrice =
+      typeof item.price === "number" ? item.price : Number(item.price || 0);
+    const lineTotal = finalPrice * item.quantity;
+    return sum + lineTotal;
+  }, 0);
+
   const fullname = `${first_name} ${last_name}`;
 
   useEffect(() => {
@@ -65,8 +71,8 @@ const Receipt = ({
 
         const canvas = await html2canvas(receiptRef.current, {
           scale: 2,
-          logging: false, // Reduce console logs
-          useCORS: true, // Handle cross-origin images better
+          logging: false,
+          useCORS: true,
         });
         const imgData = canvas.toDataURL("image/png");
 
@@ -89,14 +95,10 @@ const Receipt = ({
         formData.append("last_name", last_name);
         formData.append("total", total.toString());
 
-        // Upload the PDF blob
         const response = await ReceiptService.saveReceipt(formData);
         const data = response.data;
 
-        // Check if the receipt was saved successfully
         if (data.url) {
-          // Even if Make.com webhook failed, we consider this a success
-          // since the PDF was saved
           setHasUploaded(true);
 
           if (data.message.includes("failed to send")) {
@@ -126,6 +128,8 @@ const Receipt = ({
     total,
   ]);
 
+  console.log("Order items:", order_item);
+
   return (
     <div>
       <div ref={receiptRef} className="card mt-3 p-3">
@@ -139,17 +143,50 @@ const Receipt = ({
           </p>
         </div>
         <ul className="list-group list-group-flush">
-          {order_item.map((item) => (
-            <li
-              key={item.item_id}
-              className="list-group-item d-flex justify-content-between"
-            >
-              <span>
-                {item.item.item_name} x {item.quantity}
-              </span>
-              <span>₱{(item.price * item.quantity).toFixed(2)}</span>
-            </li>
-          ))}
+          {order_item.map((item) => {
+            const finalPrice =
+              typeof item.price === "number"
+                ? item.price
+                : Number(item.price || 0);
+            const originalPrice = item.original_price
+              ? typeof item.original_price === "number"
+                ? item.original_price
+                : Number(item.original_price)
+              : finalPrice;
+            const discountPercent = item.discount_percent
+              ? typeof item.discount_percent === "number"
+                ? item.discount_percent
+                : Number(item.discount_percent)
+              : 0;
+
+            const lineTotal = finalPrice * item.quantity;
+            const hasDiscount =
+              discountPercent > 0 && originalPrice > finalPrice;
+
+            return (
+              <li
+                key={item.item_id}
+                className="list-group-item d-flex justify-content-between"
+              >
+                <div>
+                  <span>
+                    {item.item.item_name} x {item.quantity}
+                  </span>
+                  {hasDiscount && (
+                    <div className="text-muted small">
+                      <span style={{ textDecoration: "line-through" }}>
+                        ₱{originalPrice.toFixed(2)} each
+                      </span>{" "}
+                      <span className="text-success">
+                        {discountPercent}% off - ₱{finalPrice.toFixed(2)} each
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span>₱{lineTotal.toFixed(2)}</span>
+              </li>
+            );
+          })}
           <li className="list-group-item d-flex justify-content-between">
             <strong>Total:</strong>
             <strong>₱{total.toFixed(2)}</strong>

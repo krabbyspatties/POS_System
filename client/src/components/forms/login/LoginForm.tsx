@@ -42,7 +42,7 @@ const LoginForm = () => {
     login(state.user_email, state.password)
       .then(() => {
         console.log("Login successful. navigating");
-        navigate("/users");
+        navigate("/products");
       })
       .catch((error) => {
         console.error("Login failed", error);

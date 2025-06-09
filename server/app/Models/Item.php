@@ -27,7 +27,6 @@ class Item extends Model
         'is_deleted',
     ];
 
-    // Accessors to match expected field names
     public function getIdAttribute()
     {
         return $this->item_id;
@@ -45,7 +44,7 @@ class Item extends Model
 
     public function getCostPriceAttribute()
     {
-        return $this->item_price; // adjust if you have a separate cost_price field
+        return $this->item_price;
     }
 
     public function category(): BelongsTo
