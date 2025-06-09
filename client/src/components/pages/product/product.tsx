@@ -78,14 +78,14 @@ const ProductsTable = ({
 
     if (filters.category !== "") {
       filtered = filtered.filter(
-        (item) => item.category?.toString() === filters.category
+        (item) => item.category?.category_id?.toString() === filters.category
       );
     }
 
     if (filters.sort === "price_asc") {
-      filtered.sort((a, b) => a.item_price - b.item_price);
+      filtered.sort((a, b) => Number(a.item_price) - Number(b.item_price));
     } else if (filters.sort === "price_desc") {
-      filtered.sort((a, b) => b.item_price - a.item_price);
+      filtered.sort((a, b) => Number(b.item_price) - Number(a.item_price));
     }
 
     setState((prev) => ({ ...prev, filteredItems: filtered }));

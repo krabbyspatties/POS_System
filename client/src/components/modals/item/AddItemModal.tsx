@@ -16,7 +16,6 @@ const AddItemModal = ({
 }: AddItemModalProps) => {
   const submitFormRef = useRef<() => void | null>(null);
 
-  const [refreshItems, setRefreshItems] = useState(false);
   const [loadingStore, setLoadingStore] = useState(false);
 
   const [message, setMessage] = useState("");
@@ -97,8 +96,10 @@ const AddItemModal = ({
                 setLoadingStore={setLoadingStore}
                 onItemAdded={(message) => {
                   handleShowAlertMessage(message, true, true);
-                  setRefreshItems(!refreshItems);
-                  onRefreshItems(!refreshItems);
+                  onRefreshItems(true); // this triggers ItemsPage refresh
+                  setTimeout(() => {
+                    onClose(); // optional: auto-close modal after add
+                  }, 1000); // 1 second delay so user can see success message
                 }}
               />
             </div>

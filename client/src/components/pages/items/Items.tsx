@@ -45,7 +45,7 @@ const ItemsPage = () => {
     loadItems();
   }, [refreshItems]);
 
-  // Handlers for modals (same as before)
+  // Modal Handlers
   const handleOpenEditItemModal = (item: Items) => {
     setSelectedItem(item);
     setOpenEditItemModal(true);
@@ -66,7 +66,7 @@ const ItemsPage = () => {
     setOpenDeleteItemModal(false);
   };
 
-  // Define low stock threshold, e.g., less than 5
+  // Low stock threshold
   const lowStockItems = items.filter((item) => item.item_quantity < 100);
 
   const content = (
@@ -74,7 +74,7 @@ const ItemsPage = () => {
       {openAddItemModal && (
         <AddItemModal
           showModal={true}
-          onRefreshItems={() => setRefreshItems(!refreshItems)}
+          onRefreshItems={() => setRefreshItems((prev) => !prev)}
           onClose={() => setOpenAddItemModal(false)}
         />
       )}
@@ -82,14 +82,14 @@ const ItemsPage = () => {
         <EditItemModal
           showModal={true}
           item={selectedItem}
-          onRefreshItems={() => setRefreshItems(!refreshItems)}
+          onRefreshItems={() => setRefreshItems((prev) => !prev)}
           onClose={handleCloseEditItemModal}
         />
       )}
       <DeleteItemModal
         showModal={openDeleteItemModal}
         item={selectedItem}
-        onRefreshItems={() => setRefreshItems(!refreshItems)}
+        onRefreshItems={() => setRefreshItems((prev) => !prev)}
         onClose={handleCloseDeleteItemModal}
       />
 
