@@ -275,26 +275,41 @@ const AddOrderForm = ({
           </div>
 
           {orderList.length > 0 && (
-            <div
-              style={{
-                borderTop: "1px solid #ddd",
-                paddingTop: "12px",
-                marginTop: "auto",
-              }}
-            >
-              <strong>Total: ₱{totalPrice.toFixed(2)}</strong>
+            <div className="mb-3" style={{ marginBottom: "16px" }}>
+              <p className="fw-bold" style={{ fontSize: "1.2em" }}>
+                Total Price: ₱
+                {totalPrice.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}
+              </p>
             </div>
           )}
         </div>
 
-        <div className="mt-auto d-flex justify-content-end align-items-center">
+        <div
+          className="d-flex justify-content-end"
+          style={{ marginTop: "auto" }}
+        >
           <button
             type="submit"
             className="btn btn-primary"
             disabled={state.loadingStore}
-            style={{ borderRadius: "8px", minWidth: "100px" }}
+            style={{
+              width: "100%",
+              borderRadius: "8px",
+              fontWeight: "bold",
+              fontSize: "1.1em",
+              padding: "12px 0",
+              letterSpacing: "1px",
+            }}
           >
-            {state.loadingStore ? <SpinnerSmall /> : "Place Order"}
+            {state.loadingStore ? (
+              <>
+                <SpinnerSmall /> Loading...
+              </>
+            ) : (
+              "Submit Order"
+            )}
           </button>
         </div>
       </form>

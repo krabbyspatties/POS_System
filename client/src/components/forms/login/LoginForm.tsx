@@ -82,66 +82,103 @@ const LoginForm = () => {
   };
 
   return (
-    <>
-      <AlertMessage
-        message={message}
-        isSuccess={isSuccess}
-        isVisible={isVisible}
-        onClose={handleCloseAlertMessage}
-      />
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="user_email">Email</label>
-          <input
-            type="text"
-            className={`form-control ${
-              state.errors.user_email ? "is-invalid" : ""
-            }`}
-            name="user_email"
-            id="user_email"
-            value={state.user_email}
-            onChange={handleInputChange}
-            autoFocus
-          />
-          {state.errors.user_email && (
-            <span className="text-danger">{state.errors.user_email[0]}</span>
-          )}
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        backgroundImage: `url("/src/images/bg.png")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100vh",
+        width: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      }}
+    >
+      <div
+        className="card shadow-lg p-4 p-md-5 rounded-4"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          backgroundColor: "rgba(255,255,255,0.95)",
+        }}
+      >
+        <div className="text-center mb-4">
+          <h2 className="fw-bold">Welcome</h2>
+          <p className="text-muted small">Login to your account</p>
         </div>
 
-        <div className="mb-3">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            className={`form-control ${
-              state.errors.password ? "is-invalid" : ""
-            }`}
-            name="password"
-            id="password"
-            value={state.password}
-            onChange={handleInputChange}
-          />
-          {state.errors.password && (
-            <span className="text-danger">{state.errors.password[0]}</span>
-          )}
-        </div>
+        <AlertMessage
+          message={message}
+          isSuccess={isSuccess}
+          isVisible={isVisible}
+          onClose={handleCloseAlertMessage}
+        />
 
-        <div className="d-flex justify-content-end">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={state.loadingLogin}
-          >
-            {state.loadingLogin ? (
-              <>
-                <SpinnerSmall /> Logging In...
-              </>
-            ) : (
-              "Login"
+        <form onSubmit={handleLogin} noValidate>
+          <div className="mb-3">
+            <label htmlFor="user_email" className="form-label fw-semibold">
+              Email
+            </label>
+            <input
+              type="text"
+              className={`form-control shadow-sm ${
+                state.errors.user_email ? "is-invalid" : ""
+              }`}
+              name="user_email"
+              id="user_email"
+              value={state.user_email}
+              onChange={handleInputChange}
+              autoFocus
+              placeholder="Enter your email"
+            />
+            {state.errors.user_email && (
+              <div className="invalid-feedback">
+                {state.errors.user_email[0]}
+              </div>
             )}
-          </button>
-        </div>
-      </form>
-    </>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label fw-semibold">
+              Password
+            </label>
+            <input
+              type="password"
+              className={`form-control shadow-sm ${
+                state.errors.password ? "is-invalid" : ""
+              }`}
+              name="password"
+              id="password"
+              value={state.password}
+              onChange={handleInputChange}
+              placeholder="••••••••"
+            />
+            {state.errors.password && (
+              <div className="invalid-feedback">{state.errors.password[0]}</div>
+            )}
+          </div>
+
+          <div className="d-grid mt-4">
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg rounded-3"
+              disabled={state.loadingLogin}
+            >
+              {state.loadingLogin ? (
+                <>
+                  <SpinnerSmall /> <span className="ms-2">Logging In...</span>
+                </>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

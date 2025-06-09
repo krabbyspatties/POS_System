@@ -5,10 +5,10 @@ import MainLayout from "../../layout/MainLayout";
 const ChartPage = () => {
   const content = (
     <>
-      <h2>Chart</h2>
+      <h2></h2>
       <div style={{ display: "flex", gap: "2rem" }}>
-      <BestSellingChart />
-      <TopSpenderChart />
+        <BestSellingChart />
+        <TopSpenderChart />
       </div>
     </>
   );
