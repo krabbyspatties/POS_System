@@ -99,6 +99,7 @@ const EditItemForm = ({
       if (state.item_discount !== undefined && state.item_discount !== null) {
         formData.append("item_discount", String(state.item_discount));
       }
+      formData.append("item_quantity", String(state.item_quantity));
 
       formData.append("stock_level", state.stock_level);
 

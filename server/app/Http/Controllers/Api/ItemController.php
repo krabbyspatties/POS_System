@@ -18,6 +18,15 @@ class ItemController extends Controller
         ], 200);
     }
 
+    public function getItem($id)
+    {
+        $item = Item::with('category')->where('is_deleted', 0)->findOrFail($id);
+
+        return response()->json([
+            'item' => $item
+        ], 200);
+    }
+
     public function storeItem(Request $request)
     {
         $validated = $request->validate([
@@ -43,6 +52,7 @@ class ItemController extends Controller
             'message' => 'Item Successfully Added.'
         ], 200);
     }
+
     public function updateItem(Request $request, $id)
     {
         $validated = $request->validate([
@@ -56,12 +66,16 @@ class ItemController extends Controller
             'category_id' => ['required', 'exists:tbl_item_category,category_id'],
         ]);
 
+        $item = Item::findOrFail($id);
 
+        // Only update image if a new one is uploaded
         if ($request->hasFile('item_image')) {
-            $validated['item_image'] = $request->file('item_image')->store('pictures', 'public');
+            $validated['item_image'] = $request->file('item_image')->store('images', 'public');
+        } else {
+            // Remove item_image from validated data to keep existing image
+            unset($validated['item_image']);
         }
 
-        $item = Item::findOrFail($id);
         $item->update($validated);
 
         return response()->json([
@@ -75,7 +89,7 @@ class ItemController extends Controller
             'is_deleted' => 1
         ]);
         return response()->json([
-            'message' => 'Item Sucessfully Deleted'
+            'message' => 'Item Successfully Deleted'
         ], 200);
     }
 }

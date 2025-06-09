@@ -9,6 +9,14 @@ const ItemService = {
       })
   },
 
+  getItem: async (itemId: number) => {
+    return AxiosInstance.get(`/getItem/${itemId}`)
+      .then((response) => response)
+      .catch((error) => {
+        throw error
+      })
+  },
+
   storeItem: async (data: FormData) => {
     return AxiosInstance.post("/storeItem", data, {
       headers: {
@@ -28,7 +36,6 @@ const ItemService = {
       console.log(key, value)
     }
 
-    // Changed from PUT to POST to match UserService pattern
     return AxiosInstance.post(`/updateItem/${itemId}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
