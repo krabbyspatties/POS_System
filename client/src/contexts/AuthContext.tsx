@@ -1,8 +1,15 @@
 import axios from "axios";
-import { createContext, type ReactNode, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  // Add more fields based on your User model
+}
 
 interface AuthContextProps {
-  user: any;
+  user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -12,14 +19,25 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+  }, [token]);
+
   const login = async (email: string, password: string) => {
-    const response = await axios.post("http://127.0.0.1:8000/api/login", {
-      user_email: email,
+    const response = await axios.post("/login", {
+      email,
       password,
     });
 
@@ -34,7 +52,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = async () => {
-    await axios.post("http://127.0.0.1:8000/api/logout");
+    try {
+      await axios.post("/logout");
+    } catch (err) {
+      console.warn("Logout error:", err);
+    }
+
     setToken(null);
     setUser(null);
 
@@ -55,10 +78,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-
   return context;
 };
