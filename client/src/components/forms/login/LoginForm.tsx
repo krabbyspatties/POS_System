@@ -12,7 +12,7 @@ const LoginForm = () => {
 
   const [state, setState] = useState({
     loadingLogin: false,
-    email: "",
+    user_email: "",
     password: "",
     errors: {} as LoginFieldErrors,
   });
@@ -36,9 +36,10 @@ const LoginForm = () => {
     setState((prevState) => ({
       ...prevState,
       loadingLogin: true,
+      errors: {} as LoginFieldErrors, // clear previous errors
     }));
 
-    login(state.email, state.password)
+    login(state.user_email, state.password)
       .then(() => {
         console.log("Login successful. navigating");
         navigate("/users");
@@ -90,18 +91,20 @@ const LoginForm = () => {
       />
       <form onSubmit={handleLogin}>
         <div className="mb-3">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="user_email">Email</label>
           <input
             type="text"
-            className={`form-control ${state.errors.email ? "is-invalid" : ""}`}
-            name="email"
-            id="email"
-            value={state.email}
+            className={`form-control ${
+              state.errors.user_email ? "is-invalid" : ""
+            }`}
+            name="user_email"
+            id="user_email"
+            value={state.user_email}
             onChange={handleInputChange}
             autoFocus
           />
-          {state.errors.email && (
-            <span className="text-danger">{state.errors.email[0]}</span>
+          {state.errors.user_email && (
+            <span className="text-danger">{state.errors.user_email[0]}</span>
           )}
         </div>
 
