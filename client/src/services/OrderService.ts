@@ -2,7 +2,7 @@ import AxiosInstance from "../AxiosInstance";
 
 const OrderServices = {
   loadOrders: async () => {
-    return AxiosInstance.get('/loadOrder') // If this isn't implemented, consider removing it
+    return AxiosInstance.get('/loadOrder') 
       .then((response) => response)
       .catch((error) => { throw error; });
   },
@@ -22,7 +22,6 @@ const OrderServices = {
     }
   },
 
-  // ✅ NEW METHOD: Get order by ID
   getOrderById: async (orderId: number | string) => {
     try {
       const response = await AxiosInstance.get(`/orders/${orderId}`);

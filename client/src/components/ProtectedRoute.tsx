@@ -8,7 +8,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="text-center mt-5">Loading...</div>;
+  }
 
   if (!isLoggedIn || !user) {
     return <Navigate to="/" replace />;

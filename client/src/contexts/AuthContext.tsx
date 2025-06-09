@@ -20,6 +20,7 @@ interface AuthContextProps {
   login: (user_email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   isLoggedIn: boolean;
+  isLoading: boolean; // 👈 added this!
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
+  const [isLoading, setIsLoading] = useState(true); // 👈 added this!
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -41,6 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         "Authorization"
       ] = `Bearer ${token}`;
     }
+
+    setIsLoading(false); // 👈 once done restoring
   }, [token]);
 
   const login = async (user_email: string, password: string) => {
@@ -78,7 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, isLoggedIn, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

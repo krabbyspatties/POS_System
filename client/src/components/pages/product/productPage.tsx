@@ -50,6 +50,7 @@ const ProductPage = () => {
           quantity: 1,
           price: item.item_price,
           item,
+          total_price: item.item_price * 1,
         },
       ];
     });

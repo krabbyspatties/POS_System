@@ -16,87 +16,138 @@ interface SummaryData {
 }
 
 const surveyQuestions: { [question: string]: string[] } = {
-  "The POS system is easy to use and user-friendly.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How easy was it to complete your transaction using our POS system?": [
+    "Very Easy",
+    "Easy",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Difficult",
+    "Very Difficult",
   ],
-  "The system responds quickly without significant delays.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How easy was it to navigate the POS screen or menu?": [
+    "Very Easy",
+    "Easy",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Difficult",
+    "Very Difficult",
   ],
-  "It is easy to train new staff to use the POS system.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How satisfied were you with the speed of the checkout?": [
+    "Very Satisfied",
+    "Satisfied",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Dissatisfied",
+    "Very Dissatisfied",
   ],
-  "The POS system helps improve our transaction accuracy.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How smooth was the payment process?": [
+    "Excellent",
+    "Good",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Poor",
+    "Very Poor",
   ],
-  "I am satisfied with the reliability and stability of the system.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How well did the POS system support your preferred payment method?": [
+    "Completely",
+    "Mostly",
+    "Moderately",
+    "Slightly",
+    "Not at all",
+  ],
+  "Did you experience any technical issues during the transaction?": [
+    "Perfect experience",
+    "No issues",
+    "A few minor issues",
+    "Some issues",
+    "Many issues",
+  ],
+  "How clear and understandable was the on-screen information?": [
+    "Very clear",
+    "Clear",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Unclear",
+    "Very unclear",
   ],
-  "The features of the POS system meet the needs of our business.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How confident were you in reviewing your order details before payment?": [
+    "Completely confident",
+    "Very confident",
+    "Moderately confident",
+    "Slightly confident",
+    "Not confident at all",
+  ],
+  "How accurately did the POS system display your total amount?": [
+    "Very accurate",
+    "Accurate",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Inaccurate",
+    "Very inaccurate",
   ],
-  "The system integrates well with our inventory and reporting tools.": [
-    "Strongly Disagree",
-    "Disagree",
+  "How satisfied were you with the promptness and accuracy of your receipt?": [
+    "Very Satisfied",
+    "Satisfied",
     "Neutral",
-    "Agree",
-    "Strongly Agree",
+    "Dissatisfied",
+    "Very Dissatisfied",
   ],
-  "Customer transactions are processed efficiently using the POS.": [
-    "Strongly Disagree",
-    "Disagree",
-    "Neutral",
-    "Agree",
-    "Strongly Agree",
+  "How helpful was the customer-facing screen during checkout?": [
+    "Extremely helpful",
+    "Very helpful",
+    "Moderately helpful",
+    "Slightly helpful",
+    "Not helpful at all",
   ],
-  "Technical support is responsive and helpful when issues arise.": [
-    "Strongly Disagree",
-    "Disagree",
-    "Neutral",
-    "Agree",
-    "Strongly Agree",
-  ],
-  "I would recommend this POS system to other businesses.": [
-    "Strongly Disagree",
-    "Disagree",
-    "Neutral",
-    "Agree",
-    "Strongly Agree",
-  ],
-  "What suggestions do you have for improving the POS system to better serve your needs?":
+  "In your opinion, What possible improvements can be implemented in the system?":
     [],
 };
 
 // Map each choice to a fixed color
 const choiceColorMap: { [choice: string]: string } = {
-  "Strongly Disagree": "#FF3333", // Red
-  Disagree: "#FF8042", // Orange
-  Neutral: "#FFBB28", // Yellow
-  Agree: "#00C49F", // Teal
-  "Strongly Agree": "#0088FE", // Blue
+  "Very Easy": "#0088FE",
+  Easy: "#00C49F",
+  Neutral: "#FFBB28",
+  Difficult: "#FF8042",
+  "Very Difficult": "#FF3333",
+
+  "Very Satisfied": "#0088FE",
+  Satisfied: "#00C49F",
+  Dissatisfied: "#FF8042",
+  "Very Dissatisfied": "#FF3333",
+
+  Excellent: "#0088FE",
+  Good: "#00C49F",
+  Poor: "#FF8042",
+  "Very Poor": "#FF3333",
+
+  Completely: "#0088FE",
+  Mostly: "#00C49F",
+  Moderately: "#FFBB28",
+  Slightly: "#FF8042",
+  "Not at all": "#FF3333",
+
+  "Perfect experience": "#0088FE",
+  "No issues": "#00C49F",
+  "A few minor issues": "#FFBB28",
+  "Some issues": "#FF8042",
+  "Many issues": "#FF3333",
+
+  "Very clear": "#0088FE",
+  Clear: "#00C49F",
+  Unclear: "#FF8042",
+  "Very unclear": "#FF3333",
+
+  "Completely confident": "#0088FE",
+  "Very confident": "#00C49F",
+  "Moderately confident": "#FFBB28",
+  "Slightly confident": "#FF8042",
+  "Not confident at all": "#FF3333",
+
+  "Very accurate": "#0088FE",
+  Accurate: "#00C49F",
+  Inaccurate: "#FF8042",
+  "Very inaccurate": "#FF3333",
+
+  "Extremely helpful": "#0088FE",
+  "Very helpful": "#00C49F",
+  "Moderately helpful": "#FFBB28",
+  "Slightly helpful": "#FF8042",
+  "Not helpful at all": "#FF3333",
 };
 
 const SurveyCharts: React.FC = () => {
@@ -158,18 +209,20 @@ const SurveyCharts: React.FC = () => {
                       cx="50%"
                       cy="50%"
                       outerRadius={100}
-                      fill="#8884d8"
                       label={({ name, percent }) =>
                         `${name} ${(percent * 100).toFixed(0)}%`
                       }
                       isAnimationActive={false}
                     >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={choiceColorMap[entry.name] || "#8884d8"}
-                        />
-                      ))}
+                      {data.map((entry, index) => {
+                        console.log("ENTRY NAME:", entry.name);
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={choiceColorMap[entry.name] || "#8884d8"}
+                          />
+                        );
+                      })}
                     </Pie>
                     <Tooltip formatter={(value: number) => [value, "Count"]} />
                     <Legend />
