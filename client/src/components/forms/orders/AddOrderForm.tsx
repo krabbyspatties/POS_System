@@ -301,7 +301,21 @@ const AddOrderForm = ({
               fontSize: "1.1em",
               padding: "12px 0",
               letterSpacing: "1px",
+              background: "linear-gradient(90deg, #000000 0%, #b30000 100%)",
+              color: "white",
+              border: "none",
+              boxShadow: "0 4px 12px rgba(179, 0, 0, 0.6)",
+              cursor: state.loadingStore ? "not-allowed" : "pointer",
+              transition: "background 0.3s ease",
             }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background =
+                "linear-gradient(90deg, #b30000 0%, #000000 100%)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background =
+                "linear-gradient(90deg, #000000 0%, #b30000 100%)")
+            }
           >
             {state.loadingStore ? (
               <>
