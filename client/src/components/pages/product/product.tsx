@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Items } from "../../../interfaces/Item/Items";
 import type { ItemCategories } from "../../../interfaces/itemcategory/ItemCategory";
-import ItemCategoryServices from "../../../services/ItemCategoryService";
+import ItemCategoryServices from "../../../services/ItemCategoryService"; // Correct service for categories
 import ItemService from "../../../services/ItemService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
@@ -30,12 +30,13 @@ const ProductsTable = ({
   const [filters, setFilters] = useState({
     search: "",
     category: "",
-    sort: "",
+    sort: "", // 'price_asc', 'price_desc'
   });
 
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const selectedItemRef = useRef<HTMLDivElement | null>(null);
 
+  // Load items and categories
   const handleLoadItems = () => {
     setState((prev) => ({ ...prev, loadingItems: true }));
 
@@ -64,21 +65,25 @@ const ProductsTable = ({
     handleLoadItems();
   }, [refreshItems]);
 
+  // Filter and sort items whenever filters or items change
   useEffect(() => {
     let filtered = [...state.items];
 
+    // Search filter
     if (filters.search.trim() !== "") {
       filtered = filtered.filter((item) =>
         item.item_name.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
 
+    // Category filter
     if (filters.category !== "") {
       filtered = filtered.filter(
         (item) => item.category?.toString() === filters.category
       );
     }
 
+    // Sort filter
     if (filters.sort === "price_asc") {
       filtered.sort((a, b) => a.item_price - b.item_price);
     } else if (filters.sort === "price_desc") {
@@ -123,21 +128,19 @@ const ProductsTable = ({
   }, []);
 
   return (
-    <div
-      className="d-flex p-3"
-      style={{ gap: "20px", marginTop: "70px", minHeight: "100vh" }}
-    >
-      {/* Sidebar Filters */}
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <div
         style={{
           width: 260,
-          backgroundColor: "#f8f9fa",
-          border: "1px solid #e0e0e0",
-          borderRadius: 8,
+          backgroundColor: "#007bff",
+          color: "#fff",
           padding: 16,
+          position: "relative",
+          zIndex: 1,
+          minHeight: "100vh",
         }}
       >
-        <h6 className="fw-bold mb-3">Filter Products</h6>
+        <h5>Advanced Filter</h5>
         <input
           type="text"
           name="search"
@@ -169,72 +172,86 @@ const ProductsTable = ({
           <option value="price_asc">Low to High</option>
           <option value="price_desc">High to Low</option>
         </select>
+
         <button
-          className="btn btn-outline-secondary w-100"
+          className="btn btn-light text-primary mt-2"
           onClick={resetFilters}
+          style={{ border: "2px solid white" }}
+          type="button"
         >
           Reset Filters
         </button>
       </div>
 
-      {/* Main Item Grid */}
-      <div style={{ flex: 1 }}>
+      <div
+        style={{
+          flex: 1,
+          padding: 32,
+          marginRight: 400,
+          transition: "margin-right 0.3s",
+        }}
+      >
         <div
           style={{
             background: "#fff",
             borderRadius: 8,
             boxShadow: "0 2px 8px #e0e0e0",
+            marginTop: 20,
             padding: 24,
           }}
         >
           {state.loadingItems ? (
-            <div className="text-center py-5">
+            <div className="py-3 text-center">
               <Spinner />
             </div>
           ) : state.filteredItems.length > 0 ? (
-            <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+            <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 py-3">
               {state.filteredItems.map((item) => (
                 <div className="col" key={item.item_id}>
-                  <div className="card h-100 shadow-sm">
+                  <div className="card h-100 shadow-sm product-card">
                     <div
-                      className="position-relative"
+                      className="product-image-wrapper"
                       onClick={() => {
-                        const isInOrder = orderList.find(
-                          (o) => o.item_id === item.item_id
+                        const existingOrder = orderList.find(
+                          (order) => order.item_id === item.item_id
                         );
-                        isInOrder ? onRemove(item) : onAdd(item);
-                        setSelectedItemId(item.item_id);
+                        if (existingOrder) {
+                          onRemove(item);
+                        } else {
+                          onAdd(item);
+                        }
                       }}
-                      style={{ cursor: "pointer" }}
+                      style={{ position: "relative", cursor: "pointer" }}
                     >
                       <img
                         src={`http://localhost:8000/storage/${
                           item.item_image || "Images/placeholder.png"
                         }`}
                         alt={item.item_name}
-                        className="card-img-top"
+                        className="card-img-top product-image"
                       />
                       {selectedItemId === item.item_id && (
                         <div
                           ref={selectedItemRef}
-                          className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded text-white"
+                          className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 p-2 rounded d-flex justify-content-center align-items-center z-2 text-white"
                         >
                           Selected
                         </div>
                       )}
                     </div>
-                    <div className="card-body">
+                    <div className="card-body d-flex flex-column">
                       <h6
-                        className="card-title text-truncate"
+                        className="card-title product-title"
                         title={item.item_name}
                       >
                         {item.item_name}
                       </h6>
-                      <p className="card-text small text-muted">
+                      <p className="card-text product-description flex-grow-1">
+                        
                         {item.item_description}
                       </p>
-                      <p className="card-text fw-bold mb-0">
-                        ₱{item.item_price.toLocaleString()}
+                      <p className="card-text product-price">
+                        <strong>₱{item.item_price.toLocaleString()}</strong>
                       </p>
                     </div>
                   </div>
@@ -242,7 +259,7 @@ const ProductsTable = ({
               ))}
             </div>
           ) : (
-            <div className="text-center py-5">No Items Found</div>
+            <div className="py-3 text-center">No Items Found</div>
           )}
         </div>
       </div>

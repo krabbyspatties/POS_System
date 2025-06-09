@@ -15,8 +15,9 @@ interface SummaryData {
   };
 }
 
-const surveyQuestions: { [question: string]: string[] } = {
-  // (same questions as your original)
+const surveyQuestions: {
+  [question: string]: string[];
+} = {
   "How easy was it to complete your transaction using our POS system?": [
     "Very Easy",
     "Easy",
@@ -24,20 +25,89 @@ const surveyQuestions: { [question: string]: string[] } = {
     "Difficult",
     "Very Difficult",
   ],
-  // ... (include the rest unchanged)
+  "How easy was it to navigate the POS screen or menu?": [
+    "Very Easy",
+    "Easy",
+    "Neutral",
+    "Difficult",
+    "Very Difficult",
+  ],
+  "How satisfied were you with the speed of the checkout?": [
+    "Very Satisfied",
+    "Satisfied",
+    "Neutral",
+    "Dissatisfied",
+    "Very Dissatisfied",
+  ],
+  "How smooth was the payment process?": [
+    "Excellent",
+    "Good",
+    "Neutral",
+    "Poor",
+    "Very Poor",
+  ],
+  "How well did the POS system support your preferred payment method?": [
+    "Completely",
+    "Mostly",
+    "Moderately",
+    "Slightly",
+    "Not at all",
+  ],
+  "Did you experience any technical issues during the transaction?": [
+    "Perfect experience",
+    "No issues",
+    "A few minor issues",
+    "Some issues",
+    "Many issues",
+  ],
+  "How clear and understandable was the on-screen information?": [
+    "Very clear",
+    "Clear",
+    "Neutral",
+    "Unclear",
+    "Very unclear",
+  ],
+  "How confident were you in reviewing your order details before payment?": [
+    "Completely confident",
+    "Very confident",
+    "Moderately confident",
+    "Slightly confident",
+    "Not confident at all",
+  ],
+  "How accurately did the POS system display your total amount?": [
+    "Very accurate",
+    "Accurate",
+    "Neutral",
+    "Inaccurate",
+    "Very inaccurate",
+  ],
+  "How satisfied were you with the promptness and accuracy of your receipt?": [
+    "Very Satisfied",
+    "Satisfied",
+    "Neutral",
+    "Dissatisfied",
+    "Very Dissatisfied",
+  ],
+  "How helpful was the customer-facing screen during checkout?": [
+    "Extremely helpful",
+    "Very helpful",
+    "Moderately helpful",
+    "Slightly helpful",
+    "Not helpful at all",
+  ],
 };
 
 const COLORS = [
-  "#4e79a7",
-  "#f28e2c",
-  "#e15759",
-  "#76b7b2",
-  "#59a14f",
-  "#edc949",
-  "#af7aa1",
-  "#ff9da7",
-  "#9c755f",
-  "#bab0ab",
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#AA336A",
+  "#663399",
+  "#33AA66",
+  "#CC3333",
+  "#3366CC",
+  "#999966",
 ];
 
 const SurveyCharts: React.FC = () => {
@@ -53,39 +123,22 @@ const SurveyCharts: React.FC = () => {
         setLoading(false);
       })
       .catch(() => {
-        setError("❌ Failed to load chart data");
+        setError("Failed to load chart data");
         setLoading(false);
       });
   }, []);
 
+  if (loading) return <p>Loading charts...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div
-      style={{
-        padding: "2rem",
-        backgroundColor: "#f9f9f9",
-        minHeight: "100vh",
-        marginTop: "70px",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: 600,
-          marginBottom: "2rem",
-          color: "#333",
-        }}
-      >
-        📊 Customer Feedback Charts
-      </h2>
-
-      {loading && <p className="text-muted">Loading charts...</p>}
-      {error && <p className="text-danger">{error}</p>}
-
+    <div style={{ padding: 20 }}>
+      <h2 className="mb-4">Survey Results</h2>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(500px, 1fr))",
-          gap: "2rem",
+          gap: "24px",
         }}
       >
         {summary &&
@@ -95,28 +148,18 @@ const SurveyCharts: React.FC = () => {
               name: choice,
               value: answers[choice] || 0,
             }));
-
+  
             return (
               <div
                 key={question}
                 style={{
-                  backgroundColor: "#fff",
+                  background: "#fff",
                   borderRadius: "12px",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-                  padding: "1.5rem",
-                  transition: "0.2s",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  padding: "20px",
                 }}
               >
-                <h4
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    marginBottom: "1rem",
-                    color: "#222",
-                  }}
-                >
-                  {question}
-                </h4>
+                <h4 style={{ marginBottom: "16px" }}>{question}</h4>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -126,10 +169,11 @@ const SurveyCharts: React.FC = () => {
                       cx="50%"
                       cy="50%"
                       outerRadius={100}
-                      labelLine={false}
+                      fill="#8884d8"
                       label={({ name, percent }) =>
-                        `${name}: ${(percent * 100).toFixed(0)}%`
+                        `${name} ${(percent * 100).toFixed(0)}%`
                       }
+                      isAnimationActive={false}
                     >
                       {data.map((_, index) => (
                         <Cell
@@ -138,13 +182,8 @@ const SurveyCharts: React.FC = () => {
                         />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value: number) => [`${value}`, "Count"]} />
-                    <Legend
-                      layout="horizontal"
-                      verticalAlign="bottom"
-                      iconType="circle"
-                      wrapperStyle={{ fontSize: "0.85rem" }}
-                    />
+                    <Tooltip formatter={(value: number) => [value, "Count"]} />
+                    <Legend />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -153,6 +192,7 @@ const SurveyCharts: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default SurveyCharts;

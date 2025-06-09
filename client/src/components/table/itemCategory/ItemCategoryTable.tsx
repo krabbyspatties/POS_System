@@ -42,64 +42,64 @@ const CategoryTable = ({ refreshCategory }: CategoryTableProps) => {
   }, [refreshCategory]);
 
   return (
-    <div className="p-3">
-      <div
-        style={{
-          background: "#fff",
-          borderRadius: "12px",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-          overflowX: "auto",
-        }}
-        className="p-3"
-      >
-        <h6 className="mb-3">Category List</h6>
-        <table className="table table-bordered table-sm mb-0" style={{ fontSize: "14px" }}>
-          <thead className="table-light">
-            <tr>
-              <th style={{ width: "60px" }}>#</th>
-              <th>Category Name</th>
-              <th style={{ width: "140px" }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {state.loadingCategories ? (
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <div style={{ flex: 1, padding: 32 }}>
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 8,
+            boxShadow: "0 2px 8px #e0e0e0",
+          }}
+        >
+          <table className="table table-hover mb-0" style={{ width: "100%" }}>
+            <thead className="table-light">
               <tr>
-                <td colSpan={3} className="text-center py-4">
-                  <Spinner />
-                </td>
+                <th>No.</th>
+                <th>Category</th>
+                <th>Actions</th>
               </tr>
-            ) : state.itemCategories.length > 0 ? (
-              state.itemCategories.map((category, index) => (
-                <tr key={category.category_id}>
-                  <td>{index + 1}</td>
-                  <td>{category.category_name}</td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <Link
-                        to={`/itemCategories/edit/${category.category_id}`}
-                        className="btn btn-outline-primary btn-sm"
-                      >
-                        Edit
-                      </Link>
-                      <Link
-                        to={`/itemCategories/delete/${category.category_id}`}
-                        className="btn btn-outline-danger btn-sm"
-                      >
-                        Delete
-                      </Link>
-                    </div>
+            </thead>
+            <tbody>
+              {state.loadingCategories ? (
+                <tr>
+                  <td colSpan={3} className="text-center">
+                    <Spinner />
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={3} className="text-center text-muted py-3">
-                  No categories found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : state.itemCategories.length > 0 ? (
+                state.itemCategories.map((category, index) => (
+                  <tr className="align-middle" key={category.category_id}>
+                    <td>{index + 1}</td>
+                    <td>{category.category_name}</td>
+                    <td>
+                      <div className="btn-group">
+                        <Link
+                          to={`/itemCategories/edit/${category.category_id}`}
+                          className="btn btn-primary btn-sm"
+                          style={{ marginRight: 8 }}
+                        >
+                          Edit
+                        </Link>
+                        <Link
+                          to={`/itemCategories/delete/${category.category_id}`}
+                          className="btn btn-danger btn-sm"
+                        >
+                          Delete
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr className="align-middle">
+                  <td colSpan={3} className="text-center">
+                    No Categories Found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

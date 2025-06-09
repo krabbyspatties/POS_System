@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import AlertMessage from "../../AlertMessage";
 import ItemForm from "../../forms/items/AddItemsForm";
 import SpinnerSmall from "../../SpinnerSmall";
 
 interface AddItemModalProps {
   showModal: boolean;
-  onRefreshItems: () => void;
+  onRefreshItems: (refresh: boolean) => void;
   onClose: () => void;
 }
 
@@ -16,7 +16,9 @@ const AddItemModal = ({
 }: AddItemModalProps) => {
   const submitFormRef = useRef<() => void | null>(null);
 
+  const [refreshItems, setRefreshItems] = useState(false);
   const [loadingStore, setLoadingStore] = useState(false);
+
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -37,62 +39,17 @@ const AddItemModal = ({
     setIsVisible(false);
   };
 
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showModal]);
-
-  if (!showModal) return null;
-
   return (
     <>
-      {/* Backdrop */}
       <div
-        className="modal-backdrop fade show"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          zIndex: 1040,
-        }}
-        onClick={onClose}
-      />
-
-      {/* Modal Content */}
-      <div
-        className="modal fade show d-block"
+        className={`modal fade ${showModal ? "show d-block" : ""}`}
         tabIndex={-1}
         role="dialog"
-        style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 1050,
-          width: "100%",
-          maxWidth: "700px",
-        }}
       >
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5">Add Item</h1>
-              <button
-                type="button"
-                className="btn-close"
-                onClick={onClose}
-                disabled={loadingStore}
-              />
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -110,7 +67,8 @@ const AddItemModal = ({
                 setLoadingStore={setLoadingStore}
                 onItemAdded={(message) => {
                   handleShowAlertMessage(message, true, true);
-                  onRefreshItems(); // Refresh parent item list
+                  setRefreshItems(!refreshItems);
+                  onRefreshItems(refreshItems);
                 }}
               />
             </div>

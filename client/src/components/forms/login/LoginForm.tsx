@@ -82,99 +82,62 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="container d-flex align-items-center justify-content-center min-vh-100">
-  <div
-    className="card flex-row shadow"
-    style={{
-      maxWidth: "800px",
-      width: "100%",
-      borderRadius: "1rem",
-      overflow: "hidden",
-    }}
-  >
-    {/* Logo section (left side) */}
-    <div
-      className="d-flex align-items-center justify-content-center"
-      style={{
-        width: "45%",
-        backgroundColor: "#f8f9fa",
-        padding: "2rem",
-      }}
-    >
-      <img
-        src="src/assets/images/techfour.jpg" 
-        alt="POS Logo"
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
-    </div>
-
-    {/* Login form section (right side) */}
-    <div className="p-4 flex-grow-1">
-      <h3 className="mb-4 text-center">POS LOGIN</h3>
-
       <AlertMessage
         message={message}
         isSuccess={isSuccess}
         isVisible={isVisible}
         onClose={handleCloseAlertMessage}
       />
-
       <form onSubmit={handleLogin}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
             className={`form-control ${state.errors.email ? "is-invalid" : ""}`}
-            id="email"
             name="email"
+            id="email"
             value={state.email}
             onChange={handleInputChange}
             autoFocus
           />
           {state.errors.email && (
-            <div className="invalid-feedback">{state.errors.email[0]}</div>
+            <span className="text-danger">{state.errors.email[0]}</span>
           )}
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
+        <div className="mb-3">
+          <label htmlFor="password">Password</label>
           <input
             type="password"
-            className={`form-control ${state.errors.password ? "is-invalid" : ""}`}
-            id="password"
+            className={`form-control ${
+              state.errors.password ? "is-invalid" : ""
+            }`}
             name="password"
+            id="password"
             value={state.password}
             onChange={handleInputChange}
           />
           {state.errors.password && (
-            <div className="invalid-feedback">{state.errors.password[0]}</div>
+            <span className="text-danger">{state.errors.password[0]}</span>
           )}
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary w-100"
-          disabled={state.loadingLogin}
-        >
-          {state.loadingLogin ? (
-            <>
-              <SpinnerSmall /> <span className="ms-2">Logging In...</span>
-            </>
-          ) : (
-            "Login"
-          )}
-        </button>
+        <div className="d-flex justify-content-end">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={state.loadingLogin}
+          >
+            {state.loadingLogin ? (
+              <>
+                <SpinnerSmall /> Logging In...
+              </>
+            ) : (
+              "Login"
+            )}
+          </button>
+        </div>
       </form>
-    </div>
-  </div>
-</div>
-
-
-
     </>
   );
 };
