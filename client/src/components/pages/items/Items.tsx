@@ -19,7 +19,6 @@ const ItemsPage = () => {
   const [openEditItemModal, setOpenEditItemModal] = useState(false);
   const [openDeleteItemModal, setOpenDeleteItemModal] = useState(false);
 
-  // Load items here
   const loadItems = () => {
     setLoadingItems(true);
     ItemService.loadItems()
@@ -27,10 +26,7 @@ const ItemsPage = () => {
         if (res.status === 200) {
           setItems(res.data.items);
         } else {
-          console.error(
-            "Unexpected status error while loading items: ",
-            res.status
-          );
+          console.error("Unexpected status error while loading items:", res.status);
         }
       })
       .catch((error) => {
@@ -45,7 +41,6 @@ const ItemsPage = () => {
     loadItems();
   }, [refreshItems]);
 
-  // Handlers for modals (same as before)
   const handleOpenEditItemModal = (item: Items) => {
     setSelectedItem(item);
     setOpenEditItemModal(true);
@@ -66,7 +61,6 @@ const ItemsPage = () => {
     setOpenDeleteItemModal(false);
   };
 
-  // Define low stock threshold, e.g., less than 5
   const lowStockItems = items.filter((item) => item.item_quantity < 100);
 
   const content = (
@@ -93,31 +87,35 @@ const ItemsPage = () => {
         onClose={handleCloseDeleteItemModal}
       />
 
-      <div style={{ display: "flex", gap: "2rem", alignItems: "flex-start" }}>
-        <div>
-          <div
-            className="alert"
-            style={{
-              backgroundColor: "#e3f2fd",
-              border: "1px solid #90caf9",
-              color: "#1565c0",
-              borderRadius: "4px",
-              padding: "16px",
-              fontFamily: "monospace",
-              fontSize: "15px",
-              marginBottom: "0",
-              marginTop: "1rem",
-              minWidth: "260px",
-              maxWidth: "320px",
-            }}
-            role="alert"
-          >
-            <strong>Logs:</strong>
-            <div style={{ marginTop: "8px" }}>
-              <ItemAlert lowStockItems={lowStockItems} loading={loadingItems} />
-            </div>
-          </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "2rem",
+          alignItems: "stretch",
+          marginTop: "2rem",
+        }}
+      >
+        {/* Left: ItemAlert Card */}
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 12,
+            border: "1px solid #e0e0e0",
+            padding: "20px 24px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            minWidth: "320px",
+            maxWidth: "380px",
+            flexShrink: 0,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
+          <h5 style={{ fontSize: "1.1rem", marginBottom: 16, fontWeight: 600 }}>🔔 Stock Alerts</h5>
+          <ItemAlert lowStockItems={lowStockItems} loading={loadingItems} />
         </div>
+
+        {/* Right: Items Table */}
         <div style={{ flex: 1 }}>
           <ItemsTable
             loadingItems={loadingItems}

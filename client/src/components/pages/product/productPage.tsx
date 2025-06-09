@@ -1,16 +1,17 @@
 import { useState } from "react";
 import MainLayout from "../../layout/MainLayout";
-import AddOrderForm from "../../forms/orders/AddOrderForm";
 import ProductsTable from "./product";
 import AlertMessage from "../../AlertMessage";
 import type { Items } from "../../../interfaces/Item/Items";
 import type { OrderItem } from "../../../interfaces/order_item/order_item";
 import { useNavigate } from "react-router-dom";
+import AddOrderModal from "../../modals/orders/AddOrderModal";
 
 const ProductPage = () => {
   const [refreshItems, setRefreshOrder] = useState(false);
   const [orderList, setOrderList] = useState<OrderItem[]>([]);
   const [itemList] = useState<Items[]>([]);
+  const [openAddOrderModal, setOpenAddOrderModal] = useState(false);
 
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -23,9 +24,7 @@ const ProductPage = () => {
       const existing = prev.find((order) => order.item_id === item.item_id);
       if (existing) {
         if (existing.quantity >= item.item_quantity) {
-          alert(
-            `Not enough stock for ${item.item_name}. Only ${item.item_quantity} in stock.`
-          );
+          alert(`Not enough stock for ${item.item_name}. Only ${item.item_quantity} in stock.`);
           return prev;
         }
         return prev.map((order) =>
@@ -83,38 +82,47 @@ const ProductPage = () => {
     setIsVisible(false);
   };
 
+  const handleOrderAdded = (message: string) => {
+    handleShowAlertMessage(message, true, true);
+    setOrderList([]);
+    setRefreshOrder(!refreshItems);
+  };
+
   const content = (
     <>
       <AlertMessage
-      message={message}
-      isSuccess={isSuccess}
-      isVisible={isVisible}
-      onClose={handleCloseAlertMessage}
+        message={message}
+        isSuccess={isSuccess}
+        isVisible={isVisible}
+        onClose={handleCloseAlertMessage}
       />
-      <AddOrderForm
-      orderList={orderList}
-      itemList={itemList}
-      onAdd={handleAddToOrder}
-      onRemove={handleRemoveFromOrder}
-      onOrderAdded={(msg, order) => {
-        handleShowAlertMessage(msg, true, true);
-        navigate("/receipt", {
-        state: {
-          order_item: orderList,
-          order_email: order.customer_email,
-          first_name: order.first_name,
-          last_name: order.last_name,
-        },
-        });
-        setRefreshOrder(!refreshItems);
-        setOrderList([]);
-      }}
-      />
+
+      <div className="d-flex justify-content-end mb-3">
+        <button
+          className="btn btn-success"
+          onClick={() => setOpenAddOrderModal(true)}
+          disabled={orderList.length === 0}
+        >
+          Create Order ({orderList.length} item{orderList.length > 1 ? "s" : ""})
+        </button>
+      </div>
+
       <ProductsTable
-      refreshItems={refreshItems}
-      orderList={orderList}
-      onAdd={handleAddToOrder}
-      onRemove={handleRemoveFromOrder}
+        refreshItems={refreshItems}
+        orderList={orderList}
+        onAdd={handleAddToOrder}
+        onRemove={handleRemoveFromOrder}
+      />
+
+      {/* Modal */}
+      <AddOrderModal
+        showModal={openAddOrderModal}
+        onClose={() => setOpenAddOrderModal(false)}
+        onOrderAdded={handleOrderAdded}
+        orderList={orderList}
+        itemList={itemList}
+        onAdd={handleAddToOrder}
+        onRemove={handleRemoveFromOrder}
       />
     </>
   );

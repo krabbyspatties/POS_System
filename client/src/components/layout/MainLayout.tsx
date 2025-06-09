@@ -6,10 +6,24 @@ interface MainLayoutProps {
 
 const MainLayout = ({ content }: MainLayoutProps) => {
   return (
-    <div>
+    <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       <Navbar />
-      <main style={{ paddingTop: "80px" }}>{content}</main>
-    </div>
+
+
+        {/* Main content adjusted to align with sidebar and navbar */}
+        <main
+          className="container-fluid"
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "40px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            flex: 1,
+          }}
+        >
+          {content}
+        </main>
+      </div>
   );
 };
 

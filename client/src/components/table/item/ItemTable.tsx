@@ -19,7 +19,7 @@ const ItemsTable = ({
   onDeleteItem,
 }: ItemsTableProps) => {
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
-  const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false); // fixed naming
+  const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
   const [refreshItems, setRefreshItems] = useState(false);
 
   return (
@@ -39,7 +39,7 @@ const ItemsTable = ({
             fontSize: "1rem",
             padding: "8px 16px",
             fontWeight: "600",
-            borderRadius: 6,
+            borderRadius: 20,
           }}
           onClick={() => setOpenAddItemModal(true)}
         >
@@ -51,26 +51,30 @@ const ItemsTable = ({
             fontSize: "1rem",
             padding: "8px 16px",
             fontWeight: "600",
-            borderRadius: 6,
+            borderRadius: 20,
           }}
           onClick={() => setOpenAddCategoryModal(true)}
         >
           + Add Category
         </button>
       </div>
-  
+
       {/* Table Wrapper */}
       <div
         style={{
           background: "#fff",
           borderRadius: 12,
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-          padding: 16,
+          border: "1px solid #e0e0e0",
+          padding: 24,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
         }}
       >
-        <table className="table table-hover mb-0" style={{ width: "100%" }}>
-          <thead className="table-light">
-            <tr style={{ fontSize: "1rem" }}>
+        <table
+          className="table"
+          style={{ width: "100%", borderSpacing: "0 12px", fontSize: "1rem" }}
+        >
+          <thead>
+            <tr style={{ color: "#555" }}>
               <th>No.</th>
               <th>Image</th>
               <th>Item</th>
@@ -92,7 +96,15 @@ const ItemsTable = ({
               </tr>
             ) : items.length > 0 ? (
               items.map((item, index) => (
-                <tr className="align-middle" key={item.item_id}>
+                <tr
+                  className="align-middle"
+                  key={item.item_id}
+                  style={{
+                    background: "#fff",
+                    borderBottom: "1px solid #eee",
+                    verticalAlign: "middle",
+                  }}
+                >
                   <td>{index + 1}</td>
                   <td>
                     {item.item_image ? (
@@ -100,14 +112,14 @@ const ItemsTable = ({
                         <img
                           src={`http://localhost:8000/storage/${item.item_image}`}
                           alt={item.item_name}
-                          className="rounded-circle img-thumbnail"
+                          className="rounded-circle"
                           style={{
                             width: 48,
                             height: 48,
                             objectFit: "cover",
                             borderRadius: "50%",
-                            cursor: "pointer",
                             border: "2px solid #6c757d",
+                            cursor: "pointer",
                           }}
                         />
                       </Link>
@@ -137,8 +149,9 @@ const ItemsTable = ({
                       }`}
                       style={{
                         fontSize: "0.85rem",
-                        padding: "5px 12px",
-                        borderRadius: 12,
+                        padding: "6px 12px",
+                        borderRadius: 20,
+                        textTransform: "uppercase",
                       }}
                     >
                       {item.stock_level}
@@ -146,22 +159,22 @@ const ItemsTable = ({
                   </td>
                   <td>{item.category?.category_name ?? "N/A"}</td>
                   <td>
-                    <div className="btn-group">
+                    <div className="btn-group" style={{ gap: 6 }}>
                       <button
                         type="button"
-                        className="btn btn-primary btn-sm"
-                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
+                        className="btn btn-outline-primary btn-sm"
+                        style={{ borderRadius: 20 }}
                         onClick={() => onEditItem(item)}
                       >
-                        Edit
+                        ✏️ Edit
                       </button>
                       <button
                         type="button"
-                        className="btn btn-danger btn-sm"
-                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
+                        className="btn btn-outline-danger btn-sm"
+                        style={{ borderRadius: 20 }}
                         onClick={() => onDeleteItem(item)}
                       >
-                        Delete
+                        🗑 Delete
                       </button>
                     </div>
                   </td>
@@ -169,7 +182,7 @@ const ItemsTable = ({
               ))
             ) : (
               <tr className="align-middle">
-                <td colSpan={10} className="text-center">
+                <td colSpan={10} className="text-center text-muted">
                   No Items Found
                 </td>
               </tr>
@@ -177,14 +190,14 @@ const ItemsTable = ({
           </tbody>
         </table>
       </div>
-  
+
       {/* Modals */}
       <AddItemModal
         showModal={openAddItemModal}
         onRefreshItems={() => setRefreshItems(!refreshItems)}
         onClose={() => setOpenAddItemModal(false)}
       />
-  
+
       <AddItemCategory
         showModal={openAddCategoryModal}
         onRefreshItems={() => setRefreshItems(!refreshItems)}
@@ -192,7 +205,6 @@ const ItemsTable = ({
       />
     </div>
   );
-  
 };
 
 export default ItemsTable;

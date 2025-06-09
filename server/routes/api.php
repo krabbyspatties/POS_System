@@ -57,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:cashier,manager,administrator')->group(function () {
         Route::post('/createOrder', [OrderController::class, 'createOrder']);
         Route::get('/loadItems', [ItemController::class, 'loadItems']);
+        Route::get('/loadCategory', [ItemCategoryController::class, 'loadCategory']);
     });
 
     // ✅ ADMINISTRATOR — full access
@@ -72,7 +73,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // ✅ MANAGER & ADMINISTRATOR — full inventory/report access
     Route::middleware('role:manager,administrator')->group(function () {
         Route::controller(ItemCategoryController::class)->group(function () {
-            Route::get('/loadCategory', 'loadCategory');
             Route::get('/getCategory/{category_id}', 'getCategory');
             Route::post('/storeCategory', 'storeCategory');
             Route::put('/updateCategory/{category}', 'updateCategory');

@@ -80,7 +80,7 @@ const BestSellingChart = () => {
   return (
     <div style={{ display: "flex", justifyContent: "flex-start" }}>
       <div style={{ width: 1000, margin: "40px 0 0 0", padding: 32, background: "#fff", borderRadius: 10, boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}>
-        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 24, letterSpacing: 0.3 }}>Top 10 Best-Selling Items</h2>
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 24, letterSpacing: 0.3 }}></h2>
         {chartData ? (
           <div style={{ minHeight: 500 }}>
             <Bar data={chartData} options={options} />

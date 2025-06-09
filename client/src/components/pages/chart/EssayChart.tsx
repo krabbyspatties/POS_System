@@ -43,19 +43,51 @@ const OpenEndedAnswers: React.FC = () => {
       });
   }, []);
 
-  if (loading) return <p>Loading possible improvements...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div style={{ padding: 20 }}>
-      <h3>Suggestions & Possible Improvements</h3>
-      <ul>
-        {answers.map((answer, idx) => (
-          <li key={idx} style={{ marginBottom: 10 }}>
-            {answer}
-          </li>
-        ))}
-      </ul>
+    <div
+      style={{
+        marginTop: "70px",
+        padding: "2rem",
+        backgroundColor: "#f9f9f9",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+          padding: "2rem",
+          maxWidth: "800px",
+          margin: "0 auto",
+        }}
+      >
+        <h4 className="mb-4 text-dark fw-semibold">
+          📝 Suggestions & Possible Improvements
+        </h4>
+
+        {loading && <p className="text-muted">Loading suggestions...</p>}
+        {error && <p className="text-danger">{error}</p>}
+
+        {!loading && !error && (
+          <ul style={{ paddingLeft: 0, listStyle: "none" }}>
+            {answers.map((answer, idx) => (
+              <li
+                key={idx}
+                style={{
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "6px",
+                  boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05)",
+                }}
+              >
+                {answer}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
