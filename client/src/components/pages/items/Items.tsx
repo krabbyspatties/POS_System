@@ -13,6 +13,8 @@ const ItemsPage = () => {
   const [refreshItems, setRefreshItems] = useState(false);
   const [items, setItems] = useState<Items[]>([]);
   const [loadingItems, setLoadingItems] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const [selectedItem, setSelectedItem] = useState<Items | null>(null);
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
@@ -20,12 +22,16 @@ const ItemsPage = () => {
   const [openDeleteItemModal, setOpenDeleteItemModal] = useState(false);
 
   // Load items here
-  const loadItems = () => {
+  const loadItems = (reset = false) => {
     setLoadingItems(true);
-    ItemService.loadItems()
+    ItemService.loadItems(reset ? 1 : page, 10)
       .then((res) => {
         if (res.status === 200) {
-          setItems(res.data.items);
+          const newItems = res.data.items;
+          setItems((prevItems) =>
+            reset ? newItems : [...prevItems, ...newItems]
+          );
+          setHasMore(res.data.current_page < res.data.last_page);
         } else {
           console.error(
             "Unexpected status error while loading items: ",
@@ -42,10 +48,15 @@ const ItemsPage = () => {
   };
 
   useEffect(() => {
-    loadItems();
+    setPage(1);
+    loadItems(true);
   }, [refreshItems]);
 
-  // Modal Handlers
+  useEffect(() => {
+    if (page > 1) {
+      loadItems();
+    }
+  }, [page]);
   const handleOpenEditItemModal = (item: Items) => {
     setSelectedItem(item);
     setOpenEditItemModal(true);
@@ -124,6 +135,10 @@ const ItemsPage = () => {
             items={items}
             onEditItem={handleOpenEditItemModal}
             onDeleteItem={handleOpenDeleteItemModal}
+            hasMore={hasMore}
+            onLoadMore={() => {
+              setPage((prev) => prev + 1);
+            }}
           />
         </div>
       </div>

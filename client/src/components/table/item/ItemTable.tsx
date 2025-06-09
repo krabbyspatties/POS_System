@@ -10,6 +10,8 @@ interface ItemsTableProps {
   loadingItems: boolean;
   onEditItem: (item: Items) => void;
   onDeleteItem: (item: Items) => void;
+  onLoadMore?: () => void; // ADD
+  hasMore?: boolean; // ADD
 }
 
 const ItemsTable = ({
@@ -17,6 +19,8 @@ const ItemsTable = ({
   loadingItems,
   onEditItem,
   onDeleteItem,
+  onLoadMore,
+  hasMore = false,
 }: ItemsTableProps) => {
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
@@ -88,7 +92,7 @@ const ItemsTable = ({
             </tr>
           </thead>
           <tbody>
-            {loadingItems ? (
+            {loadingItems && items.length === 0 ? (
               <tr>
                 <td colSpan={10} className="text-center">
                   <Spinner />
@@ -190,6 +194,15 @@ const ItemsTable = ({
             )}
           </tbody>
         </table>
+
+        {/* Lazy load footer */}
+        {hasMore && !loadingItems && (
+          <div style={{ textAlign: "center", marginTop: 16 }}>
+            <button className="btn btn-primary" onClick={() => onLoadMore?.()}>
+              Load More
+            </button>
+          </div>
+        )}
       </div>
 
       <AddItemModal

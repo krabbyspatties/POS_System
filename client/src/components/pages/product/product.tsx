@@ -35,23 +35,29 @@ const ProductsTable = ({
 
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const selectedItemRef = useRef<HTMLDivElement | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const handleLoadItems = () => {
+  const handleLoadItems = (page = 1, reset = false) => {
     setState((prev) => ({ ...prev, loadingItems: true }));
 
     Promise.all([
-      ItemService.loadItems(),
+      ItemService.loadItems(page, 10),
       ItemCategoryServices.loadCategories(),
     ])
       .then(([itemsRes, categoriesRes]) => {
         if (itemsRes.status === 200 && categoriesRes.status === 200) {
+          const newItems = itemsRes.data.items;
+
           setState((prev) => ({
             ...prev,
-            items: itemsRes.data.items,
+            items: reset ? newItems : [...prev.items, ...newItems],
             categories: categoriesRes.data.categories,
-            filteredItems: itemsRes.data.items,
+            filteredItems: reset ? newItems : [...prev.items, ...newItems],
             loadingItems: false,
           }));
+
+          setHasMore(itemsRes.data.current_page < itemsRes.data.last_page);
         } else {
           console.error("Failed to load items or categories");
           setState((prev) => ({ ...prev, loadingItems: false }));
@@ -64,7 +70,8 @@ const ProductsTable = ({
   };
 
   useEffect(() => {
-    handleLoadItems();
+    setPage(1);
+    handleLoadItems(1, true);
   }, [refreshItems]);
 
   useEffect(() => {
@@ -200,91 +207,117 @@ const ProductsTable = ({
       {/* Product Area */}
       <main className="flex-grow-1 p-4" style={{ marginRight: 400 }}>
         <section className="bg-white p-4 rounded shadow-lg mt-4">
-          {state.loadingItems ? (
+          {state.loadingItems && page === 1 ? (
             <div className="text-center py-4">
               <Spinner />
             </div>
           ) : state.filteredItems.length > 0 ? (
-            <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
-              {state.filteredItems.map((item) => {
-                const isSelected = orderList.some(
-                  (order) => order.item_id === item.item_id
-                );
+            <>
+              <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+                {state.filteredItems.map((item) => {
+                  const isSelected = orderList.some(
+                    (order) => order.item_id === item.item_id
+                  );
 
-                return (
-                  <div className="col" key={item.item_id}>
-                    <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-                      <div
-                        className="position-relative cursor-pointer"
-                        role="button"
-                        onClick={() => {
-                          isSelected ? onRemove(item) : onAdd(item);
-                          setSelectedItemId(item.item_id);
-                        }}
-                        aria-pressed={isSelected}
-                      >
-                        <img
-                          src={`http://localhost:8000/storage/${
-                            item.item_image || "Images/placeholder.png"
-                          }`}
-                          className="card-img-top"
-                          alt={item.item_name}
-                          style={{
-                            height: "160px",
-                            objectFit: "cover",
-                            borderBottom: "1px solid #eee",
+                  return (
+                    <div className="col" key={item.item_id}>
+                      <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div
+                          className="position-relative cursor-pointer"
+                          role="button"
+                          onClick={() => {
+                            isSelected ? onRemove(item) : onAdd(item);
+                            setSelectedItemId(item.item_id);
                           }}
-                        />
-                        {selectedItemId === item.item_id && (
-                          <div
-                            ref={selectedItemRef}
-                            className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 text-white px-3 py-2 rounded shadow-sm"
-                            style={{ fontSize: "0.85rem", fontWeight: 600 }}
+                          aria-pressed={isSelected}
+                        >
+                          <img
+                            src={`http://localhost:8000/storage/${
+                              item.item_image || "Images/placeholder.png"
+                            }`}
+                            className="card-img-top"
+                            alt={item.item_name}
+                            style={{
+                              height: "160px",
+                              objectFit: "cover",
+                              borderBottom: "1px solid #eee",
+                            }}
+                          />
+                          {selectedItemId === item.item_id && (
+                            <div
+                              ref={selectedItemRef}
+                              className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-75 text-white px-3 py-2 rounded shadow-sm"
+                              style={{ fontSize: "0.85rem", fontWeight: 600 }}
+                            >
+                              ✅ Selected
+                            </div>
+                          )}
+                        </div>
+                        <div className="card-body d-flex flex-column">
+                          <h6
+                            className="card-title text-truncate fw-semibold text-primary mb-1"
+                            title={item.item_name}
+                            style={{ fontSize: "1rem" }}
                           >
-                            ✅ Selected
-                          </div>
-                        )}
-                      </div>
-                      <div className="card-body d-flex flex-column">
-                        <h6
-                          className="card-title text-truncate fw-semibold text-primary mb-1"
-                          title={item.item_name}
-                          style={{ fontSize: "1rem" }}
-                        >
-                          {item.item_name}
-                        </h6>
-                        <p
-                          className="card-text small text-muted mb-2 flex-grow-1"
-                          style={{ fontSize: "0.85rem" }}
-                        >
-                          {item.item_description}
-                        </p>
-                        <p
-                          className="card-text fw-bold text-success mb-1"
-                          style={{ fontSize: "0.9rem" }}
-                        >
-                          ₱{item.item_price.toLocaleString()}
-                        </p>
-                        <p
-                          className="card-text fw-semibold"
-                          style={{
-                            fontSize: "0.85rem",
-                            color:
-                              item.item_quantity === 0
-                                ? "red"
-                                : item.item_quantity <= 100
-                                ? "orange"
-                                : "green",
-                          }}
-                        >
-                          Stock: {item.item_quantity}
-                        </p>
+                            {item.item_name}
+                          </h6>
+                          <p
+                            className="card-text small text-muted mb-2 flex-grow-1"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            {item.item_description}
+                          </p>
+                          <p
+                            className="card-text fw-bold text-success mb-1"
+                            style={{ fontSize: "0.9rem" }}
+                          >
+                            ₱{item.item_price.toLocaleString()}
+                          </p>
+                          <p
+                            className="card-text fw-semibold"
+                            style={{
+                              fontSize: "0.85rem",
+                              color:
+                                item.item_quantity === 0
+                                  ? "red"
+                                  : item.item_quantity <= 100
+                                  ? "orange"
+                                  : "green",
+                            }}
+                          >
+                            Stock: {item.item_quantity}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+
+              {/* Load More Button */}
+              {hasMore && (
+                <div className="text-center mt-4">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                      const nextPage = page + 1;
+                      setPage(nextPage);
+                      handleLoadItems(nextPage);
+                    }}
+                    disabled={state.loadingItems}
+                  >
+                    {state.loadingItems ? "Loading..." : "Load More"}
+                  </button>
+                </div>
+              )}
+
+              {/* No More Items Message */}
+              {!hasMore && (
+                <div className="text-center py-3 text-muted small">
+                  No more items to load.
+                </div>
+              )}
+            </>
           ) : (
             <div
               className="text-center py-4 text-muted"

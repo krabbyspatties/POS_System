@@ -9,14 +9,26 @@ use Illuminate\Validation\Rule;
 
 class ItemController extends Controller
 {
-    public function loadItems()
+    public function loadItems(Request $request)
     {
-        $items = Item::with('category')->where('is_deleted', 0)->get();
+        $perPage = $request->get('perPage', 10);
+        $page = $request->get('page', 1);
+
+        $items = Item::with('category')
+            ->where('is_deleted', 0)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json([
-            'items' => $items
+            'items' => $items->items(),
+            'current_page' => $items->currentPage(),
+            'last_page' => $items->lastPage(),
+            'total' => $items->total(),
         ], 200);
     }
+
+
+
 
     public function getItem($id)
     {

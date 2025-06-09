@@ -1,13 +1,17 @@
 import AxiosInstance from "../AxiosInstance"
 
 const ItemService = {
-  loadItems: async () => {
-    return AxiosInstance.get("/loadItems")
+  loadItems: async (page = 1, perPage = 10) => {
+    return AxiosInstance.get("/loadItems", {
+      params: { page, perPage },
+    })
       .then((response) => response)
       .catch((error) => {
-        throw error
-      })
+        throw error;
+      });
   },
+  
+  
 
   getItem: async (itemId: number) => {
     return AxiosInstance.get(`/getItem/${itemId}`)
