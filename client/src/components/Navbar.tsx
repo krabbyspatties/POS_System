@@ -67,17 +67,24 @@ const Navbar = () => {
       });
   };
 
-  const handleUserFullName = () => {
+  const handleUserInfo = () => {
     const user = localStorage.getItem("user");
     const parsedUser = user ? JSON.parse(user) : null;
-    let fullName = "";
-    if (parsedUser?.middle_name) {
-      fullName = `${parsedUser.last_name}, ${parsedUser.first_name} ${parsedUser.middle_name[0]}.`;
-    } else if (parsedUser) {
-      fullName = `${parsedUser.last_name}, ${parsedUser.first_name}`;
+
+    if (!parsedUser) {
+      return { fullName: "", userImage: "" };
     }
-    return fullName;
+
+    const { first_name, middle_name, last_name, user_image } = parsedUser;
+
+    const fullName = middle_name
+      ? `${last_name}, ${first_name} ${middle_name[0]}.`
+      : `${last_name}, ${first_name}`;
+
+    return { fullName, userImage: user_image };
   };
+
+  const { fullName, userImage } = handleUserInfo();
 
   return (
     <nav
@@ -145,7 +152,25 @@ const Navbar = () => {
       </ul>
 
       <div className="d-flex align-items-center">
-        <strong className="me-3">{handleUserFullName()}</strong>
+        {userImage && (
+          <img
+            src={
+              userImage
+                ? `/storage/${userImage}`
+                : "/src/images/placeholder.jpg"
+            }
+            alt="User"
+            style={{
+              height: "40px",
+              width: "40px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              marginRight: "10px",
+              border: "2px solid #fff",
+            }}
+          />
+        )}
+        <strong className="me-3">{fullName}</strong>
         <button
           type="button"
           className="btn btn-outline-light btn-sm"
