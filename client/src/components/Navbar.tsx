@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import type { FormEvent } from "react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import SpinnerSmall from "./SpinnerSmall";
 const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loadingLogout, setLoadingLogout] = useState(false);
 
@@ -28,7 +29,7 @@ const Navbar = () => {
     },
     {
       route: "/products",
-      title: "Products",
+      title: "Order",
       allowedRoles: ["administrator", "manager", "cashier"],
     },
     {
@@ -115,33 +116,44 @@ const Navbar = () => {
           />
         </Link>
 
-        {accessibleMenuItems.map((menuItem, index) => (
-          <li className="nav-item" key={index}>
-            <Link
-              className="nav-link"
-              to={menuItem.route}
-              style={{
-                color: "#fff",
-                backgroundColor: "rgba(255,255,255,0.1)",
-                borderRadius: "30px",
-                marginLeft: "8px",
-                padding: "8px 20px",
-                fontWeight: 500,
-                transition: "all 0.2s ease-in-out",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "rgba(255,255,255,0.2)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "rgba(255,255,255,0.1)")
-              }
-            >
-              {menuItem.title}
-            </Link>
-          </li>
-        ))}
+        {accessibleMenuItems.map((menuItem, index) => {
+          const isActive = location.pathname === menuItem.route;
+
+          return (
+            <li className="nav-item" key={index}>
+              <Link
+                className="nav-link"
+                to={menuItem.route}
+                style={{
+                  color: "#fff",
+                  backgroundColor: isActive
+                    ? "rgba(255,255,255,0.3)"
+                    : "rgba(255,255,255,0.1)",
+                  borderRadius: "30px",
+                  marginLeft: "8px",
+                  padding: "8px 20px",
+                  fontWeight: 500,
+                  transition: "all 0.2s ease-in-out",
+                  border: isActive ? "2px solid #fff" : "none",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.2)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.1)";
+                  }
+                }}
+              >
+                {menuItem.title}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
 
       <div className="d-flex align-items-center">

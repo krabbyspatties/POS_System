@@ -210,7 +210,7 @@ const UsersTable = ({
                       <td>{index + 1}</td>
                       <td>
                         {user.user_image ? (
-                          <Link to={`/users/${user.user_id}`}>
+                          <div>
                             <img
                               src={`http://localhost:8000/storage/${user.user_image}`}
                               alt={user.user_name}
@@ -224,7 +224,7 @@ const UsersTable = ({
                                 border: "2px solid #8B0000",
                               }}
                             />
-                          </Link>
+                          </div>
                         ) : (
                           <div
                             style={{
