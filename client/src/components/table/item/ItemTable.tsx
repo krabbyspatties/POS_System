@@ -12,7 +12,7 @@ interface ItemsTableProps {
   onDeleteItem: (item: Items) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
-  onRefreshItems: () => void; // ADDED this prop
+  onRefreshItems: () => void;
 }
 
 const ItemsTable = ({
@@ -22,7 +22,7 @@ const ItemsTable = ({
   onDeleteItem,
   onLoadMore,
   hasMore = false,
-  onRefreshItems, // RECEIVE this prop
+  onRefreshItems,
 }: ItemsTableProps) => {
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
@@ -209,8 +209,8 @@ const ItemsTable = ({
       <AddItemModal
         showModal={openAddItemModal}
         onRefreshItems={() => {
-          onRefreshItems(); // trigger parent's refresh
-          setOpenAddItemModal(false); // close modal after add
+          onRefreshItems();
+          setOpenAddItemModal(false);
         }}
         onClose={() => setOpenAddItemModal(false)}
       />
@@ -218,7 +218,7 @@ const ItemsTable = ({
       <AddItemCategory
         showModal={openAddCategoryModal}
         onRefreshItems={() => {
-          onRefreshItems(); // same for categories
+          onRefreshItems();
           setOpenAddCategoryModal(false);
         }}
         onClose={() => setOpenAddCategoryModal(false)}

@@ -55,7 +55,7 @@ class ItemController extends Controller
         if ($request->hasFile('item_image')) {
             $validated['item_image'] = $request->file('item_image')->store('images', 'public');
         } else {
-            $validated['item_image'] = 'images/placeholder.jpg';
+            $validated['item_image'] = 'images/item.png';
         }
 
         Item::create($validated);

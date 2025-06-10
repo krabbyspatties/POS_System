@@ -249,7 +249,7 @@ const UsersTable = ({
                             type="button"
                             className="btn btn-sm"
                             style={{
-                              backgroundColor: "#0d6efd", // blue (items table style)
+                              backgroundColor: "#0d6efd",
                               color: "#fff",
                               border: "none",
                               fontWeight: "bold",
@@ -262,7 +262,7 @@ const UsersTable = ({
                             type="button"
                             className="btn btn-sm"
                             style={{
-                              backgroundColor: "#dc3545", // red (items table style)
+                              backgroundColor: "#dc3545",
                               color: "#fff",
                               border: "none",
                               fontWeight: "bold",

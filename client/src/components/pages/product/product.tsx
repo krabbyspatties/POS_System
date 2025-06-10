@@ -6,6 +6,7 @@ import ItemService from "../../../services/ItemService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
 import type { OrderItem } from "../../../interfaces/order_item/order_item";
+import SpinnerSmall from "../../SpinnerSmall";
 
 interface ItemsTable {
   refreshItems: boolean;
@@ -213,7 +214,7 @@ const ProductsTable = ({
             </div>
           ) : state.filteredItems.length > 0 ? (
             <>
-              <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+              <div className="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 border border-white border-3">
                 {state.filteredItems.map((item) => {
                   const isSelected = orderList.some(
                     (order) => order.item_id === item.item_id
@@ -221,7 +222,7 @@ const ProductsTable = ({
 
                   return (
                     <div className="col" key={item.item_id}>
-                      <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                      <div className="card h-100 border border-white border-3 shadow p-3 bg-white rounded-4 overflow-hidden">
                         <div
                           className="position-relative cursor-pointer"
                           role="button"
@@ -306,7 +307,14 @@ const ProductsTable = ({
                     }}
                     disabled={state.loadingItems}
                   >
-                    {state.loadingItems ? "Loading..." : "Load More"}
+                    {state.loadingItems ? (
+                      <>
+                        <SpinnerSmall />{" "}
+                        <span className="ms-2">Loading...</span>
+                      </>
+                    ) : (
+                      "Load More"
+                    )}
                   </button>
                 </div>
               )}
