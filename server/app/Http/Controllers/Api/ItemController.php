@@ -80,11 +80,9 @@ class ItemController extends Controller
 
         $item = Item::findOrFail($id);
 
-        // Only update image if a new one is uploaded
         if ($request->hasFile('item_image')) {
             $validated['item_image'] = $request->file('item_image')->store('images', 'public');
         } else {
-            // Remove item_image from validated data to keep existing image
             unset($validated['item_image']);
         }
 

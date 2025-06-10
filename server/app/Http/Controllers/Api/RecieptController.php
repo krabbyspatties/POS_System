@@ -13,7 +13,6 @@ class RecieptController extends Controller
     public function store(Request $request)
     {
         try {
-            // Increased file size limit to 20MB (20480 KB)
             $request->validate([
                 'receipt_pdf' => 'required|file|mimes:pdf|max:20480',
                 'email' => 'required|email',
@@ -24,14 +23,11 @@ class RecieptController extends Controller
 
             $file = $request->file('receipt_pdf');
 
-            // Check file size before processing
             $fileSizeInMB = $file->getSize() / 1024 / 1024;
             \Log::info("Uploading PDF file: {$file->getClientOriginalName()}, Size: {$fileSizeInMB}MB");
 
-            // Generate unique filename
             $filename = 'receipt_' . uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-            // Store file with error handling
             try {
                 $path = $file->storeAs('receipts', $filename, 'public');
                 $pdfUrl = url(Storage::url($path));
@@ -45,7 +41,6 @@ class RecieptController extends Controller
                 ], 500);
             }
 
-            // Return early if Make webhook is not configured
             $makeWebhookUrl = env('MAKE_WEBHOOK_URL');
             if (!$makeWebhookUrl) {
                 \Log::warning('Make.com webhook URL is not configured.');
@@ -56,11 +51,11 @@ class RecieptController extends Controller
                 ], 200);
             }
 
-            // Send to Make.com with extended timeout for larger files
+            
             try {
                 $response = Http::withOptions([
                     'verify' => false,
-                    'timeout' => 60, // Increased timeout for larger files
+                    'timeout' => 60,
                     'connect_timeout' => 30,
                 ])->post($makeWebhookUrl, [
                     'pdf_url' => $pdfUrl,
@@ -103,7 +98,6 @@ class RecieptController extends Controller
         } catch (ValidationException $e) {
             \Log::error('Validation failed: ' . json_encode($e->errors()));
 
-            // Custom error message for file size
             if (isset($e->errors()['receipt_pdf'])) {
                 foreach ($e->errors()['receipt_pdf'] as $error) {
                     if (strpos($error, 'greater than') !== false) {

@@ -139,6 +139,7 @@ const ItemsPage = () => {
             onLoadMore={() => {
               setPage((prev) => prev + 1);
             }}
+            onRefreshItems={() => setRefreshItems((prev) => !prev)} // HERE
           />
         </div>
       </div>

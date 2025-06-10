@@ -10,8 +10,9 @@ interface ItemsTableProps {
   loadingItems: boolean;
   onEditItem: (item: Items) => void;
   onDeleteItem: (item: Items) => void;
-  onLoadMore?: () => void; // ADD
-  hasMore?: boolean; // ADD
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  onRefreshItems: () => void; // ADDED this prop
 }
 
 const ItemsTable = ({
@@ -21,10 +22,10 @@ const ItemsTable = ({
   onDeleteItem,
   onLoadMore,
   hasMore = false,
+  onRefreshItems, // RECEIVE this prop
 }: ItemsTableProps) => {
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
   const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
-  const [refreshItems, setRefreshItems] = useState(false);
 
   return (
     <div style={{ flex: 1, padding: 32, backgroundColor: "#f8f9fa" }}>
@@ -207,13 +208,19 @@ const ItemsTable = ({
 
       <AddItemModal
         showModal={openAddItemModal}
-        onRefreshItems={() => setRefreshItems(!refreshItems)}
+        onRefreshItems={() => {
+          onRefreshItems(); // trigger parent's refresh
+          setOpenAddItemModal(false); // close modal after add
+        }}
         onClose={() => setOpenAddItemModal(false)}
       />
 
       <AddItemCategory
         showModal={openAddCategoryModal}
-        onRefreshItems={() => setRefreshItems(!refreshItems)}
+        onRefreshItems={() => {
+          onRefreshItems(); // same for categories
+          setOpenAddCategoryModal(false);
+        }}
         onClose={() => setOpenAddCategoryModal(false)}
       />
     </div>
