@@ -5,6 +5,7 @@ import SpinnerSmall from "../../SpinnerSmall";
 import AlertMessage from "../../AlertMessage";
 import ErrorHandler from "../../handler/ErrorHandler";
 import type { LoginFieldErrors } from "../../../interfaces/LoginFieldErrors";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -20,10 +21,10 @@ const LoginForm = () => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setState((prevState) => ({
       ...prevState,
       [name]: value,
@@ -32,20 +33,15 @@ const LoginForm = () => {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
-
     setState((prevState) => ({
       ...prevState,
       loadingLogin: true,
-      errors: {} as LoginFieldErrors, // clear previous errors
+      errors: {} as LoginFieldErrors,
     }));
 
     login(state.user_email, state.password)
-      .then(() => {
-        console.log("Login successful. navigating");
-        navigate("/products");
-      })
+      .then(() => navigate("/products"))
       .catch((error) => {
-        console.error("Login failed", error);
         if (error.response.status === 422) {
           setState((prevState) => ({
             ...prevState,
@@ -98,85 +94,139 @@ const LoginForm = () => {
       }}
     >
       <div
-        className="card shadow-lg p-4 p-md-5 rounded-4"
+        className="p-1 rounded-4 shadow-lg"
         style={{
+          background: "linear-gradient(to right, black, red)",
           maxWidth: "400px",
           width: "100%",
-          backgroundColor: "rgba(255,255,255,0.95)",
         }}
       >
-        <div className="text-center mb-4">
-          <h2 className="fw-bold">Welcome</h2>
-          <p className="text-muted small">Login to your account</p>
-        </div>
+        <div
+          className="card rounded-4 p-4 p-md-5"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.95)",
+          }}
+        >
+          <div className="text-center mb-4">
+            <h2 className="fw-bold">Welcome</h2>
+            <p className="text-muted small">Login to your account</p>
+          </div>
 
-        <AlertMessage
-          message={message}
-          isSuccess={isSuccess}
-          isVisible={isVisible}
-          onClose={handleCloseAlertMessage}
-        />
+          <AlertMessage
+            message={message}
+            isSuccess={isSuccess}
+            isVisible={isVisible}
+            onClose={handleCloseAlertMessage}
+          />
 
-        <form onSubmit={handleLogin} noValidate>
-          <div className="mb-3">
-            <label htmlFor="user_email" className="form-label fw-semibold">
-              Email
-            </label>
-            <input
-              type="text"
-              className={`form-control shadow-sm ${
-                state.errors.user_email ? "is-invalid" : ""
-              }`}
-              name="user_email"
-              id="user_email"
-              value={state.user_email}
-              onChange={handleInputChange}
-              autoFocus
-              placeholder="Enter your email"
-            />
-            {state.errors.user_email && (
-              <div className="invalid-feedback">
-                {state.errors.user_email[0]}
+          <form onSubmit={handleLogin} noValidate>
+            <div className="mb-3">
+              <label htmlFor="user_email" className="form-label fw-semibold">
+                Email
+              </label>
+              <div
+                style={{
+                  padding: "1px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(to right, black, red)",
+                }}
+              >
+                <input
+                  type="text"
+                  className={`form-control shadow-none ${
+                    state.errors.user_email ? "is-invalid" : ""
+                  }`}
+                  style={{
+                    borderRadius: "10px",
+                    padding: "12px",
+                    border: "none",
+                  }}
+                  name="user_email"
+                  id="user_email"
+                  value={state.user_email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                />
               </div>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label fw-semibold">
-              Password
-            </label>
-            <input
-              type="password"
-              className={`form-control shadow-sm ${
-                state.errors.password ? "is-invalid" : ""
-              }`}
-              name="password"
-              id="password"
-              value={state.password}
-              onChange={handleInputChange}
-              placeholder="••••••••"
-            />
-            {state.errors.password && (
-              <div className="invalid-feedback">{state.errors.password[0]}</div>
-            )}
-          </div>
-
-          <div className="d-grid mt-4">
-            <button
-              type="submit"
-              className="btn btn-primary btn-lg rounded-3"
-              disabled={state.loadingLogin}
-            >
-              {state.loadingLogin ? (
-                <>
-                  <SpinnerSmall /> <span className="ms-2">Logging In...</span>
-                </>
-              ) : (
-                "Login"
+              {state.errors.user_email && (
+                <div className="invalid-feedback">
+                  {state.errors.user_email[0]}
+                </div>
               )}
-            </button>
-          </div>
-        </form>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label fw-semibold">
+                Password
+              </label>
+              <div
+                className="position-relative"
+                style={{
+                  padding: "1px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(to right, black, red)",
+                }}
+              >
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control shadow-none ${
+                    state.errors.password ? "is-invalid" : ""
+                  }`}
+                  style={{
+                    borderRadius: "10px",
+                    padding: "12px",
+                    border: "none",
+                  }}
+                  name="password"
+                  id="password"
+                  value={state.password}
+                  onChange={handleInputChange}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                  style={{ background: "transparent", border: "none" }}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} className="text-dark" />
+                  ) : (
+                    <Eye size={18} className="text-dark" />
+                  )}
+                </button>
+              </div>
+              {state.errors.password && (
+                <div className="invalid-feedback">
+                  {state.errors.password[0]}
+                </div>
+              )}
+            </div>
+
+            <div className="d-grid mt-4">
+              <button
+                type="submit"
+                className="btn btn-dark btn-lg rounded-pill"
+                disabled={state.loadingLogin}
+                style={{
+                  background: "linear-gradient(to right, black, red)",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: "bold",
+                }}
+              >
+                {state.loadingLogin ? (
+                  <>
+                    <SpinnerSmall /> <span className="ms-2">Logging In...</span>
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

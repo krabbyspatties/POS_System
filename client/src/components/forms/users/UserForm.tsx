@@ -29,7 +29,8 @@ const UserForm = ({
     errors: {} as UserFieldErrors,
   });
 
-  // Reset form fields and errors
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleResetNecessaryFields = () => {
     setState((prevState) => ({
       ...prevState,
@@ -47,7 +48,6 @@ const UserForm = ({
     }));
   };
 
-  // Handle input change for text/select fields
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -58,7 +58,6 @@ const UserForm = ({
     }));
   };
 
-  // Handle file input change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setState((prevState) => ({
@@ -67,7 +66,6 @@ const UserForm = ({
     }));
   };
 
-  // Submit form data
   const handleStoreUser = (e: FormEvent) => {
     e.preventDefault();
 
@@ -236,40 +234,60 @@ const UserForm = ({
               <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input
-                type="password"
-                className={`form-control ${
-                  state.errors.password ? "is-invalid" : ""
-                }`}
-                name="password"
-                id="password"
-                value={state.password}
-                onChange={handleInputChange}
-              />
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control ${
+                    state.errors.password ? "is-invalid" : ""
+                  }`}
+                  name="password"
+                  id="password"
+                  value={state.password}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {state.errors.password && (
-                <div className="invalid-feedback">
+                <div className="invalid-feedback d-block">
                   {state.errors.password[0]}
                 </div>
               )}
             </div>
 
-            {/* Password Confirmation */}
+            {/* Confirm Password */}
             <div className="mb-3">
               <label htmlFor="password_confirmation" className="form-label">
                 Confirm Password
               </label>
-              <input
-                type="password"
-                className={`form-control ${
-                  state.errors.password_confirmation ? "is-invalid" : ""
-                }`}
-                name="password_confirmation"
-                id="password_confirmation"
-                value={state.password_confirmation}
-                onChange={handleInputChange}
-              />
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control ${
+                    state.errors.password_confirmation ? "is-invalid" : ""
+                  }`}
+                  name="password_confirmation"
+                  id="password_confirmation"
+                  value={state.password_confirmation}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {state.errors.password_confirmation && (
-                <div className="invalid-feedback">
+                <div className="invalid-feedback d-block">
                   {state.errors.password_confirmation[0]}
                 </div>
               )}
