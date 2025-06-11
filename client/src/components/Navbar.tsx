@@ -164,24 +164,6 @@ const Navbar = () => {
       </ul>
 
       <div className="d-flex align-items-center">
-        {userImage && (
-          <img
-            src={
-              userImage
-                ? `/storage/${userImage}`
-                : "/src/images/placeholder.jpg"
-            }
-            alt="User"
-            style={{
-              height: "40px",
-              width: "40px",
-              objectFit: "cover",
-              borderRadius: "50%",
-              marginRight: "10px",
-              border: "2px solid #fff",
-            }}
-          />
-        )}
         <strong className="me-3">{fullName}</strong>
         <button
           type="button"

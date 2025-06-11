@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\order;
-use DB;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -81,7 +81,6 @@ class OrderController extends Controller
                 'message' => 'Order created successfully',
                 'order_id' => $order->order_id,
             ], 201);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             Log::error('Validation error in createOrder:', $e->errors());
@@ -90,7 +89,6 @@ class OrderController extends Controller
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
             ], 422);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating order: ' . $e->getMessage());
@@ -118,7 +116,7 @@ class OrderController extends Controller
                         'item_name' => $item->item_name,
                     ],
                     'quantity' => $item->pivot->quantity,
-                    'price' => $item->pivot->price,
+                    'price' => $item->pivot->price, // ✅ This should be the discounted price
                     'original_price' => $item->pivot->original_price,
                     'discount_percent' => $item->pivot->discount_percent,
                     'total_price' => $item->pivot->total_price,

@@ -25,6 +25,7 @@ const OrderServices = {
   getOrderById: async (orderId: number | string) => {
     try {
       const response = await AxiosInstance.get(`/orders/${orderId}`);
+      console.log("Fetched order data:", response.data);
       return response;
     } catch (error: any) {
       console.error("Error fetching order by ID:", error.message);
