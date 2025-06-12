@@ -1,9 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import ItemCategoryServices from "../../../services/ItemCategoryService";
 import ErrorHandler from "../../handler/ErrorHandler";
 import Spinner from "../../Spinner";
-import { Link } from "react-router-dom";
 import SpinnerSmall from "../../SpinnerSmall";
 
 interface DeleteCategoryFormProps {
@@ -20,8 +19,6 @@ const DeleteCategoryForm = ({ onDeleteCategory }: DeleteCategoryFormProps) => {
   });
 
   const handleGetCategory = (category_id: number) => {
-    console.log("Sending delete request for category:", category_id);
-
     ItemCategoryServices.getCategories(category_id)
       .then((res) => {
         if (res.status === 200) {
@@ -32,7 +29,7 @@ const DeleteCategoryForm = ({ onDeleteCategory }: DeleteCategoryFormProps) => {
           }));
         } else {
           console.error(
-            "Unexpected statuse error while geting category: ",
+            "Unexpected status error while getting category: ",
             res.status
           );
         }
@@ -61,13 +58,13 @@ const DeleteCategoryForm = ({ onDeleteCategory }: DeleteCategoryFormProps) => {
           onDeleteCategory(res.data.message);
         } else {
           console.error(
-            "Unexpected Status error while destroying Category: ",
+            "Unexpected Status error while destroying category: ",
             res.status
           );
         }
       })
       .catch((error) => {
-        console.error(error, null);
+        ErrorHandler(error, null);
       })
       .finally(() => {
         setState((prevState) => ({
@@ -82,7 +79,7 @@ const DeleteCategoryForm = ({ onDeleteCategory }: DeleteCategoryFormProps) => {
       const parsedCategoryId = parseInt(category_id);
       handleGetCategory(parsedCategoryId);
     } else {
-      console.error("invalid category_id: ", category_id);
+      console.error("Invalid category_id: ", category_id);
     }
   }, [category_id]);
 
@@ -93,45 +90,78 @@ const DeleteCategoryForm = ({ onDeleteCategory }: DeleteCategoryFormProps) => {
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleDestroyCategory}>
-          <h3>Are you sure you want to delete this category? </h3>
-          <div className="for-group">
-            <div className="mb-3">
-              <label htmlFor="category">Category</label>
-              <input
-                type="text"
-                className="form-control"
-                name="category"
-                id="category"
-                value={state.category_name}
-                readOnly
-              />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "60vh",
+            padding: 20,
+          }}
+        >
+          <form
+            onSubmit={handleDestroyCategory}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: 8,
+              padding: 24,
+              width: 360,
+              boxShadow:
+                "0 4px 8px rgba(0, 0, 0, 0.1), 0 0 15px rgba(0, 0, 0, 0.05)",
+              backgroundColor: "#fff",
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{ fontSize: 48, color: "#dc3545", marginBottom: 12 }}
+              aria-hidden="true"
+            >
+              &#9888;
             </div>
-            <div className="d-flex justify-content-end">
+            <h3
+              style={{ marginBottom: 20, fontWeight: "bold", color: "#dc3545" }}
+            >
+              Confirm Deletion
+            </h3>
+            <p style={{ fontSize: 16, marginBottom: 24 }}>
+              Are you sure you want to delete this category?
+            </p>
+            <input
+              type="text"
+              className="form-control mb-3"
+              readOnly
+              value={state.category_name}
+              aria-label="Category name"
+              style={{ fontWeight: "600", textAlign: "center" }}
+            />
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Link
-                to={"/ItemCategories"}
-                className={`btn btn-secondary me-3 ${
-                  state.loadingDestroy ? "disabled" : ""
-                }`}
+                to="/itemcategories"
+                className="btn btn-outline-secondary"
+                style={{ flex: 1, marginRight: 10 }}
+                aria-disabled={state.loadingDestroy}
+                tabIndex={state.loadingDestroy ? -1 : 0}
               >
-                Back
+                Cancel
               </Link>
               <button
                 type="submit"
                 className="btn btn-danger"
+                style={{ flex: 1 }}
                 disabled={state.loadingDestroy}
+                aria-busy={state.loadingDestroy}
               >
                 {state.loadingDestroy ? (
                   <>
                     <SpinnerSmall /> Deleting...
                   </>
                 ) : (
-                  "YES"
+                  "Delete"
                 )}
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       )}
     </>
   );

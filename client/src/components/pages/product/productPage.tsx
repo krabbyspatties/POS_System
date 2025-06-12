@@ -50,6 +50,7 @@ const ProductPage = () => {
           quantity: 1,
           price: item.item_price,
           item,
+          total_price: item.item_price * 1,
         },
       ];
     });
@@ -86,35 +87,35 @@ const ProductPage = () => {
   const content = (
     <>
       <AlertMessage
-      message={message}
-      isSuccess={isSuccess}
-      isVisible={isVisible}
-      onClose={handleCloseAlertMessage}
+        message={message}
+        isSuccess={isSuccess}
+        isVisible={isVisible}
+        onClose={handleCloseAlertMessage}
       />
       <AddOrderForm
-      orderList={orderList}
-      itemList={itemList}
-      onAdd={handleAddToOrder}
-      onRemove={handleRemoveFromOrder}
-      onOrderAdded={(msg, order) => {
-        handleShowAlertMessage(msg, true, true);
-        navigate("/receipt", {
-        state: {
-          order_item: orderList,
-          order_email: order.customer_email,
-          first_name: order.first_name,
-          last_name: order.last_name,
-        },
-        });
-        setRefreshOrder(!refreshItems);
-        setOrderList([]);
-      }}
+        orderList={orderList}
+        itemList={itemList}
+        onAdd={handleAddToOrder}
+        onRemove={handleRemoveFromOrder}
+        onOrderAdded={(msg, order) => {
+          handleShowAlertMessage(msg, true, true);
+          navigate("/receipt", {
+            state: {
+              order_item: orderList,
+              order_email: order.customer_email,
+              first_name: order.first_name,
+              last_name: order.last_name,
+            },
+          });
+          setRefreshOrder(!refreshItems);
+          setOrderList([]);
+        }}
       />
       <ProductsTable
-      refreshItems={refreshItems}
-      orderList={orderList}
-      onAdd={handleAddToOrder}
-      onRemove={handleRemoveFromOrder}
+        refreshItems={refreshItems}
+        orderList={orderList}
+        onAdd={handleAddToOrder}
+        onRemove={handleRemoveFromOrder}
       />
     </>
   );

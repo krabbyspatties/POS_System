@@ -1,25 +1,55 @@
-import axios from "axios";
-import { createContext, type ReactNode, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import AxiosInstance from "../AxiosInstance";
+
+interface User {
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  user_image: string | File;
+  user_name: string;
+  user_email: string;
+  user_phone: string;
+  user_address: string;
+  role: "cashier" | "manager" | "administrator";
+}
 
 interface AuthContextProps {
-  user: any;
+  user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (user_email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   isLoggedIn: boolean;
+  isLoading: boolean; // 👈 added this!
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
+  const [isLoading, setIsLoading] = useState(true); // 👈 added this!
 
-  const login = async (email: string, password: string) => {
-    const response = await axios.post("http://127.0.0.1:8000/api/login", {
-      user_email: email,
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    if (token) {
+      AxiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${token}`;
+    }
+
+    setIsLoading(false); // 👈 once done restoring
+  }, [token]);
+
+  const login = async (user_email: string, password: string) => {
+    const response = await AxiosInstance.post("/login", {
+      user_email,
       password,
     });
 
@@ -30,24 +60,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
   const logout = async () => {
-    await axios.post("http://127.0.0.1:8000/api/logout");
+    try {
+      await AxiosInstance.post("/logout");
+    } catch (err) {
+      console.warn("Logout error:", err);
+    }
+
     setToken(null);
     setUser(null);
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    delete axios.defaults.headers.common["Authorization"];
+    delete AxiosInstance.defaults.headers.common["Authorization"];
   };
 
   const isLoggedIn = !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, isLoggedIn, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -55,10 +92,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-
   return context;
 };

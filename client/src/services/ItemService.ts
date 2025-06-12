@@ -1,8 +1,20 @@
 import AxiosInstance from "../AxiosInstance"
 
 const ItemService = {
-  loadItems: async () => {
-    return AxiosInstance.get("/loadItems")
+  loadItems: async (page = 1, perPage = 10) => {
+    return AxiosInstance.get("/loadItems", {
+      params: { page, perPage },
+    })
+      .then((response) => response)
+      .catch((error) => {
+        throw error;
+      });
+  },
+  
+  
+
+  getItem: async (itemId: number) => {
+    return AxiosInstance.get(`/getItem/${itemId}`)
       .then((response) => response)
       .catch((error) => {
         throw error
@@ -28,7 +40,6 @@ const ItemService = {
       console.log(key, value)
     }
 
-    // Changed from PUT to POST to match UserService pattern
     return AxiosInstance.post(`/updateItem/${itemId}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",

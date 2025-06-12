@@ -28,7 +28,6 @@ const AddItemCategory = ({
     setIsVisible(isVisible);
   };
 
-
   const handleCategoryAdded = (msg: string) => {
     handleShowAlertMessage(msg, true, true);
     onRefreshItems(true);
@@ -48,11 +47,12 @@ const AddItemCategory = ({
         <div className="modal-dialog modal-lg" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5">Add Item Category</h1>
+              <h1 className="modal-title fs-5">Category</h1>
               <button
                 type="button"
                 className="btn-close"
                 onClick={onClose}
+                disabled={loadingStore}
               ></button>
             </div>
             <div className="modal-body">
@@ -69,7 +69,20 @@ const AddItemCategory = ({
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn"
+                style={{
+                  background:
+                    "linear-gradient(90deg, #198754 0%, #146c43 100%)",
+                  color: "white",
+                  border: "none",
+                  fontWeight: 600,
+                  padding: "8px 16px",
+                  borderRadius: 6,
+                  cursor: loadingStore ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
                 disabled={loadingStore}
               >
                 {loadingStore ? (

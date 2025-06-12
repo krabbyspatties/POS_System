@@ -11,12 +11,12 @@ class FeedbackController extends Controller
     public function getResponses()
     {
         $client = new Client();
-        $client->setAuthConfig(storage_path('app/posSystemSheets.json')); // Your service account JSON
+        $client->setAuthConfig(storage_path('app/posSystemSheets.json'));
         $client->addScope(Sheets::SPREADSHEETS_READONLY);
 
         $service = new Sheets($client);
-        $spreadsheetId = '1Cqk8-_HVKM1cZl_p46wPaELCz-UKZ1S6-V42682sofc'; // Your Google Sheet ID
-        $range = "Form Responses 1!A1:Z1000"; // Adjust as needed
+        $spreadsheetId = '1Cqk8-_HVKM1cZl_p46wPaELCz-UKZ1S6-V42682sofc';
+        $range = "Form Responses 1!A1:Z1000";
 
         $response = $service->spreadsheets_values->get($spreadsheetId, $range);
         $values = $response->getValues();
@@ -113,7 +113,6 @@ class FeedbackController extends Controller
         $summary = [];
 
         foreach ($headers as $colIndex => $question) {
-            // Skip timestamp column (usually index 0)
             if ($colIndex === 0) {
                 continue;
             }

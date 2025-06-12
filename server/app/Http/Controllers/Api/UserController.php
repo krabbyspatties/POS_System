@@ -37,7 +37,7 @@ class UserController extends Controller
         if ($request->hasFile('user_image')) {
             $validated['user_image'] = $request->file('user_image')->store('images', 'public');
         } else {
-            $validated['user_image'] = 'images/placeholder.jpg';
+            $validated['user_image'] = 'images/profile.png';
         }
 
         User::create([
@@ -74,7 +74,7 @@ class UserController extends Controller
         $imagePath = $user->user_image;
 
         if ($request->hasFile('user_image')) {
-            if ($user->user_image && $user->user_image !== 'images/placeholder.jpg') {
+            if ($user->user_image && $user->user_image !== 'images/profile.png') {
                 Storage::disk('public')->delete($user->user_image);
             }
             $imagePath = $request->file('user_image')->store('images', 'public');

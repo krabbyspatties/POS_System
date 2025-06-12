@@ -24,7 +24,6 @@ class ReportController extends Controller
                 ->select(DB::raw('SUM(tbl_order_items.quantity * tbl_order_items.price) as total_sales'))
                 ->value('total_sales');
 
-            // 1. Get total quantities per day
             $dailySalesSummary = DB::table('tbl_orders')
                 ->join('tbl_order_items', 'tbl_orders.order_id', '=', 'tbl_order_items.order_id')
                 ->whereBetween('tbl_orders.created_at', [$startDate, $endDate])
@@ -33,7 +32,6 @@ class ReportController extends Controller
                 ->orderBy('sale_date')
                 ->get();
 
-            // 2. Get item-level sales grouped by day and item
             $dailyItems = DB::table('tbl_orders')
                 ->join('tbl_order_items', 'tbl_orders.order_id', '=', 'tbl_order_items.order_id')
                 ->join('tbl_items', 'tbl_order_items.item_id', '=', 'tbl_items.item_id')
@@ -88,17 +86,15 @@ class ReportController extends Controller
         try {
             $items = Item::select('item_id', 'item_name', 'item_quantity', 'item_price')->get();
 
-            // Filter items with low stock (quantity less than 100)
             $lowStockItems = $items->filter(fn($item) => $item->item_quantity < 100);
 
-            // Calculate total inventory value (sum of quantity * price)
             $totalInventoryValue = $items->reduce(function ($carry, $item) {
                 return $carry + ($item->item_quantity * $item->item_price);
             }, 0);
 
             return response()->json([
                 'items' => $items,
-                'lowStockItems' => $lowStockItems->values(), // reset keys
+                'lowStockItems' => $lowStockItems->values(),
                 'totalInventoryValue' => $totalInventoryValue,
             ]);
         } catch (\Exception $e) {

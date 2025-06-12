@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import {
   useEffect,
   useRef,
@@ -88,10 +87,8 @@ const EditItemForm = ({
     setState((prev) => ({ ...prev, errors: {} }));
 
     try {
-      // Create FormData object
       const formData = new FormData();
 
-      // Append all required fields
       formData.append("item_name", state.item_name);
       formData.append("item_description", state.item_description);
       formData.append("item_price", String(state.item_price));
@@ -99,6 +96,9 @@ const EditItemForm = ({
       if (state.item_discount !== undefined && state.item_discount !== null) {
         formData.append("item_discount", String(state.item_discount));
       }
+      formData.append("item_quantity", String(state.item_quantity));
+
+      formData.append("item_quantity", String(state.item_quantity));
 
       formData.append("stock_level", state.stock_level);
 
@@ -116,7 +116,6 @@ const EditItemForm = ({
         return;
       }
 
-      // Handle image properly
       if (state.item_image instanceof File) {
         formData.append("item_image", state.item_image);
       } else if (
@@ -124,11 +123,6 @@ const EditItemForm = ({
         state.item_image !== ""
       ) {
         formData.append("existing_image", state.item_image);
-      }
-
-      console.log("FormData entries:");
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
       }
 
       const response = await ItemService.updateItem(state.item_id, formData);
@@ -139,10 +133,7 @@ const EditItemForm = ({
         throw new Error("Unexpected response status: " + response.status);
       }
     } catch (error: any) {
-      console.error("Update item error:", error);
-
       if (error.response?.status === 422) {
-        // Handle validation errors
         setState((prev) => ({
           ...prev,
           errors: error.response.data.errors || {},

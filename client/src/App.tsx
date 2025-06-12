@@ -13,8 +13,6 @@ import ChartPage from "./components/pages/chart/Chart";
 import ReportPage from "./components/pages/report/report";
 import FeedbackPage from "./components/pages/feedback/feedback";
 
-// const submitFormRef = React.createRef<() => void>();
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,7 +21,7 @@ const router = createBrowserRouter([
   {
     path: "/users",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["administrator"]}>
         <UsersPage />
       </ProtectedRoute>
     ),
@@ -31,7 +29,7 @@ const router = createBrowserRouter([
   {
     path: "/itemCategories",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <CategoriesPage />
       </ProtectedRoute>
     ),
@@ -39,7 +37,7 @@ const router = createBrowserRouter([
   {
     path: "/itemCategories/edit/:category_id",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <EditItemCategory />
       </ProtectedRoute>
     ),
@@ -47,7 +45,7 @@ const router = createBrowserRouter([
   {
     path: "/itemCategories/delete/:category_id",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <DeleteCategory />
       </ProtectedRoute>
     ),
@@ -55,7 +53,7 @@ const router = createBrowserRouter([
   {
     path: "/items",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <ItemsPage />
       </ProtectedRoute>
     ),
@@ -63,7 +61,7 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["cashier", "manager", "administrator"]}>
         <ProductPage />
       </ProtectedRoute>
     ),
@@ -71,7 +69,7 @@ const router = createBrowserRouter([
   {
     path: "/receipt",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["cashier", "manager", "administrator"]}>
         <ReceiptPage />
       </ProtectedRoute>
     ),
@@ -79,7 +77,7 @@ const router = createBrowserRouter([
   {
     path: "/charts",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <ChartPage />
       </ProtectedRoute>
     ),
@@ -87,7 +85,7 @@ const router = createBrowserRouter([
   {
     path: "/reports",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <ReportPage />
       </ProtectedRoute>
     ),
@@ -95,7 +93,7 @@ const router = createBrowserRouter([
   {
     path: "/feedback",
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={["manager", "administrator"]}>
         <FeedbackPage />
       </ProtectedRoute>
     ),

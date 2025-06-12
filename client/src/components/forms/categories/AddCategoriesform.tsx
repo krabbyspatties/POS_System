@@ -72,14 +72,25 @@ const AddCategoryForm = ({ onCategoryAdded }: AddCategoriesFormProps) => {
 
   return (
     <>
-      <div style={{ display: "flex", minHeight: "50vh" }}>
+      <div
+        style={{
+          display: "flex",
+          minHeight: "50vh",
+          justifyContent: "flex-start", // aligns left, we'll add margin to move right
+          alignItems: "flex-start",
+          paddingTop: 20,
+          paddingLeft: 50, // move entire container a bit right
+        }}
+      >
         <div
           style={{
             width: 260,
-            backgroundColor: "#007bff",
+            background: "linear-gradient(45deg, #000000, #8B0000)", // black-red gradient background behind form only
             color: "#fff",
             padding: 16,
-            top: 100,
+            borderRadius: 8,
+            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+            border: "1px solid #440000",
           }}
         >
           <h5>Add Category</h5>
@@ -93,14 +104,21 @@ const AddCategoryForm = ({ onCategoryAdded }: AddCategoriesFormProps) => {
               name="category"
               value={state.category}
               onChange={handleInputChange}
+              style={{ backgroundColor: "#fff", color: "#000" }}
             />
             {state.errors.category_name && (
               <p className="text-danger">{state.errors.category_name[0]}</p>
             )}
             <button
               type="submit"
-              className="btn btn-primary"
-              style={{ border: "2px solid black" }}
+              className="btn"
+              style={{
+                background: "linear-gradient(45deg, #28a745, #218838)", // green gradient
+                border: "none",
+                color: "white",
+                fontWeight: "bold",
+                width: "100%",
+              }}
               disabled={state.loadingStore}
             >
               {state.loadingStore ? (

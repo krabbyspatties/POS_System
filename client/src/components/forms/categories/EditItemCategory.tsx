@@ -13,7 +13,7 @@ interface EditCategoryFormProps {
 const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
   const { category_id } = useParams();
 
-  const [state, SetState] = useState({
+  const [state, setState] = useState({
     loadingGet: true,
     loadingUpdate: false,
     category_id: 0,
@@ -23,14 +23,14 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    SetState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   const handleGetCategory = (category_id: number) => {
-    SetState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       loadingGet: true,
     }));
@@ -38,7 +38,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
     ItemCategoryServices.getCategories(category_id)
       .then((res) => {
         if (res.status === 200) {
-          SetState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
             category_id: res.data.category.category_id,
             category_name: res.data.category.category_name,
@@ -51,7 +51,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
         ErrorHandler(error, null);
       })
       .finally(() => {
-        SetState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           loadingGet: false,
         }));
@@ -61,7 +61,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
   const handleUpdateCategory = (e: FormEvent) => {
     e.preventDefault();
 
-    SetState((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
       loadingUpdate: true,
     }));
@@ -71,7 +71,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
     })
       .then((res) => {
         if (res.status === 200) {
-          SetState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
             errors: {} as CategoryFieldErrors,
           }));
@@ -82,7 +82,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
       })
       .catch((error) => {
         if (error.response?.status === 422) {
-          SetState((prevState) => ({
+          setState((prevState) => ({
             ...prevState,
             errors: error.response.data.errors,
           }));
@@ -91,7 +91,7 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
         }
       })
       .finally(() => {
-        SetState((prevState) => ({
+        setState((prevState) => ({
           ...prevState,
           loadingUpdate: false,
         }));
@@ -114,45 +114,82 @@ const EditCategoryForm = ({ onCategoryUpdate }: EditCategoryFormProps) => {
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleUpdateCategory}>
-          <div className="form-group">
-            <div className="mb-3">
-              <label htmlFor="category_name">Category</label>
-              <input
-                type="text"
-                className={`form-control ${
-                  state.errors.category_name ? "is-invalid" : ""
-                }`}
-                name="category_name"
-                id="category_name"
-                value={state.category_name}
-                onChange={handleInputChange}
-              />
-              {state.errors.category_name && (
-                <p className="text-danger">{state.errors.category_name[0]}</p>
-              )}
-            </div>
-            <div className="d-flex justify-content-end">
-              <Link to="/items" className="btn btn-secondary me-1">
-                Back
-              </Link>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={state.loadingUpdate}
-              >
-                {state.loadingUpdate ? (
-                  <>
-                    <SpinnerSmall />
-                    Updating...
-                  </>
-                ) : (
-                  "Update"
+        <div
+          style={{
+            display: "flex",
+            minHeight: "60vh",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
+          <div
+            style={{
+              width: 360, // increased width
+              background: "linear-gradient(45deg, #000000, #8B0000)",
+              color: "#fff",
+              padding: 24, // increased padding
+              borderRadius: 8,
+              boxShadow: "0 0 12px rgba(0,0,0,0.6)",
+              border: "1px solid #440000",
+            }}
+          >
+            <h5>Edit Category</h5>
+            <form onSubmit={handleUpdateCategory}>
+              <div className="mb-3">
+                <label htmlFor="category_name" className="form-label">
+                  Category
+                </label>
+                <input
+                  type="text"
+                  className={`form-control ${
+                    state.errors.category_name ? "is-invalid" : ""
+                  }`}
+                  name="category_name"
+                  id="category_name"
+                  value={state.category_name}
+                  onChange={handleInputChange}
+                  style={{ backgroundColor: "#fff", color: "#000" }}
+                />
+                {state.errors.category_name && (
+                  <div className="invalid-feedback">
+                    {state.errors.category_name[0]}
+                  </div>
                 )}
-              </button>
-            </div>
+              </div>
+              <div className="d-flex justify-content-end">
+                <Link
+                  to="/items"
+                  className="btn btn-secondary me-2"
+                  style={{ minWidth: 80 }}
+                >
+                  Back
+                </Link>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{
+                    background: "linear-gradient(45deg, #28a745, #218838)",
+                    border: "none",
+                    color: "white",
+                    fontWeight: "bold",
+                    minWidth: 80,
+                  }}
+                  disabled={state.loadingUpdate}
+                >
+                  {state.loadingUpdate ? (
+                    <>
+                      <SpinnerSmall />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       )}
     </>
   );

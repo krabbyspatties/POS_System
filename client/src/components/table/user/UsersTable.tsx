@@ -87,7 +87,7 @@ const UsersTable = ({
       <div
         style={{
           width: 260,
-          backgroundColor: "#007bff",
+          background: "linear-gradient(180deg, #000000 0%, #8B0000 100%)",
           color: "#fff",
           padding: 20,
           fontSize: "1.1rem",
@@ -119,9 +119,9 @@ const UsersTable = ({
         <button
           className="btn btn-light w-100"
           style={{
-            border: "2px solid white",
+            border: "2px solid #8B0000",
             fontWeight: "bold",
-            color: "#007bff",
+            color: "#8B0000",
             backgroundColor: "#fff",
           }}
           onClick={() => setFilter({ name: "", role: "" })}
@@ -129,20 +129,35 @@ const UsersTable = ({
           Reset Filters
         </button>
       </div>
-  
+
       {/* Main Content */}
       <div style={{ flex: 1, padding: 32, fontSize: "1rem", color: "#333" }}>
         {/* Header Action */}
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 16,
+          }}
+        >
           <button
-            className="btn btn-primary btn-lg"
-            style={{ fontSize: "1rem", padding: "8px 20px" }}
+            className="btn"
+            style={{
+              background: "linear-gradient(90deg, #198754 0%, #146c43 100%)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: "600",
+              padding: "8px 16px",
+              fontSize: "1rem",
+              cursor: "pointer",
+            }}
             onClick={() => setShowAddUserModal(true)}
           >
             + Add User
           </button>
         </div>
-  
+
         {/* Table Container */}
         <div
           style={{
@@ -163,14 +178,13 @@ const UsersTable = ({
                 <th>Phone</th>
                 <th>Address</th>
                 <th>Role</th>
-                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {state.loadingUsers ? (
                 <tr>
-                  <td colSpan={10} className="text-center">
+                  <td colSpan={9} className="text-center">
                     <Spinner />
                   </td>
                 </tr>
@@ -196,7 +210,7 @@ const UsersTable = ({
                       <td>{index + 1}</td>
                       <td>
                         {user.user_image ? (
-                          <Link to={`/users/${user.user_id}`}>
+                          <div>
                             <img
                               src={`http://localhost:8000/storage/${user.user_image}`}
                               alt={user.user_name}
@@ -207,10 +221,10 @@ const UsersTable = ({
                                 objectFit: "cover",
                                 borderRadius: "50%",
                                 cursor: "pointer",
-                                border: "2px solid #007bff",
+                                border: "2px solid #8B0000",
                               }}
                             />
-                          </Link>
+                          </div>
                         ) : (
                           <div
                             style={{
@@ -230,29 +244,29 @@ const UsersTable = ({
                       <td>{user.user_address}</td>
                       <td>{user.role}</td>
                       <td>
-                        <span
-                          className={`badge ${
-                            user.user_status === "Active"
-                              ? "bg-success"
-                              : "bg-secondary"
-                          }`}
-                          style={{ fontSize: "0.9rem", padding: "6px 12px" }}
-                        >
-                          {user.user_status}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="btn-group">
+                        <div className="btn-group" style={{ gap: 6 }}>
                           <button
                             type="button"
-                            className="btn btn-primary btn-sm"
+                            className="btn btn-sm"
+                            style={{
+                              backgroundColor: "#0d6efd",
+                              color: "#fff",
+                              border: "none",
+                              fontWeight: "bold",
+                            }}
                             onClick={() => onEditUser(user)}
                           >
                             Edit
                           </button>
                           <button
                             type="button"
-                            className="btn btn-danger btn-sm"
+                            className="btn btn-sm"
+                            style={{
+                              backgroundColor: "#dc3545",
+                              color: "#fff",
+                              border: "none",
+                              fontWeight: "bold",
+                            }}
                             onClick={() => onDeleteUser(user)}
                           >
                             Delete
@@ -263,7 +277,7 @@ const UsersTable = ({
                   ))
               ) : (
                 <tr className="align-middle">
-                  <td colSpan={10} className="text-center">
+                  <td colSpan={9} className="text-center">
                     No Users Found
                   </td>
                 </tr>
@@ -271,17 +285,17 @@ const UsersTable = ({
             </tbody>
           </table>
         </div>
-  
-        {/* Modal */}
+      </div>
+
+      {showAddUserModal && (
         <AddUserModal
           showModal={showAddUserModal}
           onRefreshUsers={handleRefreshUsers}
           onClose={() => setShowAddUserModal(false)}
         />
-      </div>
+      )}
     </div>
   );
-  
 };
 
 export default UsersTable;

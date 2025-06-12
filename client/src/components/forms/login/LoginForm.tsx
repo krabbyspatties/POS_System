@@ -5,6 +5,7 @@ import SpinnerSmall from "../../SpinnerSmall";
 import AlertMessage from "../../AlertMessage";
 import ErrorHandler from "../../handler/ErrorHandler";
 import type { LoginFieldErrors } from "../../../interfaces/LoginFieldErrors";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -12,7 +13,7 @@ const LoginForm = () => {
 
   const [state, setState] = useState({
     loadingLogin: false,
-    email: "",
+    user_email: "",
     password: "",
     errors: {} as LoginFieldErrors,
   });
@@ -20,10 +21,10 @@ const LoginForm = () => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     setState((prevState) => ({
       ...prevState,
       [name]: value,
@@ -32,19 +33,15 @@ const LoginForm = () => {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
-
     setState((prevState) => ({
       ...prevState,
       loadingLogin: true,
+      errors: {} as LoginFieldErrors,
     }));
 
-    login(state.email, state.password)
-      .then(() => {
-        console.log("Login successful. navigating");
-        navigate("/users");
-      })
+    login(state.user_email, state.password)
+      .then(() => navigate("/products"))
       .catch((error) => {
-        console.error("Login failed", error);
         if (error.response.status === 422) {
           setState((prevState) => ({
             ...prevState,
@@ -81,64 +78,157 @@ const LoginForm = () => {
   };
 
   return (
-    <>
-      <AlertMessage
-        message={message}
-        isSuccess={isSuccess}
-        isVisible={isVisible}
-        onClose={handleCloseAlertMessage}
-      />
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            className={`form-control ${state.errors.email ? "is-invalid" : ""}`}
-            name="email"
-            id="email"
-            value={state.email}
-            onChange={handleInputChange}
-            autoFocus
-          />
-          {state.errors.email && (
-            <span className="text-danger">{state.errors.email[0]}</span>
-          )}
-        </div>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        backgroundImage: `url("/src/images/bg.png")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100vh",
+        width: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      }}
+    >
+      <div
+        className="p-1 rounded-4 shadow-lg"
+        style={{
+          background: "linear-gradient(to right, black, red)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <div
+          className="card rounded-4 p-4 p-md-5"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.95)",
+          }}
+        >
+          <div className="text-center mb-4">
+            <h2 className="fw-bold">Welcome</h2>
+            <p className="text-muted small">Login to your account</p>
+          </div>
 
-        <div className="mb-3">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            className={`form-control ${
-              state.errors.password ? "is-invalid" : ""
-            }`}
-            name="password"
-            id="password"
-            value={state.password}
-            onChange={handleInputChange}
+          <AlertMessage
+            message={message}
+            isSuccess={isSuccess}
+            isVisible={isVisible}
+            onClose={handleCloseAlertMessage}
           />
-          {state.errors.password && (
-            <span className="text-danger">{state.errors.password[0]}</span>
-          )}
-        </div>
 
-        <div className="d-flex justify-content-end">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={state.loadingLogin}
-          >
-            {state.loadingLogin ? (
-              <>
-                <SpinnerSmall /> Logging In...
-              </>
-            ) : (
-              "Login"
-            )}
-          </button>
+          <form onSubmit={handleLogin} noValidate>
+            <div className="mb-3">
+              <label htmlFor="user_email" className="form-label fw-semibold">
+                Email
+              </label>
+              <div
+                style={{
+                  padding: "1px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(to right, black, red)",
+                }}
+              >
+                <input
+                  type="text"
+                  className={`form-control shadow-none ${
+                    state.errors.user_email ? "is-invalid" : ""
+                  }`}
+                  style={{
+                    borderRadius: "10px",
+                    padding: "12px",
+                    border: "none",
+                  }}
+                  name="user_email"
+                  id="user_email"
+                  value={state.user_email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                />
+              </div>
+              {state.errors.user_email && (
+                <div className="invalid-feedback">
+                  {state.errors.user_email[0]}
+                </div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label fw-semibold">
+                Password
+              </label>
+              <div
+                className="position-relative"
+                style={{
+                  padding: "1px",
+                  borderRadius: "10px",
+                  background: "linear-gradient(to right, black, red)",
+                }}
+              >
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control shadow-none ${
+                    state.errors.password ? "is-invalid" : ""
+                  }`}
+                  style={{
+                    borderRadius: "10px",
+                    padding: "12px",
+                    border: "none",
+                  }}
+                  name="password"
+                  id="password"
+                  value={state.password}
+                  onChange={handleInputChange}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                  style={{ background: "transparent", border: "none" }}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} className="text-dark" />
+                  ) : (
+                    <Eye size={18} className="text-dark" />
+                  )}
+                </button>
+              </div>
+              {state.errors.password && (
+                <div className="invalid-feedback">
+                  {state.errors.password[0]}
+                </div>
+              )}
+            </div>
+
+            <div className="d-grid mt-4">
+              <button
+                type="submit"
+                className="btn btn-dark btn-lg rounded-pill"
+                disabled={state.loadingLogin}
+                style={{
+                  background: "linear-gradient(to right, black, red)",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: "bold",
+                }}
+              >
+                {state.loadingLogin ? (
+                  <>
+                    <SpinnerSmall /> <span className="ms-2">Logging In...</span>
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </>
+      </div>
+    </div>
   );
 };
 

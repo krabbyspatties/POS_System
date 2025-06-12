@@ -10,6 +10,9 @@ interface ItemsTableProps {
   loadingItems: boolean;
   onEditItem: (item: Items) => void;
   onDeleteItem: (item: Items) => void;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  onRefreshItems: () => void;
 }
 
 const ItemsTable = ({
@@ -17,14 +20,15 @@ const ItemsTable = ({
   loadingItems,
   onEditItem,
   onDeleteItem,
+  onLoadMore,
+  hasMore = false,
+  onRefreshItems,
 }: ItemsTableProps) => {
   const [openAddItemModal, setOpenAddItemModal] = useState(false);
-  const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false); // fixed naming
-  const [refreshItems, setRefreshItems] = useState(false);
+  const [openAddCategoryModal, setOpenAddCategoryModal] = useState(false);
 
   return (
     <div style={{ flex: 1, padding: 32, backgroundColor: "#f8f9fa" }}>
-      {/* Top Buttons */}
       <div
         style={{
           display: "flex",
@@ -34,32 +38,37 @@ const ItemsTable = ({
         }}
       >
         <button
-          className="btn btn-success btn-sm"
+          className="btn btn-sm"
           style={{
             fontSize: "1rem",
             padding: "8px 16px",
             fontWeight: "600",
             borderRadius: 6,
+            background: "linear-gradient(90deg, #28a745, #218838)",
+            color: "#fff",
+            border: "none",
           }}
           onClick={() => setOpenAddItemModal(true)}
         >
           + Add Item
         </button>
         <button
-          className="btn btn-primary btn-sm"
+          className="btn btn-sm"
           style={{
             fontSize: "1rem",
             padding: "8px 16px",
             fontWeight: "600",
             borderRadius: 6,
+            background: "linear-gradient(90deg, #007bff, #0056b3)",
+            color: "#fff",
+            border: "none",
           }}
           onClick={() => setOpenAddCategoryModal(true)}
         >
-          + Add Category
+          Category
         </button>
       </div>
-  
-      {/* Table Wrapper */}
+
       <div
         style={{
           background: "#fff",
@@ -84,7 +93,7 @@ const ItemsTable = ({
             </tr>
           </thead>
           <tbody>
-            {loadingItems ? (
+            {loadingItems && items.length === 0 ? (
               <tr>
                 <td colSpan={10} className="text-center">
                   <Spinner />
@@ -146,19 +155,29 @@ const ItemsTable = ({
                   </td>
                   <td>{item.category?.category_name ?? "N/A"}</td>
                   <td>
-                    <div className="btn-group">
+                    <div className="btn-group" style={{ gap: 6 }}>
                       <button
                         type="button"
-                        className="btn btn-primary btn-sm"
-                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
+                        className="btn btn-sm"
+                        style={{
+                          backgroundColor: "#0d6efd",
+                          color: "#fff",
+                          border: "none",
+                          fontWeight: "bold",
+                        }}
                         onClick={() => onEditItem(item)}
                       >
                         Edit
                       </button>
                       <button
                         type="button"
-                        className="btn btn-danger btn-sm"
-                        style={{ padding: "4px 10px", fontSize: "0.9rem" }}
+                        className="btn btn-sm"
+                        style={{
+                          backgroundColor: "#dc3545",
+                          color: "#fff",
+                          border: "none",
+                          fontWeight: "bold",
+                        }}
                         onClick={() => onDeleteItem(item)}
                       >
                         Delete
@@ -176,23 +195,36 @@ const ItemsTable = ({
             )}
           </tbody>
         </table>
+
+        {/* Lazy load footer */}
+        {hasMore && !loadingItems && (
+          <div style={{ textAlign: "center", marginTop: 16 }}>
+            <button className="btn btn-primary" onClick={() => onLoadMore?.()}>
+              Load More
+            </button>
+          </div>
+        )}
       </div>
-  
-      {/* Modals */}
+
       <AddItemModal
         showModal={openAddItemModal}
-        onRefreshItems={() => setRefreshItems(!refreshItems)}
+        onRefreshItems={() => {
+          onRefreshItems();
+          setOpenAddItemModal(false);
+        }}
         onClose={() => setOpenAddItemModal(false)}
       />
-  
+
       <AddItemCategory
         showModal={openAddCategoryModal}
-        onRefreshItems={() => setRefreshItems(!refreshItems)}
+        onRefreshItems={() => {
+          onRefreshItems();
+          setOpenAddCategoryModal(false);
+        }}
         onClose={() => setOpenAddCategoryModal(false)}
       />
     </div>
   );
-  
 };
 
 export default ItemsTable;

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import type { FormEvent } from "react";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import SpinnerSmall from "./SpinnerSmall";
 const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loadingLogout, setLoadingLogout] = useState(false);
 
@@ -28,7 +29,7 @@ const Navbar = () => {
     },
     {
       route: "/products",
-      title: "Products",
+      title: "Order",
       allowedRoles: ["administrator", "manager", "cashier"],
     },
     {
@@ -48,7 +49,6 @@ const Navbar = () => {
     },
   ];
 
-  // ✅ Filter routes based on user role
   const accessibleMenuItems = menuItems.filter((item) =>
     item.allowedRoles.includes(userRole)
   );
@@ -68,69 +68,111 @@ const Navbar = () => {
       });
   };
 
-  const handleUserFullName = () => {
+  const handleUserInfo = () => {
     const user = localStorage.getItem("user");
     const parsedUser = user ? JSON.parse(user) : null;
-    let fullName = "";
-    if (parsedUser?.middle_name) {
-      fullName = `${parsedUser.last_name}, ${parsedUser.first_name} ${parsedUser.middle_name[0]}.`;
-    } else if (parsedUser) {
-      fullName = `${parsedUser.last_name}, ${parsedUser.first_name}`;
+
+    if (!parsedUser) {
+      return { fullName: "", userImage: "" };
     }
-    return fullName;
+
+    const { first_name, middle_name, last_name, user_image } = parsedUser;
+
+    const fullName = middle_name
+      ? `${last_name}, ${first_name} ${middle_name[0]}.`
+      : `${last_name}, ${first_name}`;
+
+    return { fullName, userImage: user_image };
   };
+
+  const { fullName, userImage } = handleUserInfo();
 
   return (
     <nav
-      className="d-flex align-items-center justify-content-between mb-3"
+      className="d-flex align-items-center justify-content-between shadow-lg"
       style={{
         width: "100%",
         height: "80px",
         position: "fixed",
         top: 0,
         left: 0,
-        borderBottom: "1px solid #222",
         zIndex: 1000,
-        backgroundColor: "#007bff",
+        background: "linear-gradient(to right, #000000, #8B0000)",
         color: "#fff",
         padding: "0 32px",
+        borderBottom: "2px solid rgba(255,255,255,0.1)",
       }}
     >
       <ul className="nav mb-0 d-flex align-items-center">
-        <span
-          className="navbar-brand mb-0"
-          style={{ color: "#fff", fontWeight: "bold", marginRight: "24px" }}
+        <Link
+          to="#"
+          className="me-4 d-flex align-items-center text-decoration-none"
         >
-          POS_SYSTEM
-        </span>
-        {accessibleMenuItems.map((menuItem, index) => (
-          <li className="nav-item" key={index}>
-            <Link
-              className="nav-link"
-              to={menuItem.route}
-              style={{
-                color: "#fff",
-                backgroundColor: "rgba(0,0,0,0.1)",
-                borderRadius: "4px",
-                marginLeft: "8px",
-                padding: "8px 20px",
-                fontWeight: 500,
-              }}
-            >
-              {menuItem.title}
-            </Link>
-          </li>
-        ))}
+          <img
+            src="/src/images/logo.png"
+            alt="Logo"
+            style={{
+              height: "45px",
+              width: "auto",
+              objectFit: "contain",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+              padding: "4px",
+              boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+            }}
+          />
+        </Link>
+
+        {accessibleMenuItems.map((menuItem, index) => {
+          const isActive = location.pathname === menuItem.route;
+
+          return (
+            <li className="nav-item" key={index}>
+              <Link
+                className="nav-link"
+                to={menuItem.route}
+                style={{
+                  color: "#fff",
+                  backgroundColor: isActive
+                    ? "rgba(255,255,255,0.3)"
+                    : "rgba(255,255,255,0.1)",
+                  borderRadius: "30px",
+                  marginLeft: "8px",
+                  padding: "8px 20px",
+                  fontWeight: 500,
+                  transition: "all 0.2s ease-in-out",
+                  border: isActive ? "2px solid #fff" : "none",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.2)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255,255,255,0.1)";
+                  }
+                }}
+              >
+                {menuItem.title}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
 
       <div className="d-flex align-items-center">
-        <strong>{handleUserFullName()}</strong>
+        <strong className="me-3">{fullName}</strong>
         <button
           type="button"
-          className="btn btn-light btn-sm ms-3"
+          className="btn btn-outline-light btn-sm"
           onClick={handleLogout}
           disabled={loadingLogout}
-          style={{ color: "#007bff", borderColor: "#fff" }}
+          style={{
+            borderColor: "#fff",
+          }}
         >
           {loadingLogout ? (
             <>
