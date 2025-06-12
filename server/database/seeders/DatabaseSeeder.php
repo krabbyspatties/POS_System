@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'user_phone' => '0946593123451',
             'user_address' => 'Test',
             'user_image' => '',
-            'role' => 'Administrator',
+            'role' => 'administrator',
             'is_deleted' => 0,
 
         ]);

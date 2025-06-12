@@ -48,19 +48,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [token]);
 
   const login = async (user_email: string, password: string) => {
-    const response = await AxiosInstance.post("/login", {
-      user_email,
-      password,
-    });
+    try {
+      const response = await AxiosInstance.post("/login", {
+        user_email,
+        password,
+      });
 
-    const { token, user } = response.data;
-    setToken(token);
-    setUser(user);
+      const { token, user } = response.data;
+      setToken(token);
+      setUser(user);
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
-    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      AxiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${token}`;
+    } catch (error: any) {
+      // Re-throw the error so the login form can handle it
+      throw error;
+    }
   };
 
   const logout = async () => {

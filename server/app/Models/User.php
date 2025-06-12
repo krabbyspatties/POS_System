@@ -30,4 +30,28 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    protected $casts = [
+        'password' => 'hashed',
+    ];
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'user_email';
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 }

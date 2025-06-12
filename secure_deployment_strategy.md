@@ -8,13 +8,6 @@ This document outlines the recommended deployment strategies and best practices 
 
 ### 1. Server Environment
 
-#### Recommended Configuration:
-
-- **Web Server**: Nginx with PHP-FPM
-- **Database Server**: MySQL/MariaDB with encryption enabled
-- **Operating System**: Latest LTS version of Ubuntu Server or similar hardened Linux distribution
-- **PHP Version**: PHP 8.1+ with OPcache enabled
-
 #### Server Hardening:
 
 - Implement minimal installation principle (only required services)
@@ -144,13 +137,6 @@ This document outlines the recommended deployment strategies and best practices 
 - [ ] Performance baseline established
 - [ ] Monitoring systems confirmed operational
 - [ ] Backup systems confirmed operational
-
-## Compliance Considerations
-
-- **PCI DSS**: If processing payment card data, ensure compliance with PCI DSS requirements
-- **GDPR**: Ensure proper handling of personal data for EU customers
-- **Local Regulations**: Address specific requirements for operating regions
-- **Industry Standards**: Follow relevant industry security standards
 
 ## Documentation
 

@@ -42,15 +42,56 @@ const LoginForm = () => {
     login(state.user_email, state.password)
       .then(() => navigate("/products"))
       .catch((error) => {
-        if (error.response.status === 422) {
-          setState((prevState) => ({
-            ...prevState,
-            errors: error.response.data.errors,
-          }));
-        } else if (error.response.status === 401) {
-          handleShowAlertMessage(error.response.data.message, false, true);
+        console.log("Login error:", error); // Debug log
+
+        if (error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+
+          if (status === 422) {
+            // Validation errors
+            setState((prevState) => ({
+              ...prevState,
+              errors: data.errors || {},
+            }));
+          } else if (status === 401) {
+            // Authentication failed
+            handleShowAlertMessage(
+              data.message || "Invalid credentials, please try again.",
+              false,
+              true
+            );
+          } else if (status === 429) {
+            // Too many attempts
+            handleShowAlertMessage(
+              data.message ||
+                "Too many login attempts. Please try again later.",
+              false,
+              true
+            );
+          } else {
+            // Other server errors
+            handleShowAlertMessage(
+              data.message ||
+                "An error occurred during login. Please try again.",
+              false,
+              true
+            );
+          }
+        } else if (error.request) {
+          // Network error
+          handleShowAlertMessage(
+            "Network error. Please check your connection and try again.",
+            false,
+            true
+          );
         } else {
-          ErrorHandler(error, null);
+          // Other errors
+          handleShowAlertMessage(
+            "An unexpected error occurred. Please try again.",
+            false,
+            true
+          );
         }
       })
       .finally(() => {

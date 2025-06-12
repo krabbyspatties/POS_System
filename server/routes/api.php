@@ -18,6 +18,23 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
 });
 
+// Temporary debug route - remove this in production
+Route::get('/debug-auth', function () {
+    $user = \App\Models\User::where('user_email', 'Test@gmail.com')->first();
+
+    if (!$user) {
+        return response()->json(['error' => 'Test user not found']);
+    }
+
+    return response()->json([
+        'user_found' => true,
+        'email' => $user->user_email,
+        'password_hash' => $user->password,
+        'auth_identifier' => $user->getAuthIdentifierName(),
+        'auth_password' => $user->getAuthPassword(),
+    ]);
+});
+
 Route::get('/test-make-webhook', function () {
     $makeWebhookUrl = env('MAKE_WEBHOOK_URL');
 
@@ -30,12 +47,12 @@ Route::get('/test-make-webhook', function () {
             'verify' => false, // Disable SSL verification
             'timeout' => 30,
         ])->post($makeWebhookUrl, [
-                    'pdf_url' => 'https://example.com/test.pdf',
-                    'email' => 'test@example.com',
-                    'first_name' => 'Test',
-                    'last_name' => 'User',
-                    'total' => 100.00,
-                ]);
+            'pdf_url' => 'https://example.com/test.pdf',
+            'email' => 'test@example.com',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'total' => 100.00,
+        ]);
 
         return response()->json([
             'status' => $response->status(),

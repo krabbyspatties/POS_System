@@ -39,8 +39,16 @@ class AuthController extends Controller
                 // Increment login attempts counter
                 $this->incrementLoginAttempts($request);
 
+                Log::warning('Login failed - Invalid credentials', [
+                    'email' => $request->input('user_email'),
+                    'ip' => $request->ip()
+                ]);
+
                 return response()->json([
-                    'message' => 'Invalid credentials, please try again.'
+                    'message' => 'Invalid credentials, please try again.',
+                    'errors' => [
+                        'general' => ['Invalid email or password.']
+                    ]
                 ], 401);
             }
 
