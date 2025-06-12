@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -34,11 +35,17 @@ class AuthController extends Controller
                 ], 429);
             }
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Invalid credentials, please try again.'
-            ], 401);
-        }
+            if (!Auth::attempt($credentials)) {
+                // Increment login attempts counter
+                $this->incrementLoginAttempts($request);
+
+                return response()->json([
+                    'message' => 'Invalid credentials, please try again.'
+                ], 401);
+            }
+
+            // Clear login attempts on successful login
+            $this->clearLoginAttempts($request);
 
             $user = Auth::user();
 
@@ -53,11 +60,21 @@ class AuthController extends Controller
                 'ip' => $request->ip()
             ]);
 
-        return response()->json([
-            'message' => 'Login Successful',
-            'token' => $token,
-            'user' => $user,
-        ], 200);
+            return response()->json([
+                'message' => 'Login Successful',
+                'token' => $token,
+                'user' => $user,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Login error', [
+                'message' => $e->getMessage(),
+                'ip' => $request->ip()
+            ]);
+
+            return response()->json([
+                'message' => 'An error occurred during login'
+            ], 500);
+        }
     }
     public function logout(Request $request)
     {
@@ -70,9 +87,19 @@ class AuthController extends Controller
                 'ip' => $request->ip()
             ]);
 
-        return response()->json([
-            'message' => 'Logout Successful'
-        ], 200);
+            return response()->json([
+                'message' => 'Logout Successful'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Logout error', [
+                'message' => $e->getMessage(),
+                'ip' => $request->ip()
+            ]);
+
+            return response()->json([
+                'message' => 'An error occurred during logout'
+            ], 500);
+        }
     }
 
     public function user(Request $request)
